@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace Jina.Domain.Service.Account;
+namespace Jina.Domain.Account;
 
 public class ENUM_AUDIT_TYPE : SmartEnum<ENUM_AUDIT_TYPE>
 {

@@ -1,6 +1,6 @@
 using eXtensionSharp;
 using Hangfire;
-using Jina.Domain.Base;
+using Jina.Domain.Kernel;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Infra.Const;
@@ -141,12 +141,12 @@ builder.Services
 builder.Services.AddAuthorization(options =>
 {
     // Here I stored necessary permissions/roles in a constant
-    foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+    foreach (var prop in typeof(Permission).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
     {
         var propertyValue = prop.GetValue(null);
         if (propertyValue is not null)
         {
-            options.AddPolicy(propertyValue.xValue<string>(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.xValue<string>()));
+            options.AddPolicy(propertyValue.xValue<string>(), policy => policy.RequireClaim(ApplicationClaimTypeConst.Permission, propertyValue.xValue<string>()));
         }
     }
 });

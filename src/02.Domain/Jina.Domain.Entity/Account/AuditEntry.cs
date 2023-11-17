@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using eXtensionSharp;
-using Jina.Domain.Service.Account;
+using Jina.Domain.Account;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Jina.Domain.Entity.Account;

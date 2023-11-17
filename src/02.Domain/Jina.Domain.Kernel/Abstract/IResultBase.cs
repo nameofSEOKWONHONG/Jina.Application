@@ -1,4 +1,4 @@
-namespace Jina.Domain.Base.Abstract;
+namespace Jina.Domain.Kernel.Abstract;
 
 public interface IResultBase
 {

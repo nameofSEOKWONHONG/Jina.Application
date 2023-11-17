@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Infra.Const
 {
-    public class ApplicationClaimTypeConstants
+    public class ApplicationClaimTypeConst
     {
         public const string Permission = "Permission";
         public const string TenantId = "http://schemas.microsoft.com/identity/claims/identityprovider";

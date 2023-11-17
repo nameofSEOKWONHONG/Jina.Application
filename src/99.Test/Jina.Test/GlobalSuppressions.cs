@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "<보류 중>", Scope = "member", Target = "~F:Jina.Test.Tests._serviceProvider")]
+[assembly: SuppressMessage("Structure", "NUnit1032:An IDisposable field/property should be Disposed in a TearDown method", Justification = "<보류 중>", Scope = "member", Target = "~F:Jina.Test.OpenApiTest._serviceProvider")]

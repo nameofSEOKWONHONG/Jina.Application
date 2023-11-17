@@ -1,6 +1,6 @@
 ﻿using Jina.Base.Service.Abstract;
-using Jina.Domain.Base.Abstract;
-using Jina.Domain.Service.Account;
+using Jina.Domain.Account;
+using Jina.Domain.Kernel.Abstract;
 
 namespace Jina.Domain.Abstract.Account
 {

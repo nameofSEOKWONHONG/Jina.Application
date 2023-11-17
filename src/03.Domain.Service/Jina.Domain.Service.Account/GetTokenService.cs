@@ -1,11 +1,12 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Abstract.Account;
-using Jina.Domain.Base;
-using Jina.Domain.Base.Abstract;
+using Jina.Domain.Account;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Infra.Base;
 using Jina.Domain.Infra.Const;
+using Jina.Domain.Kernel;
+using Jina.Domain.Kernel.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

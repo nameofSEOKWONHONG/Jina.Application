@@ -27,8 +27,8 @@ namespace Jina.Domain.Infra.Session
         public SessionCurrentUser(IHttpContextAccessor accessor)
         {
             var user = accessor.HttpContext.User;
-            TenantId = user.FindFirst(ApplicationClaimTypeConstants.TenantId).Value;
-            TimeZone = user.FindFirst(ApplicationClaimTypeConstants.TimeZone)?.Value;
+            TenantId = user.FindFirst(ApplicationClaimTypeConst.TenantId).Value;
+            TimeZone = user.FindFirst(ApplicationClaimTypeConst.TimeZone)?.Value;
             UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             UserName = user.FindFirst(ClaimTypes.Name)?.Value;
             RoleName = user.FindFirst(ClaimTypes.Role)?.Value;

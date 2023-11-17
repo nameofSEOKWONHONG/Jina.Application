@@ -1,6 +1,6 @@
-﻿using Jina.Domain.Entity.Account;
+﻿using Jina.Domain.Account;
+using Jina.Domain.Entity.Account;
 using Jina.Domain.Entity.Base;
-using Jina.Domain.Service.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

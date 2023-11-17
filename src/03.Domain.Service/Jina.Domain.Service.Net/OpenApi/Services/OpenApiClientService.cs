@@ -5,14 +5,13 @@ using Jina.Domain.Abstract.Net.OpenApi.Services;
 namespace Jina.Domain.Service.Net.OpenApi.Services;
 
 public class OpenApiClientService
-    : JServiceImplBase<OpenApiClientService, string, string>
+    : ServiceImplBase<OpenApiClientService, string, string>
         , IOpenApiClientService
 {
     public OpenApiClientService()
     {
-        
     }
-    
+
     public override Task<bool> OnExecutingAsync()
     {
         return Task.FromResult(true);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jina.Domain.Service.Account
+namespace Jina.Domain.Account
 {
     public class TokenResponse
     {
