@@ -1,2 +1,2 @@
-# Jina.Passion
-Jina passion Application
+# Jina.Application
+Jina Application
