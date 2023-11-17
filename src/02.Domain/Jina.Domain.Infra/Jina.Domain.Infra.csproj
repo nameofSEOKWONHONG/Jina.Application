@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Hangfire" Version="1.8.6" />
+      <PackageReference Include="Serilog" Version="3.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\eXtensionSharp\src\eXtensionSharp.csproj" />
+      <ProjectReference Include="..\..\..\..\JINA\src\Jina.Lang\Jina.Lang.csproj" />
+      <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
+      <ProjectReference Include="..\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
+      <ProjectReference Include="..\Jina.Domain\Jina.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Extension\" />
+    </ItemGroup>
+
+</Project>

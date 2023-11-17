@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/src/02.Domain/Jina.Domain.Entity/Migrations

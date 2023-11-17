@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+@inject ILogger<MainLayout> Logger
+
+@inherits LayoutComponentBase
+
+@* <AuthorizeView>
+    <NotAuthorized>
+        @Body
+    </NotAuthorized>    
+    <Authorized>
+        <MainBody>
+            <CascadingValue Value="this">
+                @Body
+            </CascadingValue>
+        </MainBody>
+    </Authorized>
+</AuthorizeView> *@
+
+<MainBody>
+    <CascadingValue Value="this">
+        @Body
+    </CascadingValue>
+</MainBody>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Navigate uri : {URI}", this.NavigationManager.Uri);
+    }
+}

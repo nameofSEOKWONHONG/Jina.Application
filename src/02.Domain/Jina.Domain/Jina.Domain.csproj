@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />      
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Service\MultiLanguage\" />
+      <Folder Include="Service\Net\" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\JINA\src\Jina.Lang\Jina.Lang.csproj" />
+      <ProjectReference Include="..\..\..\..\JINA\src\Jina.Validate\Jina.Validate.csproj" />
+    </ItemGroup>
+
+</Project>
