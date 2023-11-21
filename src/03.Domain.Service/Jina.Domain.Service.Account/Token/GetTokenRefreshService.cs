@@ -1,0 +1,127 @@
+﻿using eXtensionSharp;
+using Jina.Base.Service;
+using Jina.Base.Service.Abstract;
+using Jina.Domain.Abstract.Account.Token;
+using Jina.Domain.Account.Token;
+using Jina.Domain.Entity;
+using Jina.Domain.Entity.Account;
+using Jina.Domain.Infra.Base;
+using Jina.Domain.SharedKernel;
+using Jina.Domain.SharedKernel.Abstract;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Jina.Domain.Service.Account.Token
+{
+    public class GetTokenRefreshService : DomainServiceImpl<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
+    {
+        private readonly IGetPrincipalFromExpiredTokenService _getPrincipalFromExpiredTokenService;
+        private readonly IGetSigningCredentialsService _getSigningCredentialsService;
+        private readonly IGetClaimsService _getClaimsService;
+        private readonly IGenerateEncryptedTokenService _generateEncryptedTokenService;
+        private readonly IGetRefreshTokenService _getRefreshTokenService;
+
+        public GetTokenRefreshService(AppDbContext dbContext,
+            IGetPrincipalFromExpiredTokenService getPrincipalFromExpiredTokenService,
+            IGetSigningCredentialsService getSigningCredentialsService,
+            IGetClaimsService getClaimsService,
+            IGenerateEncryptedTokenService generateEncryptedTokenService,
+            IGetRefreshTokenService getRefreshTokenService) : base(dbContext, null)
+        {
+            _getPrincipalFromExpiredTokenService = getPrincipalFromExpiredTokenService;
+            _getSigningCredentialsService = getSigningCredentialsService;
+            _getClaimsService = getClaimsService;
+            _generateEncryptedTokenService = generateEncryptedTokenService;
+            _getRefreshTokenService = getRefreshTokenService;
+        }
+
+        public override async Task<bool> OnExecutingAsync()
+        {
+            if (this.Request.xIsEmpty())
+            {
+                this.Result = await Result<TokenResponse>.FailAsync("Invalid Client Token.");
+                return false;
+            }
+
+            ClaimsPrincipal userPrincipal = null;
+            await ServiceInvoker<string, ClaimsPrincipal>.Invoke(_getPrincipalFromExpiredTokenService)
+                .AddFilter(() => this.Request.xIsNotEmpty())
+                .AddFilter(() => this.Request.Token.xIsNotEmpty())
+                .SetParameter(() => this.Request.Token)
+                .OnExecutedAsync((res) => userPrincipal = res);
+
+            var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
+            var user = await this.DbContext.Users.AsNoTracking().FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId && m.Email == userEmail);
+
+            if (user.xIsEmpty())
+            {
+                this.Result = await Result<TokenResponse>.FailAsync("User Not Found.");
+                return false;
+            }
+
+            if (user.RefreshToken != this.Request.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                this.Result = await Result<TokenResponse>.FailAsync("Invalid Client Token.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public override async Task OnExecuteAsync()
+        {
+            ClaimsPrincipal userPrincipal = null;
+            await ServiceInvoker<string, ClaimsPrincipal>.Invoke(_getPrincipalFromExpiredTokenService)
+                .AddFilter(() => this.Request.xIsNotEmpty())
+                .AddFilter(() => this.Request.Token.xIsNotEmpty())
+                .SetParameter(() => this.Request.Token)
+                .OnExecutedAsync((res) => userPrincipal = res);
+
+            var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
+            var user = await this.DbContext.Users.AsNoTracking().FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId && m.Email == userEmail);
+
+            string token = string.Empty;
+            SigningCredentials signingCredentials = null;
+            IEnumerable<Claim> claims = null;
+
+            await ServiceInvoker<bool, SigningCredentials>.Invoke(_getSigningCredentialsService)
+                .AddFilter(() => true)
+                .SetParameter(() => true)
+                .OnExecutedAsync((res) => signingCredentials = res);
+
+            await ServiceInvoker<User, IEnumerable<Claim>>.Invoke(_getClaimsService)
+                .AddFilter(() => user.xIsNotEmpty())
+                .SetParameter(() => user)
+                .OnExecutedAsync((res) => claims = res);
+
+            await ServiceInvoker<IdentityGenerateEncryptedTokenRequest, string>.Invoke(_generateEncryptedTokenService)
+                .AddFilter(() => claims.xIsNotEmpty())
+                .SetParameter(() => new IdentityGenerateEncryptedTokenRequest()
+                {
+                    SigningCredentials = signingCredentials,
+                    Claims = claims
+                })
+                .OnExecutedAsync((res) => token = res);
+
+            await ServiceInvoker<User, string>.Invoke(_getRefreshTokenService)
+                .AddFilter(() => user.xIsNotEmpty())
+                .SetParameter(() => user)
+                .OnExecutedAsync((res) => user.RefreshToken = res);
+
+            if (token.xIsNotEmpty())
+            {
+                this.DbContext.Users.Update(user);
+                await this.DbContext.SaveChangesAsync();
+
+                var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, RefreshTokenExpiryTime = user.RefreshTokenExpiryTime };
+                this.Result = await Result<TokenResponse>.SuccessAsync(response);
+            }
+        }
+    }
+}

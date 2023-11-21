@@ -8,6 +8,13 @@ namespace Jina.Domain.Infra.Const
 {
     public class ApplicationConsts
     {
+        public class Encryption
+        {
+            public const string DB_ENC_SHA512_KEY = "AKIEUDNXMZ8823@28S3!!";
+            public const string DB_ENC_IV = "WXNDFLGSZFOQJKJK";
+            public const string DB_ENC_KEY = "BLKQJFFFBJUQUBHIAICLMJFVZZNLTXII";
+        }
+
         public class Redis
         {
             public const string MessageChannel = "EWS:REDIS:CHANNEL";

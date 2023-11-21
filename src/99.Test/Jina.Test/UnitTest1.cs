@@ -27,7 +27,7 @@ public class OpenApiTest
         var result = string.Empty;
         await ServiceInvoker<string, string>.Invoke(service)
             .SetParameter(() => $"아래의 문장을 영어로 번역해줘.{Environment.NewLine} \"에러가 발생했습니다. 다시 시도 하시겠습니까?\"")
-            .ExecutedAsync(r => result = r);
+            .OnExecutedAsync(r => result = r);
 
         await TestContext.Out.WriteLineAsync(result);
     }

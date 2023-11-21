@@ -19,8 +19,4 @@
       <ProjectReference Include="..\Jina.Domain\Jina.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Extension\" />
-    </ItemGroup>
-
 </Project>

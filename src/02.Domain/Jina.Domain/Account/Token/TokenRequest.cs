@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jina.Domain.Account
+namespace Jina.Domain.Account.Token
 {
     public class TokenRequest
     {

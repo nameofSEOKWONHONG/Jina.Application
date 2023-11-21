@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Infra.csproj" />
     </ItemGroup>
 

@@ -16,7 +16,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\JINA\src\Jina.Lang\Jina.Lang.csproj" />
       <ProjectReference Include="..\..\..\..\JINA\src\Jina.Validate\Jina.Validate.csproj" />
-      <ProjectReference Include="..\Jina.Domain.Kernel\Jina.Domain.Kernel.csproj" />
+      <ProjectReference Include="..\Jina.Domain.Kernel\Jina.Domain.SharedKernel.csproj" />
     </ItemGroup>
 
 </Project>

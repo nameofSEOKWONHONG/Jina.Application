@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,11 @@ public class User : IdentityUser<string>
 
     [MaxLength(100)]
     public string LastName { get; set; }
+
+    [MaxLength(256)]
+    public string RefreshToken { get; set; }
+
+    public DateTime RefreshTokenExpiryTime { get; set; }
 
     [Comment("활성화 여부")]
     public bool IsActive { get; set; }

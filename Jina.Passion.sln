@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Test", "src\99.Test\Ji
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Validate", "..\JINA\src\Jina.Validate\Jina.Validate.csproj", "{04C0959D-8ADD-4847-A994-300BC2341A0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Domain.Kernel", "src\02.Domain\Jina.Domain.Kernel\Jina.Domain.Kernel.csproj", "{85793CCA-CCD3-45BB-8113-E191DBDD9DBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Domain.SharedKernel", "src\02.Domain\Jina.Domain.Kernel\Jina.Domain.SharedKernel.csproj", "{85793CCA-CCD3-45BB-8113-E191DBDD9DBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{91F8CE68-CDB1-444C-B9B5-452312B567FF}"
 	ProjectSection(SolutionItems) = preProject
