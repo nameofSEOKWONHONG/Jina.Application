@@ -5,8 +5,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Jina.Domain.Base.Abstract;
-using Jina.Domain.Base;
+using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.SharedKernel;
 
 namespace Jina.Passion.FE.Share.Extensions
 {
@@ -26,7 +26,7 @@ namespace Jina.Passion.FE.Share.Extensions
         public static async Task<IResultBase> vToResult(this HttpResponseMessage response)
         {
             var responseAsString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<JResult>(responseAsString, new JsonSerializerOptions
+            var responseObject = JsonSerializer.Deserialize<Result>(responseAsString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 ReferenceHandler = ReferenceHandler.Preserve
@@ -34,10 +34,10 @@ namespace Jina.Passion.FE.Share.Extensions
             return responseObject;
         }
 
-        public static async Task<JPaginatedResult<T>> vToPaginatedResult<T>(this HttpResponseMessage response)
+        public static async Task<PaginatedResult<T>> vToPaginatedResult<T>(this HttpResponseMessage response)
         {
             var responseAsString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<JPaginatedResult<T>>(responseAsString, new JsonSerializerOptions
+            var responseObject = JsonSerializer.Deserialize<PaginatedResult<T>>(responseAsString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

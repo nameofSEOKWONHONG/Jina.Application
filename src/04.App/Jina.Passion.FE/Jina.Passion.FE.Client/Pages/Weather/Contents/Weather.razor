@@ -1,0 +1,80 @@
+﻿@using System.Text.Json
+@using Jina.Domain.Example
+@using Jina.Passion.FE.Client.Base
+@using Jina.Passion.FE.Client.Pages.Weather.Services
+
+@inherits FormPageComponentBase
+
+<PageContainer>
+    <Content>
+        <Form Model="@SelectedItem"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"              
+              LabelColSpan="4"
+              WrapperColSpan="16"
+              ValidateMode="FormValidateMode.Complex"
+              Size="@AntSizeLDSType.Small">
+              <FluentValidationValidator @ref="_fluentValidationValidator" />
+              <GridRow>
+                  <GridCol Span="12">
+                    <FormItem Label="@nameof(this.SelectedItem.Id)">
+                        <Input Value="this.SelectedItem.Id" ReadOnly />
+                     </FormItem>
+                  </GridCol>
+                  <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.Date)">
+                         <DatePicker TValue="DateOnly?" @bind-Value="this.SelectedItem.Date" Picker="@DatePickerType.Date" />
+                     </FormItem>
+                  </GridCol>
+              </GridRow>
+              <GridRow>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.TemperatureC)">
+                         <Input @bind-Value="this.SelectedItem.TemperatureC" />
+                     </FormItem>
+                 </GridCol>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.TemperatureF)">
+                         <Input Value="this.SelectedItem.TemperatureF" ReadOnly />
+                     </FormItem>
+                 </GridCol>
+              </GridRow>
+             <GridRow>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.Summary)">
+                         <Input @bind-Value="this.SelectedItem.Summary" />
+                     </FormItem>
+                 </GridCol>
+                 <GridCol Span="12">
+                 </GridCol>
+             </GridRow>
+              <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                  <Button HtmlType="submit" >
+                      Submit
+                  </Button>
+              </FormItem>
+        </Form>
+    </Content>
+</PageContainer>
+
+ @code {
+    [Parameter]
+    public WeatherForecast SelectedItem { get; set; }
+
+    [Inject]
+    public WeatherService WeatherService { get; set; }
+
+    private FluentValidationValidator _fluentValidationValidator;
+
+
+    private void OnFinish(EditContext editContext)
+    {
+        //call save api
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(SelectedItem)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SelectedItem)}");
+    }
+}

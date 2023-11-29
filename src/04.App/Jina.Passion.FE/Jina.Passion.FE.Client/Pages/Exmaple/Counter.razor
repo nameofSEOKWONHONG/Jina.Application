@@ -1,0 +1,42 @@
+﻿@page "/example/counter"
+@using Jina.Passion.FE.Client.Base
+
+@inherits PageComponentBase
+
+<PageContainer Title="Counter">
+    <Breadcrumb>
+        <Breadcrumb>
+            @foreach (var item in this.BreadcrumbItems)
+            {
+                <BreadcrumbItem>@item</BreadcrumbItem>
+            }
+        </Breadcrumb>
+    </Breadcrumb>
+
+    <Content>
+        <h1>Counter</h1>
+    </Content>
+
+    <ChildContent>
+        <p role="status">Current count: @currentCount</p>
+
+        <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    </ChildContent>
+</PageContainer>
+
+@code {
+    private string currentUrl;
+    private List<string> _breadcrumbItems;
+
+    private int currentCount = 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

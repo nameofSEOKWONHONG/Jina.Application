@@ -1,0 +1,71 @@
+﻿[
+  {
+    "path": "/exmaple",
+    "name": "Exmaple",
+    "key": "example",
+    "icon": "dashboard",
+    "children": [
+      {
+        "path": "/",
+        "name": "Home",
+        "key": "exmaple.home"
+      },
+      {
+        "path": "/example/counter",
+        "name": "Counter",
+        "key": "exmaple.counter"
+      },
+      {
+        "path": "/example/weather",
+        "name": "Weather",
+        "key": "exmaple.weather"
+      }
+    ]
+  },
+  {
+    "path": "/weathers",
+    "name": "Weathers",
+    "key": "weathers",
+    "icon": "form",
+    "children": [
+      {
+        "path": "/weathers/index",
+        "name": "Weathers",
+        "key": "weathers.index"
+      },
+      {
+        "path": "/form/step-form",
+        "name": "Step Form",
+        "key": "form.step-form"
+      },
+      {
+        "path": "/form/advanced-form",
+        "name": "Advanced Form",
+        "key": "form.advanced-form"
+      }
+    ]
+  },
+  {
+    "path": "/form",
+    "name": "Form page",
+    "key": "form",
+    "icon": "form",
+    "children": [
+      {
+        "path": "/form/basic-form",
+        "name": "Basic Form",
+        "key": "form.basic-form"
+      },
+      {
+        "path": "/form/step-form",
+        "name": "Step Form",
+        "key": "form.step-form"
+      },
+      {
+        "path": "/form/advanced-form",
+        "name": "Advanced Form",
+        "key": "form.advanced-form"
+      }
+    ]
+  }
+]

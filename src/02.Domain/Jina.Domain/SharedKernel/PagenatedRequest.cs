@@ -1,6 +1,6 @@
 namespace Jina.Domain.SharedKernel;
 
-public abstract class PagedRequest
+public abstract class PagenatedRequest
 {
     /// <summary>
     /// 날짜 선택 모드
@@ -26,7 +26,7 @@ public abstract class PagedRequest
     public bool IsActive { get; set; } = true;
 }
 
-public abstract class PagedRequest<T> : PagedRequest
+public abstract class PagenatedRequest<T> : PagenatedRequest
 {
-    public T SearchData { get; set; }
+    public T SearchOption { get; set; }
 }

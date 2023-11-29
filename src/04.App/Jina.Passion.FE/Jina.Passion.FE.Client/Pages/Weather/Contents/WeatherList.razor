@@ -1,0 +1,95 @@
+﻿@using Jina.Domain.Example
+@using Jina.Passion.FE.Client.Base
+@using Jina.Passion.FE.Client.Pages.Weather.Services
+
+@inherits TablePageComponentBase
+
+<PageContainer>
+    <Content>
+        <div>
+            <GridRow Justify="end">
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="2">
+                    <Button OnClick="DeleteRowsAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Add
+                    </Button>
+                    <Button OnClick="DeleteRowsAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Remove
+                    </Button>
+                </GridCol>
+            </GridRow>
+        </div>
+        <Table TItem="WeatherForecast"
+               DataSource="WeatherService.WeatherForecasts"
+               @bind-SelectedRows="selectedItems" 
+               Bordered=@true
+               Loading="Loading"
+               Title="Weather List"
+               Size="TableSize.Small"
+               Resizable
+               RowKey="m=>m.Id">
+            <Selection Key="@(context.Id.ToString())" />            
+             <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
+                <a @onclick='() => ItemClick(context)'>@context.Date</a>
+            </PropertyColumn>
+            <PropertyColumn Property="m => m.TemperatureC" />
+            <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
+            <PropertyColumn Title="Summary" Property="m => m.Summary" />
+            <ActionColumn Title="Action">
+                 <Popconfirm Title="Sure to delete?"
+                             OnConfirm="()=> DeleteRowAsync(context.Id)"
+                             OkText="Yes"
+                             CancelText="No">
+                     <a>Delete</a>
+                 </Popconfirm>
+             </ActionColumn>
+        </Table>
+    </Content>
+
+    <ChildContent>
+    </ChildContent>
+</PageContainer>
+
+@code {
+    [Parameter]
+    public bool Loading { get; set; }
+
+    [Parameter] 
+    public EventCallback<string> OnChange { get; set; }
+
+    [Inject]
+    public WeatherService WeatherService { get; set; } 
+
+    private IEnumerable<WeatherForecast> selectedItems;    
+
+    private void ItemClick(WeatherForecast item)
+    {
+        WeatherService.SelectedItem = item;
+        if (OnChange.HasDelegate)
+        {
+            OnChange.InvokeAsync("Weather");
+        }
+    }
+
+    async Task DeleteRowAsync(int id)
+    {
+        var exist = this.WeatherService.WeatherForecasts.First(m => m.Id == id);
+        await WeatherService.RemoveAsync(exist);
+    }
+
+    async Task DeleteRowsAsync()
+    {
+        if(this.selectedItems == null || this.selectedItems.Count() == 0)
+        {
+            await MessageService.Warning("delete data is empty");
+        }        
+
+        foreach(var item in this.selectedItems)
+        {
+            //call remove api
+            await DeleteRowAsync(item.Id);
+        }
+    }
+}

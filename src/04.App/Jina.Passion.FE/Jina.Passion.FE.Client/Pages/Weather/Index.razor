@@ -1,0 +1,67 @@
+﻿@page "/weathers/index"
+
+@using Jina.Domain.Example
+@using Jina.Passion.FE.Client.Pages.Weather.Contents
+@using Jina.Passion.FE.Client.Pages.Weather.Services
+
+<Tabs Type="@TabType.EditableCard" HideAdd
+      @ref="tabs"
+      DefaultActiveKey="1"
+      @bind-ActiveKey="@activeKey" 
+      OnChange="OnTabChange"
+      Animated>
+    <TabPane Key="1" Tab="Weather List" Closable="false">
+        <WeatherList OnChange="TabChange" Loading="loading" />
+    </TabPane>
+    @foreach(var pane in panes)
+    {
+        <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
+            <ChildContent>
+                <Weather SelectedItem="pane.WeatherForecast" />
+            </ChildContent>
+            <TabContextMenu>
+                <Menu>
+                    <MenuItem OnClick="@(()=>Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
+                </Menu>
+            </TabContextMenu>
+        </TabPane>
+    }    
+</Tabs>
+
+@code {
+    private bool loading = false;
+    private Tabs tabs;    
+    [Inject]
+    public WeatherService WeatherService { get; set; }
+    string activeKey { get; set; } = "1";
+    private WeatherForecast selectedItem;
+
+    public record Pane(string Title, string Content, string Key, WeatherForecast WeatherForecast, bool Closable = true);
+
+    private int newTabIndex;
+
+    List<Pane> panes = new List<Pane>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        await WeatherService.GetWeathersAsync();
+        loading = false;
+    }
+
+    void OnTabChange(string key) => Console.WriteLine($"tab change:{key}");
+
+    void TabChange(string key) {
+        var newkey = panes.Count + 1;
+        activeKey = $"newTab{this.WeatherService.SelectedItem.Id}";
+
+        panes.Add(new Pane(this.WeatherService.SelectedItem.Id.ToString(), this.WeatherService.SelectedItem.Id.ToString(), activeKey, this.WeatherService.SelectedItem, true));
+        StateHasChanged();
+    }
+
+    void Close(Pane pane)
+    {
+        panes.Remove(pane);
+        StateHasChanged();
+    }
+}

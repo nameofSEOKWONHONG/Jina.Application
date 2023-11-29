@@ -1,4 +1,4 @@
-﻿using Jina.Domain.Kernel;
+﻿using Jina.Domain.SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

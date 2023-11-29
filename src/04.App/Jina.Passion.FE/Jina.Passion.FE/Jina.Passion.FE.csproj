@@ -9,8 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\eXtensionSharp\src\eXtensionSharp.csproj" />
     <ProjectReference Include="..\..\Jina.Passion.FE.Share\Jina.Passion.FE.Share.csproj" />
-    <ProjectReference Include="..\Jina.Passion.FE.Client\Jina.Passion.FE.Client.csproj" />
-    <PackageReference Include="AntDesign" Version="0.16.1" />
+    <ProjectReference Include="..\Jina.Passion.FE.Client\Jina.Passion.FE.Client.csproj" />    
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
   </ItemGroup>

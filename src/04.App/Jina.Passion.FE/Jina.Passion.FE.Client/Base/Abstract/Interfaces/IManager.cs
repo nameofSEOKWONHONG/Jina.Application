@@ -1,7 +1,4 @@
-﻿using Jina.Domain.Base;
-using Jina.Domain.Base.Abstract;
-
-namespace Jina.Passion.FE.Client.Base.Abstract.Interfaces
+﻿namespace Jina.Passion.FE.Client.Base.Abstract.Interfaces
 {
     public interface IManager : IDisposable
     {

@@ -1,5 +1,6 @@
 ﻿using Jina.Domain.Account;
-using Jina.Domain.Base.Abstract;
+using Jina.Domain.Account.Token;
+using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Passion.FE.Client.Base.Abstract.Interfaces
 {
