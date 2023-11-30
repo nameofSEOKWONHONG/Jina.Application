@@ -1,4 +1,5 @@
 using Jina.Passion.FE.Client.Pages;
+using Jina.Passion.FE.Client.Pages.Weather.Services;
 using Jina.Passion.FE.Components;
 using Microsoft.AspNetCore.Components;
 
@@ -20,6 +21,7 @@ namespace Jina.Passion.FE
             {
                 BaseAddress = new Uri(sp.GetService<NavigationManager>()!.BaseUri)
             });
+            builder.Services.AddScoped<WeatherService>();
 
             var app = builder.Build();
 

@@ -23,7 +23,7 @@ namespace Jina.Passion.FE.Client.Base.Abstract
         {
         }
 
-        public virtual async Task<PaginatedResult<TResult>> GetAll(string url, PagenatedRequest<TRequest> request)
+        public virtual async Task<PaginatedResult<TResult>> GetAll(string url, PaginatedRequest<TRequest> request)
         {
             var res = await Client.GetAsync($"api/{url}?{GenerateParam(request)}");
             var result = await res.Content.ReadFromJsonAsync<PaginatedResult<TResult>>();
@@ -36,7 +36,7 @@ namespace Jina.Passion.FE.Client.Base.Abstract
             return result;
         }
 
-        private string GenerateParam(PagenatedRequest<TRequest> request)
+        private string GenerateParam(PaginatedRequest<TRequest> request)
         {
             if (request.xIsEmpty()) return string.Empty;
             var result = new List<string>();
@@ -47,7 +47,7 @@ namespace Jina.Passion.FE.Client.Base.Abstract
             return string.Join("&", result);
         }
 
-        public virtual async Task<PaginatedResult<TResult>> GetAllByPost(string url, PagenatedRequest<TRequest> request)
+        public virtual async Task<PaginatedResult<TResult>> GetAllByPost(string url, PaginatedRequest<TRequest> request)
         {
             var res = await Client.PostAsync($"api/{url}", new StringContent(request.xToJson(), Encoding.UTF8, "application/json"));
             var result = await res.Content.ReadFromJsonAsync<PaginatedResult<TResult>>();

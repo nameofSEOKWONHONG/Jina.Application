@@ -1,11 +1,43 @@
-﻿@using Jina.Domain.Example
+﻿@using AntDesign.TableModels
+@using Jina.Domain.Example
+@using Jina.Domain.SharedKernel
+@using Jina.Domain.SharedKernel.Abstract
 @using Jina.Passion.FE.Client.Base
 @using Jina.Passion.FE.Client.Pages.Weather.Services
+@using eXtensionSharp
 
 @inherits TablePageComponentBase
 
 <PageContainer>
     <Content>
+        <div>
+            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form">
+                <Row Gutter="24">
+                    <GridCol Span="6" @key="nameof(context.Date)">
+                        <FormItem Label="@nameof(context.Date)">
+                            <DatePicker @bind-Value="@(context.Date)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.TemperatureC)">
+                        <FormItem Label="@nameof(context.TemperatureC)">
+                            <Input @bind-Value="@(context.TemperatureC)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.Summary)">
+                        <FormItem Label="@nameof(context.Summary)">
+                            <Input @bind-Value="@(context.Summary)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <Row>
+                    <GridCol Span="24" Style="text-align:right;">
+                        <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                        @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
+                    </GridCol>
+                </Row>
+            </Form>
+        </div>
+        <br/>
         <div>
             <GridRow Justify="end">
                 <GridCol Span="4"></GridCol>
@@ -21,7 +53,8 @@
                 </GridCol>
             </GridRow>
         </div>
-        <Table TItem="WeatherForecast"
+        <Table @ref="table"
+               TItem="WeatherForecast"
                DataSource="WeatherService.WeatherForecasts"
                @bind-SelectedRows="selectedItems" 
                Bordered=@true
@@ -34,6 +67,7 @@
              <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
                 <a @onclick='() => ItemClick(context)'>@context.Date</a>
             </PropertyColumn>
+            <PropertyColumn Property="m => m.City" />
             <PropertyColumn Property="m => m.TemperatureC" />
             <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
             <PropertyColumn Title="Summary" Property="m => m.Summary" />
@@ -53,16 +87,36 @@
 </PageContainer>
 
 @code {
-    [Parameter]
-    public bool Loading { get; set; }
-
     [Parameter] 
     public EventCallback<string> OnChange { get; set; }
 
     [Inject]
-    public WeatherService WeatherService { get; set; } 
+    public WeatherService WeatherService { get; set; }
 
-    private IEnumerable<WeatherForecast> selectedItems;    
+    private WeatherForecast searchValue { get; set; } = new();
+
+    private IEnumerable<WeatherForecast> selectedItems;
+    private Table<WeatherForecast> table;
+
+    protected override Task OnRoleSetupAsync()
+    {
+        Console.WriteLine("OnRoleSetupAsync");
+        return base.OnRoleSetupAsync();
+    }
+
+    protected override Task OnSetupAsync()
+    {
+        Console.WriteLine("OnSetupAsync");
+        return base.OnSetupAsync();
+    }
+
+    protected override async Task OnLoadAsync()
+    {
+        this.Loading = true;
+        await WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecast>());
+        await Task.Delay(500);
+        this.Loading = false;
+    }
 
     private void ItemClick(WeatherForecast item)
     {
@@ -81,15 +135,13 @@
 
     async Task DeleteRowsAsync()
     {
-        if(this.selectedItems == null || this.selectedItems.Count() == 0)
+        if(this.selectedItems.xIsEmpty())
         {
             await MessageService.Warning("delete data is empty");
         }        
 
-        foreach(var item in this.selectedItems)
-        {
-            //call remove api
-            await DeleteRowAsync(item.Id);
-        }
+        await WeatherService.RemoveRangeAsync(this.selectedItems);
+
+        table.UnselectAll();
     }
 }

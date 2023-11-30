@@ -12,27 +12,30 @@ namespace Jina.Passion.FE.Client.Pages.Weather.Services
 
         public WeatherService(HttpClient httpClient) : base(httpClient)
         {
-            var startDate = DateOnly.FromDateTime(DateTime.Now);
-            var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-            WeatherForecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Id = index,
-                Date = startDate.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = summaries[Random.Shared.Next(summaries.Length)]
-            }).ToList();
         }
 
-        public async Task<IEnumerable<WeatherForecast>> GetWeathersAsync(PagenatedRequest<WeatherForecast> request)
+        public async Task<IEnumerable<WeatherForecast>> GetWeathersAsync(PaginatedRequest<WeatherForecast> request)
         {
             // Simulate asynchronous loading to demonstrate a loading indicator
             await Task.Delay(500);
 
             //call api
-            var weathers = await this.Client.GetFromJsonAsync<IEnumerable<WeatherForecast>>("weathers.json");
-            weathers.Where(m => m.Id == request.SearchOption.Id)
-                .Take(request.PageSize)
-                .Skip(request.PageSize * request.PageNo).ToList();
+            //var weathers = await this.Client.GetFromJsonAsync<IEnumerable<WeatherForecast>>("weathers.json");
+            //weathers.Where(m => m.Id == request.SearchOption.Id)
+            //    .Take(request.PageSize)
+            //    .Skip(request.PageSize * request.PageNo).ToList();
+
+            var startDate = DateOnly.FromDateTime(DateTime.Now);
+            var cities = new[] { "서울", "춘천", "원주", "인천", "경기" };
+            var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+            WeatherForecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Id = index,
+                City = cities[index - 1],
+                Date = startDate.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = summaries[Random.Shared.Next(summaries.Length)]
+            }).ToList();
 
             return WeatherForecasts;
         }
@@ -61,11 +64,19 @@ namespace Jina.Passion.FE.Client.Pages.Weather.Services
 
         public Task RemoveAsync(WeatherForecast item)
         {
-            var exist = this.WeatherForecasts.First(m => m.Id == item.Id);
+            this.WeatherForecasts.Remove(item);
+            return Task.CompletedTask;
+        }
+
+        public async Task RemoveRangeAsync(IEnumerable<WeatherForecast> items)
+        {
             //call api
 
-            this.WeatherForecasts.Remove(exist);
-            return Task.CompletedTask;
+            foreach (var item in items)
+            {
+                this.WeatherForecasts.Remove(item);
+            }
+            await Task.Delay(1000);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿@page "/weathers/index"
 
 @using Jina.Domain.Example
+@using Jina.Domain.SharedKernel
+@using Jina.Passion.FE.Client.Base
 @using Jina.Passion.FE.Client.Pages.Weather.Contents
 @using Jina.Passion.FE.Client.Pages.Weather.Services
 
@@ -10,8 +12,15 @@
       @bind-ActiveKey="@activeKey" 
       OnChange="OnTabChange"
       Animated>
-    <TabPane Key="1" Tab="Weather List" Closable="false">
-        <WeatherList OnChange="TabChange" Loading="loading" />
+    <TabPane Key="1" Tab="Weather List" Closable="false">        
+        <ChildContent>
+            <WeatherList @ref="tablePage" OnChange="TabChange"/>
+        </ChildContent>
+        <TabContextMenu>
+            <Menu>
+                <MenuItem @onclick="Favorite">Add Favorite</MenuItem>
+            </Menu>
+        </TabContextMenu>
     </TabPane>
     @foreach(var pane in panes)
     {
@@ -29,12 +38,13 @@
 </Tabs>
 
 @code {
-    private bool loading = false;
-    private Tabs tabs;    
     [Inject]
     public WeatherService WeatherService { get; set; }
+
+    private Tabs tabs;
     string activeKey { get; set; } = "1";
     private WeatherForecast selectedItem;
+    private TablePageComponentBase tablePage;
 
     public record Pane(string Title, string Content, string Key, WeatherForecast WeatherForecast, bool Closable = true);
 
@@ -42,12 +52,6 @@
 
     List<Pane> panes = new List<Pane>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        loading = true;
-        await WeatherService.GetWeathersAsync();
-        loading = false;
-    }
 
     void OnTabChange(string key) => Console.WriteLine($"tab change:{key}");
 
@@ -55,7 +59,7 @@
         var newkey = panes.Count + 1;
         activeKey = $"newTab{this.WeatherService.SelectedItem.Id}";
 
-        panes.Add(new Pane(this.WeatherService.SelectedItem.Id.ToString(), this.WeatherService.SelectedItem.Id.ToString(), activeKey, this.WeatherService.SelectedItem, true));
+        panes.Add(new Pane(this.WeatherService.SelectedItem.City.ToString(), this.WeatherService.SelectedItem.Id.ToString(), activeKey, this.WeatherService.SelectedItem, true));
         StateHasChanged();
     }
 
@@ -63,5 +67,24 @@
     {
         panes.Remove(pane);
         StateHasChanged();
+    }
+
+    async Task Favorite()
+    {
+        string menuName = "Weather List";
+        string key = $"updatable-{DateTime.Now.Ticks}";
+        var config = new MessageConfig()
+        {
+            Content = "Progress...",
+            Key = key
+        };
+
+        this.MessageService.Loading(config);
+        await Task.Delay(2000);
+
+        config.Content = $"added favorite menu : {menuName}";
+        config.Duration = 2;
+
+        await this.MessageService.Success(config);
     }
 }

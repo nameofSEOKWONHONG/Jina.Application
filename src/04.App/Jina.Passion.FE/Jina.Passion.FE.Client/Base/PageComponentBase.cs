@@ -15,7 +15,7 @@ namespace Jina.Passion.FE.Client.Base
         protected int PageSize { get; set; }
         protected int TotalPages { get; set; }
 
-        protected virtual async Task OnSearch<T>(QueryModel<T> query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
+        public virtual async Task OnSearch<T>(QueryModel<T> query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
         {
             if (callback.xIsEmpty()) return;
 
@@ -60,7 +60,7 @@ namespace Jina.Passion.FE.Client.Base
 
     public abstract partial class FormPageComponentBase : PageComponentBase
     {
-        protected virtual async Task OnSearch(Func<Task<IResultBase>> callback)
+        public virtual async Task OnSearch(Func<Task<IResultBase>> callback)
         {
             if (callback.xIsEmpty()) return;
 
@@ -83,7 +83,7 @@ namespace Jina.Passion.FE.Client.Base
 
         [Inject] protected NavigationManager NavigationManager { get; set; }
         [Inject] protected NotificationService NotificationService { get; set; }
-        [Inject] protected IJSRuntime JsRuntime { get; set; }
+        [Inject] protected IJSRuntime Js { get; set; }
         [Inject] protected IConfirmService ConfirmService { get; set; }
 
         [Parameter]
@@ -107,7 +107,7 @@ namespace Jina.Passion.FE.Client.Base
             }
 
             await this.OnRoleSetupAsync();
-            await this.OnBaseSetupAsync();
+            await this.OnSetupAsync();
             await this.OnLoadAsync();
         }
 
@@ -124,7 +124,7 @@ namespace Jina.Passion.FE.Client.Base
         /// 기초 설정
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnBaseSetupAsync()
+        protected virtual Task OnSetupAsync()
         {
             return Task.CompletedTask;
         }
@@ -178,17 +178,17 @@ namespace Jina.Passion.FE.Client.Base
 
         protected async Task InvokeVoidAsync(string command)
         {
-            await JsRuntime.InvokeVoidAsync(command);
+            await Js.InvokeVoidAsync(command);
         }
 
         protected async Task InvokeVoidAsync(string command, string args)
         {
-            await JsRuntime.InvokeVoidAsync(command, args);
+            await Js.InvokeVoidAsync(command, args);
         }
 
         protected async Task<T> InvokeAsync<T>(string command, string args)
         {
-            return await JsRuntime.InvokeAsync<T>(command, args);
+            return await Js.InvokeAsync<T>(command, args);
         }
 
         /// <summary>
