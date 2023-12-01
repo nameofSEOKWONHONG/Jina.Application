@@ -1,0 +1,180 @@
+﻿@using System.Text.Json
+@using Blazored.FluentValidation
+@using Jina.Domain.Example
+@using Jina.Passion.Client.Base
+@using Jina.Passion.Client.Base.Abstract
+@using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Pages.Weather.Services
+@using KakaoMapBlazor
+@using KakaoMapBlazor.Enums
+@using KakaoMapBlazor.Map
+@using KakaoMapBlazor.Marker
+@using KakaoMapBlazor.Models
+@using eXtensionSharp
+
+@inherits FormPageComponent<DlgOptions<WeatherForecast>, WeatherForecast>
+
+<PageContainer>
+    <Content>
+        <Form Model="@this.SelectedItem"
+              OnFinish="OnFinish"
+              OnFinishFailed="OnFinishFailed"              
+              LabelColSpan="4"
+              WrapperColSpan="16"
+              ValidateMode="FormValidateMode.Complex"
+              Size="@AntSizeLDSType.Small">
+              <FluentValidationValidator @ref="_fluentValidationValidator" />
+              <GridRow>
+                  <GridCol Span="12">
+                    <FormItem Label="@nameof(this.SelectedItem.Id)">
+                        <Input Value="this.SelectedItem.Id" ReadOnly />
+                     </FormItem>
+                  </GridCol>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.City)">
+                         <Input Value="this.SelectedItem.City" />
+                     </FormItem>
+                 </GridCol>
+              </GridRow>
+              <GridRow>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.Date)">
+                         <DatePicker TValue="DateOnly?" @bind-Value="this.SelectedItem.Date" Picker="@DatePickerType.Date" />
+                     </FormItem>
+                 </GridCol>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.TemperatureC)">
+                         <Input @bind-Value="this.SelectedItem.TemperatureC" />
+                     </FormItem>
+                 </GridCol>
+              </GridRow>
+             <GridRow>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.TemperatureF)">
+                         <Input Value="this.SelectedItem.TemperatureF" ReadOnly />
+                     </FormItem>
+                 </GridCol>
+                 <GridCol Span="12">
+                     <FormItem Label="@nameof(this.SelectedItem.Summary)">
+                         <Input @bind-Value="this.SelectedItem.Summary" />
+                     </FormItem>
+                 </GridCol>
+                 <GridCol Span="12">
+                 </GridCol>
+             </GridRow>
+              <FormItem WrapperColOffset="8" WrapperColSpan="16">
+                  <Button HtmlType="submit" >
+                      Submit
+                  </Button>
+              </FormItem>
+        </Form>
+    </Content>
+    <ChildContent>
+        <KakaoMapComponent
+            CreateOption="mapCreateOption"
+            OnMapCreated="OnMapCreated"
+            Style="width: 100%; height: 500px;">
+        </KakaoMapComponent>
+    </ChildContent>
+</PageContainer>
+
+ @code {
+    [Parameter]
+    public WeatherForecast SelectedItem { get; set; }
+
+    [Inject]
+    public Services.WeatherService WeatherService { get; set; }
+
+    private FluentValidationValidator _fluentValidationValidator;
+
+    IKakaoMap KakaoMap;
+    MapCreateOption mapCreateOption = new MapCreateOption(new LatLng(33.450701, 126.570667))
+        {
+            MapTypeId = MapType.RoadMap,
+            Level = 4,
+        };
+
+    protected override void OnInitialized()
+    {
+        if(this.Options.Param.xIsNotEmpty())
+        {
+            this.SelectedItem = this.Options.Param;
+        }
+        base.OnInitialized();
+    }
+
+    protected void OnMapCreated(IKakaoMap map)
+    {
+        KakaoMap = map;
+        KakaoMap.Click += async (s, e) =>
+        {
+            await this.Js.InvokeVoidAsync("console.log", "OnClick", e);
+        };
+        KakaoMap.Click += async (s, e) =>
+        {
+            var position = e.LatLng;
+            var marker = await KakaoMap.CreateMarker(new MarkerCreateOptionInMap
+                {
+                    Position = position,
+                });
+
+            marker.Click += async (s, _) =>
+            {
+                await Js.InvokeVoidAsync("console.log", "marker clicked");
+            };
+        };
+    }
+
+    public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
+    {
+        if (FeedbackRef is ConfirmRef confirmRef)
+        {
+            confirmRef.Config.OkButtonProps.Loading = true;
+            await confirmRef.UpdateConfigAsync();
+        }
+        else if (FeedbackRef is ModalRef modalRef)
+        {
+            modalRef.Config.ConfirmLoading = true;
+            await modalRef.UpdateConfigAsync();
+        }
+
+        await Task.Delay(1000);
+        // // only the input's value equals the initialized value, the OK button will close the confirm dialog box
+        if (this.SelectedItem.xIsEmpty())
+        {
+            args.Cancel = true;
+        }
+        else
+        {
+            // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
+            // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
+            await (FeedbackRef as IOkCancelRef<WeatherForecast>).OkAsync(this.SelectedItem);
+            // await base.OkCancelRefWithResult!.OnOk(this.SelectedItem);
+        }
+
+        await base.OnFeedbackOkAsync(args);
+    }
+
+
+    private void OnFinish(EditContext editContext)
+    {
+        //call save api
+        Console.WriteLine($"Success:{JsonSerializer.Serialize(SelectedItem)}");
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine($"Failed:{JsonSerializer.Serialize(SelectedItem)}");
+    }
+
+    /// <summary>
+    /// If you want <b>Dispose</b> to take effect every time it is closed in Modal, which created by ModalService,
+    /// set <b>ModalOptions.DestroyOnClose = true</b>
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected override void Dispose(bool disposing)
+    {
+        Console.WriteLine("Dispose");
+        base.Dispose(disposing);
+    }
+}

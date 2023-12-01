@@ -1,0 +1,190 @@
+﻿@using AntDesign.TableModels
+@using Jina.Domain.Example
+@using Jina.Domain.SharedKernel
+@using Jina.Domain.SharedKernel.Abstract
+@using Jina.Passion.Client.Base
+@using Jina.Passion.Client.Base.Abstract
+@using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Pages.Weather.Services
+@using eXtensionSharp
+
+@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>>
+
+<PageContainer>
+    <Content>
+        <div>
+            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form">
+                <Row Gutter="24">
+                    <GridCol Span="6" @key="nameof(context.Date)">
+                        <FormItem Label="@nameof(context.Date)">
+                            <DatePicker @bind-Value="@(context.Date)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.TemperatureC)">
+                        <FormItem Label="@nameof(context.TemperatureC)">
+                            <Input @bind-Value="@(context.TemperatureC)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.Summary)">
+                        <FormItem Label="@nameof(context.Summary)">
+                            <Input @bind-Value="@(context.Summary)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <Row>
+                    <GridCol Span="24" Style="text-align:right;">
+                        <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                        @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
+                    </GridCol>
+                </Row>
+            </Form>
+        </div>
+        <br/>
+        <div>
+            <GridRow Justify="end">
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="2">
+                    <Button OnClick="AddItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Add
+                    </Button>
+                    <Button OnClick="RemoveItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Remove
+                    </Button>
+                </GridCol>
+            </GridRow>
+        </div>
+        <Table @ref="table"
+               TItem="WeatherForecast"
+               DataSource="WeatherService.WeatherForecasts"
+               @bind-SelectedRows="selectedItems" 
+               Bordered=@true
+               Loading="Loading"
+               Title="Weather List"
+               Size="TableSize.Small"
+               Resizable
+               RowKey="m=>m.Id">
+            <Selection Key="@(context.Id.ToString())" />            
+             <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
+                <a @onclick='() => ItemClick(context)'>@context.Date</a>
+            </PropertyColumn>
+            <PropertyColumn Property="m => m.City" />
+            <PropertyColumn Property="m => m.TemperatureC" />
+            <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
+            <PropertyColumn Title="Summary" Property="m => m.Summary" />
+            <ActionColumn Title="Action">
+                 <Popconfirm Title="Sure to delete?"
+                             OnConfirm="()=> DeleteRowAsync(context.Id)"
+                             OkText="Yes"
+                             CancelText="No">
+                     <a>Delete</a>
+                 </Popconfirm>
+             </ActionColumn>
+        </Table>
+    </Content>
+
+    <ChildContent>
+    </ChildContent>
+</PageContainer>
+
+@code {
+    [Parameter] 
+    public EventCallback<string> OnChange { get; set; }
+
+    [Inject]
+    public Services.WeatherService WeatherService { get; set; }
+
+    private WeatherForecast searchValue { get; set; } = new();
+
+    private IEnumerable<WeatherForecast> selectedItems;
+    private Table<WeatherForecast> table;
+
+    protected override Task OnRoleSetupAsync()
+    {
+        Console.WriteLine("OnRoleSetupAsync");
+        return base.OnRoleSetupAsync();
+    }
+
+    protected override Task OnSetupAsync()
+    {
+        Console.WriteLine("OnSetupAsync");
+        return base.OnSetupAsync();
+    }
+
+    protected override async Task OnLoadAsync()
+    {
+        this.Loading = true;
+        await WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecast>());
+        await Task.Delay(500);
+        this.Loading = false;
+    }
+
+    private void ItemClick(WeatherForecast item)
+    {
+        WeatherService.SelectedItem = item;
+        if (OnChange.HasDelegate)
+        {
+            OnChange.InvokeAsync("Weather");
+        }
+    }
+
+    async Task DeleteRowAsync(int id)
+    {
+        var exist = this.WeatherService.WeatherForecasts.First(m => m.Id == id);
+        await WeatherService.RemoveAsync(exist);
+    }
+
+    async Task RemoveItemAsync()
+    {
+        if(this.selectedItems.xIsEmpty())
+        {
+            await MessageService.Warning("delete data is empty");
+        }        
+
+        await WeatherService.RemoveRangeAsync(this.selectedItems);
+
+        table.UnselectAll();
+    }
+
+    async Task AddItemAsync()
+    {
+        var options = new ModalOptions()
+            {
+                Maximizable = true,
+                Centered = true,
+                DefaultMaximized = true
+            };
+        // var options = new ConfirmOptions()
+        //     {
+        //         Width = "80%",
+        //         OnOk = e =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //         OnCancel = e =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //     };
+        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecast>, WeatherForecast>(options, new DlgOptions<WeatherForecast>()
+        {
+            Param = new WeatherForecast()
+        });
+        confirmd.OnOpen = () =>
+        {
+            return Task.CompletedTask;
+        };
+
+        confirmd.OnClose = () =>
+        {
+            return Task.CompletedTask;
+        };
+
+        confirmd.OnOk = result =>
+        {
+            //Console.WriteLine(result.xToJson());
+            return Task.CompletedTask;
+        };
+    }
+}
