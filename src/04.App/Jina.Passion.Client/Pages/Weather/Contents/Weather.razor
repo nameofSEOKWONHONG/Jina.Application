@@ -4,7 +4,7 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
-@using Jina.Passion.Client.Pages.Weather.Services
+@using Jina.Passion.Client.Pages.Weather.ViewModelService
 @using KakaoMapBlazor
 @using KakaoMapBlazor.Enums
 @using KakaoMapBlazor.Map
@@ -83,7 +83,7 @@
     public WeatherForecast SelectedItem { get; set; }
 
     [Inject]
-    public Services.WeatherService WeatherService { get; set; }
+    public WeatherViewModel ViewModel { get; set; }
 
     private FluentValidationValidator _fluentValidationValidator;
 
@@ -94,13 +94,25 @@
             Level = 4,
         };
 
-    protected override void OnInitialized()
+    protected override Task OnDlgParameterSetupAsync()
     {
-        if(this.Options.Param.xIsNotEmpty())
-        {
-            this.SelectedItem = this.Options.Param;
-        }
-        base.OnInitialized();
+        this.SelectedItem = this.Options.Param;
+        return base.OnDlgParameterSetupAsync();
+    }
+
+    protected override Task OnRoleSetupAsync()
+    {
+        return base.OnRoleSetupAsync();
+    }
+
+    protected override Task OnSetupAsync()
+    {
+        return base.OnSetupAsync();
+    }
+
+    protected override Task OnLoadAsync()
+    {
+        return base.OnLoadAsync();
     }
 
     protected void OnMapCreated(IKakaoMap map)

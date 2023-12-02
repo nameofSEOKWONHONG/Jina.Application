@@ -190,7 +190,7 @@ namespace Jina.Passion.Client.Client.Base
 
         [Inject] protected NavigationManager NavigationManager { get; set; }
         [Inject] protected NotificationService NotificationService { get; set; }
-        [Inject] protected IJSRuntime Js { get; set; }
+
         [Inject] protected IConfirmService ConfirmService { get; set; }
 
         [Parameter]
@@ -213,13 +213,26 @@ namespace Jina.Passion.Client.Client.Base
                 BreadcrumbItems.Add(link);
             }
 
+            if (this.Options.xIsNotEmpty())
+            {
+                await this.OnDlgParameterSetupAsync();
+            }
             await this.OnRoleSetupAsync();
             await this.OnSetupAsync();
             await this.OnLoadAsync();
         }
 
         /// <summary>
-        /// 권한 설정
+        /// 페이지 다이얼로그 파라메터 유무를 체크하여 실행합니다. 파라메터에 대한 할당을 구현합니다.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task OnDlgParameterSetupAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 권한 설정을 구현합니다.
         /// </summary>
         /// <returns></returns>
         protected virtual Task OnRoleSetupAsync()
@@ -228,7 +241,7 @@ namespace Jina.Passion.Client.Client.Base
         }
 
         /// <summary>
-        /// 기초 설정
+        /// 페이지에 필요한 기초 데이터를 설정을 구현합니다.
         /// </summary>
         /// <returns></returns>
         protected virtual Task OnSetupAsync()
@@ -237,7 +250,7 @@ namespace Jina.Passion.Client.Client.Base
         }
 
         /// <summary>
-        /// 시작 데이터 로드
+        /// 페이지 초기에 필요한 조회 로직을 구현합니다.
         /// </summary>
         /// <returns></returns>
         protected virtual Task OnLoadAsync()

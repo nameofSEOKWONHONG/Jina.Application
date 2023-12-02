@@ -5,7 +5,7 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
-@using Jina.Passion.Client.Pages.Weather.Services
+@using Jina.Passion.Client.Pages.Weather.ViewModelService
 
 <Tabs Type="@TabType.EditableCard" HideAdd
       @ref="tabs"
@@ -40,7 +40,7 @@
 
 @code {
     [Inject]
-    public Services.WeatherService WeatherService { get; set; }
+    public WeatherViewModel ViewModel { get; set; }
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
@@ -58,9 +58,9 @@
 
     void TabChange(string key) {
         var newkey = panes.Count + 1;
-        activeKey = $"newTab{this.WeatherService.SelectedItem.Id}";
+        activeKey = $"newTab{this.ViewModel.SelectedItem.Id}";
 
-        panes.Add(new Pane(this.WeatherService.SelectedItem.City.ToString(), this.WeatherService.SelectedItem.Id.ToString(), activeKey, this.WeatherService.SelectedItem, true));
+        panes.Add(new Pane(this.ViewModel.SelectedItem.City.ToString(), this.ViewModel.SelectedItem.Id.ToString(), activeKey, this.ViewModel.SelectedItem, true));
         StateHasChanged();
     }
 

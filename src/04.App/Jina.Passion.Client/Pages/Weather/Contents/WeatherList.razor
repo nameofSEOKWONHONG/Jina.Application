@@ -5,7 +5,7 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
-@using Jina.Passion.Client.Pages.Weather.Services
+@using Jina.Passion.Client.Pages.Weather.ViewModelService
 @using eXtensionSharp
 
 @inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>>
@@ -57,15 +57,15 @@
         </div>
         <Table @ref="table"
                TItem="WeatherForecast"
-               DataSource="WeatherService.WeatherForecasts"
-               @bind-SelectedRows="selectedItems" 
+               DataSource="ViewModel.WeatherForecasts"
+               @bind-SelectedRows="ViewModel.SelectedItems"
                Bordered=@true
                Loading="Loading"
                Title="Weather List"
                Size="TableSize.Small"
                Resizable
                RowKey="m=>m.Id">
-            <Selection Key="@(context.Id.ToString())" />            
+            <Selection Key="@(context.Id.ToString())" /> 
              <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
                 <a @onclick='() => ItemClick(context)'>@context.Date</a>
             </PropertyColumn>
@@ -93,12 +93,16 @@
     public EventCallback<string> OnChange { get; set; }
 
     [Inject]
-    public Services.WeatherService WeatherService { get; set; }
+    public WeatherViewModel ViewModel { get; set; }
 
     private WeatherForecast searchValue { get; set; } = new();
 
-    private IEnumerable<WeatherForecast> selectedItems;
     private Table<WeatherForecast> table;
+
+    protected override Task OnDlgParameterSetupAsync()
+    {
+        return base.OnDlgParameterSetupAsync();
+    }
 
     protected override Task OnRoleSetupAsync()
     {
@@ -115,14 +119,14 @@
     protected override async Task OnLoadAsync()
     {
         this.Loading = true;
-        await WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecast>());
+        await ViewModel.InitializeAsync();
         await Task.Delay(500);
         this.Loading = false;
     }
 
     private void ItemClick(WeatherForecast item)
     {
-        WeatherService.SelectedItem = item;
+        ViewModel.SelectedItem = item;
         if (OnChange.HasDelegate)
         {
             OnChange.InvokeAsync("Weather");
@@ -131,18 +135,18 @@
 
     async Task DeleteRowAsync(int id)
     {
-        var exist = this.WeatherService.WeatherForecasts.First(m => m.Id == id);
-        await WeatherService.RemoveAsync(exist);
+        this.ViewModel.SelectedItem = this.ViewModel.WeatherForecasts.First(m => m.Id == id);
+        await ViewModel.RemoveAsync();
     }
 
     async Task RemoveItemAsync()
     {
-        if(this.selectedItems.xIsEmpty())
+        if(this.ViewModel.SelectedItems.xIsEmpty())
         {
             await MessageService.Warning("delete data is empty");
         }        
 
-        await WeatherService.RemoveRangeAsync(this.selectedItems);
+        await ViewModel.RemoveRangeAsync();
 
         table.UnselectAll();
     }
