@@ -1,9 +1,10 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
+using Jina.Passion.Client.Pages.Weather.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace Jina.Passion.Client.Pages.Weather.ViewModelService
+namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
     public class WeatherViewModel
     {

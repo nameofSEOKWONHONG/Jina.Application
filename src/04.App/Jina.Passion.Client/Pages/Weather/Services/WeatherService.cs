@@ -4,7 +4,7 @@ using Jina.Domain.SharedKernel.Abstract;
 using Jina.Passion.Client.Base;
 using System.Net.Http.Json;
 
-namespace Jina.Passion.Client.Pages.Weather.ViewModelService
+namespace Jina.Passion.Client.Pages.Weather.Services
 {
     public class WeatherService : FeServiceBase
     {
@@ -40,7 +40,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModelService
 
         public async Task<WeatherForecast> GetWeatherAsync(int id)
         {
-            var result = await this.Client.GetFromJsonAsync<WeatherForecast>("get");
+            var result = await Client.GetFromJsonAsync<WeatherForecast>("get");
             return result;
         }
 

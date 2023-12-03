@@ -1,11 +1,15 @@
 ﻿@using AntDesign.TableModels
+@using Blazorme
 @using Jina.Domain.Example
 @using Jina.Domain.SharedKernel
 @using Jina.Domain.SharedKernel.Abstract
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
-@using Jina.Passion.Client.Pages.Weather.ViewModelService
+@using Jina.Passion.Client.Pages.Weather.ViewModels
+@using QuestPDF.Fluent
+@using QuestPDF.Helpers
+@using QuestPDF.Infrastructure
 @using eXtensionSharp
 
 @inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>>
@@ -74,6 +78,9 @@
             <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
             <PropertyColumn Title="Summary" Property="m => m.Summary" />
             <ActionColumn Title="Action">
+                <Space>
+                    <SpaceItem><Button Danger OnClick="()=>Pdf(context.Id)">Delete</Button></SpaceItem>
+                 </Space>
                  <Popconfirm Title="Sure to delete?"
                              OnConfirm="()=> DeleteRowAsync(context.Id)"
                              OkText="Yes"
@@ -88,12 +95,17 @@
     </ChildContent>
 </PageContainer>
 
-@code {
+ @code {
     [Parameter] 
     public EventCallback<string> OnChange { get; set; }
 
     [Inject]
     public WeatherViewModel ViewModel { get; set; }
+
+    [Inject]
+    public WeatherPdfDocument WeatherPdfDocument { get; set; }
+
+    [Inject] IStreamSaver StreamSaver { get; set; }
 
     private WeatherForecast searchValue { get; set; } = new();
 
@@ -190,5 +202,47 @@
             //Console.WriteLine(result.xToJson());
             return Task.CompletedTask;
         };
+    }
+
+    private async Task Pdf(int id)
+    {
+        using var ms = new MemoryStream();
+        Document.Create(container =>
+                {
+                    container.Page(page =>
+                    {
+                        page.Size(PageSizes.A4);
+                        page.Margin(2, Unit.Centimetre);
+                        page.PageColor(Colors.White);
+                        page.DefaultTextStyle(x => x.FontSize(20));
+
+                        page.Header()
+                            .Text("Hello PDF!")
+                            .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
+
+                        page.Content()
+                            .PaddingVertical(1, Unit.Centimetre)
+                            .Column(x =>
+                            {
+                                x.Spacing(20);
+
+                                x.Item().Text(Placeholders.LoremIpsum());
+                                x.Item().Image(Placeholders.Image(200, 100));
+                            });
+
+                        page.Footer()
+                            .AlignCenter()
+                            .Text(x =>
+                            {
+                                x.Span("Page ");
+                                x.CurrentPageNumber();
+                            });
+                    });
+                })
+                .GeneratePdf(ms);
+        ms.Position = 0;
+
+        await using var output = await StreamSaver.CreateWritableFileStreamAsync("example.pdf");
+        await ms.CopyToAsync(output);
     }
 }

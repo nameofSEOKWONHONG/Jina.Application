@@ -1,4 +1,5 @@
 using AntDesign.ProLayout;
+using Jina.Passion.Client.Pages.Weather.Services;
 using Jina.Passion.Client.Pages.Weather.ViewModelService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
