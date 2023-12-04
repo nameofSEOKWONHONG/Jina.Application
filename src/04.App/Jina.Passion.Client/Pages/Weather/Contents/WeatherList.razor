@@ -1,5 +1,4 @@
 ﻿@using AntDesign.TableModels
-@using Blazorme
 @using Jina.Domain.Example
 @using Jina.Domain.SharedKernel
 @using Jina.Domain.SharedKernel.Abstract
@@ -7,6 +6,7 @@
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
 @using Jina.Passion.Client.Pages.Weather.ViewModels
+@using QuestPDF.Drawing
 @using QuestPDF.Fluent
 @using QuestPDF.Helpers
 @using QuestPDF.Infrastructure
@@ -96,16 +96,11 @@
 </PageContainer>
 
  @code {
-    [Parameter] 
-    public EventCallback<string> OnChange { get; set; }
+        [Parameter] 
+        public EventCallback<string> OnChange { get; set; }
 
-    [Inject]
-    public WeatherViewModel ViewModel { get; set; }
-
-    [Inject]
-    public WeatherPdfDocument WeatherPdfDocument { get; set; }
-
-    [Inject] IStreamSaver StreamSaver { get; set; }
+        [Inject]
+        public WeatherViewModel ViewModel { get; set; }
 
     private WeatherForecast searchValue { get; set; } = new();
 
@@ -206,10 +201,14 @@
 
     private async Task Pdf(int id)
     {
+        var exist = ViewModel.WeatherForecasts.FirstOrDefault(m => m.Id == id);
+        if (exist.xIsEmpty()) return;
+
         using var ms = new MemoryStream();
+        QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
         Document.Create(container =>
-                {
-                    container.Page(page =>
+            {              
+                container.Page(page =>
                     {
                         page.Size(PageSizes.A4);
                         page.Margin(2, Unit.Centimetre);
@@ -226,8 +225,12 @@
                             {
                                 x.Spacing(20);
 
-                                x.Item().Text(Placeholders.LoremIpsum());
-                                x.Item().Image(Placeholders.Image(200, 100));
+                                x.Item().Text($"{nameof(exist.Id)} : {exist.Id}");
+                                // x.Item().Text($"{nameof(exist.City)} : {exist.City}");
+                                x.Item().Text($"{nameof(exist.Date)} : {exist.Date}");
+                                x.Item().Text($"{nameof(exist.TemperatureC)} : {exist.TemperatureC}");
+                                x.Item().Text($"{nameof(exist.TemperatureF)} : {exist.TemperatureF}");
+                                x.Item().Text($"{nameof(exist.Summary)} : {exist.Summary}");
                             });
 
                         page.Footer()
@@ -238,11 +241,17 @@
                                 x.CurrentPageNumber();
                             });
                     });
-                })
-                .GeneratePdf(ms);
+            })
+            .GeneratePdf(ms);
         ms.Position = 0;
+        // using var streamRef = new DotNetStreamReference(stream: ms);
+        // await Js.InvokeVoidAsync("downloadFileFromStream", "example.pdf", streamRef);
 
-        await using var output = await StreamSaver.CreateWritableFileStreamAsync("example.pdf");
-        await ms.CopyToAsync(output);
+        await Js.InvokeVoidAsync("download", new
+        {
+            mimeType = "pdf",
+            byteArray = Convert.ToBase64String(ms.ToArray()),
+            fileName = "example.pdf"
+        });
     }
 }

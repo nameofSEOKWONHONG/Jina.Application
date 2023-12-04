@@ -1,8 +1,11 @@
 using AntDesign.ProLayout;
+using Blazorme;
 using Jina.Passion.Client.Pages.Weather.Services;
-using Jina.Passion.Client.Pages.Weather.ViewModelService;
+using Jina.Passion.Client.Pages.Weather.ViewModels;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
+using QuestPDF.Infrastructure;
 
 namespace Jina.Passion.Client
 {
@@ -38,6 +41,9 @@ namespace Jina.Passion.Client
             builder.Services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
             builder.Services.AddScoped<WeatherService>();
             builder.Services.AddScoped<WeatherViewModel>();
+            builder.Services.AddStreamSaver();
+
+            QuestPDF.Settings.License = LicenseType.Community;
 
             await builder.Build().RunAsync();
         }

@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <noscript>Out-of-the-box mid-stage front/design solution!</noscript>
+    <!--<noscript>Out-of-the-box mid-stage front/design solution!</noscript>-->
     <div id="app">
         <style>
             html,
@@ -198,6 +198,35 @@
         </div>
     </div>
     <script type="text/javascript" src="https://unpkg.com/@antv/g2plot@2.4.17/dist/g2plot.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            console.log("start");
+        }
+        window.download = (options) => {
+            var fileUrl = "data:" + options.mimeType + ";base64," + options.byteArray;
+            fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    var link = window.document.createElement("a");
+                    link.href = window.URL.createObjectURL(blob, { type: options.mimeType });
+                    link.download = options.fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+        }
+        window.clearCache = () => {
+            sessionStorage.clear();
+            localStorage.clear();
+            caches.keys().then(keys => {
+                keys.forEach(key => caches.delete(key))
+            });
+            indexedDB.databases().then(dbs => {
+                dbs.forEach(db => indexedDB.deleteDatabase(db.name))
+            });
+            location.reload();
+        }
+    </script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
