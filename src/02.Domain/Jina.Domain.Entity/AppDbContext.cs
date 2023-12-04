@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Entity.Application;
 using Jina.Domain.Entity.Common;
+using Jina.Domain.Entity.Example;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -94,4 +95,6 @@ public class AppDbContext : AuditableContext
     public DbSet<Code> Codes { get; set; }
     public DbSet<CodeGroup> CodeGroups { get; set; }
     public DbSet<Phone> Phones { get; set; }
+
+    public DbSet<WeatherForecast> WeatherForecasts { get; set; }
 }

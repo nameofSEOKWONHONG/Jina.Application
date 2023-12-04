@@ -1,4 +1,6 @@
 using Jina.Domain.SharedKernel.Abstract;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Jina.Domain.SharedKernel;
 
@@ -21,9 +23,24 @@ public class PaginatedResult<T> : IPaginatedResult
         TotalCount = count;
     }
 
-    public static PaginatedResult<T> Failure(List<string> messages)
+    public static PaginatedResult<T> Fail(string message)
+    {
+        return Fail(new List<string>() { message });
+    }
+
+    public static PaginatedResult<T> Fail(List<string> messages)
     {
         return new PaginatedResult<T>(false, default, messages);
+    }
+
+    public static Task<PaginatedResult<T>> FailAsync(string message)
+    {
+        return FailAsync(new List<string>() { message });
+    }
+
+    public static Task<PaginatedResult<T>> FailAsync(List<string> messages)
+    {
+        return Task.FromResult(new PaginatedResult<T>(false, default, messages));
     }
 
     public static PaginatedResult<T> Success(List<T> data, int totalCount, int currentPage, int pageSize)

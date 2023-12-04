@@ -1,4 +1,5 @@
-﻿using Jina.Session.Abstract;
+﻿using eXtensionSharp;
+using Jina.Session.Abstract;
 
 namespace Jina.Domain.Infra.Session
 {
@@ -9,7 +10,7 @@ namespace Jina.Domain.Infra.Session
             get
             {
                 var utcDateTime = DateTime.UtcNow;
-                var tenantTimeZone = TimeZoneInfo.FindSystemTimeZoneById(_user.TimeZone);
+                var tenantTimeZone = TimeZoneInfo.FindSystemTimeZoneById(_user.TimeZone.xValue("Korea Standard Time"));
                 return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, tenantTimeZone);
             }
         }

@@ -6,10 +6,6 @@
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
 @using Jina.Passion.Client.Pages.Weather.ViewModels
-@using QuestPDF.Drawing
-@using QuestPDF.Fluent
-@using QuestPDF.Helpers
-@using QuestPDF.Infrastructure
 @using eXtensionSharp
 
 @inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>>
@@ -78,9 +74,9 @@
             <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
             <PropertyColumn Title="Summary" Property="m => m.Summary" />
             <ActionColumn Title="Action">
-                <Space>
+@*                 <Space>
                     <SpaceItem><Button Danger OnClick="()=>Pdf(context.Id)">Delete</Button></SpaceItem>
-                 </Space>
+                 </Space> *@
                  <Popconfirm Title="Sure to delete?"
                              OnConfirm="()=> DeleteRowAsync(context.Id)"
                              OkText="Yes"
@@ -199,59 +195,59 @@
         };
     }
 
-    private async Task Pdf(int id)
-    {
-        var exist = ViewModel.WeatherForecasts.FirstOrDefault(m => m.Id == id);
-        if (exist.xIsEmpty()) return;
+    // private async Task Pdf(int id)
+    // {
+        // var exist = ViewModel.WeatherForecasts.FirstOrDefault(m => m.Id == id);
+        // if (exist.xIsEmpty()) return;
 
-        using var ms = new MemoryStream();
-        QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
-        Document.Create(container =>
-            {              
-                container.Page(page =>
-                    {
-                        page.Size(PageSizes.A4);
-                        page.Margin(2, Unit.Centimetre);
-                        page.PageColor(Colors.White);
-                        page.DefaultTextStyle(x => x.FontSize(20));
+        // using var ms = new MemoryStream();
+        // QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
+        // Document.Create(container =>
+        //     {              
+        //         container.Page(page =>
+        //             {
+        //                 page.Size(PageSizes.A4);
+        //                 page.Margin(2, Unit.Centimetre);
+        //                 page.PageColor(Colors.White);
+        //                 page.DefaultTextStyle(x => x.FontSize(20));
 
-                        page.Header()
-                            .Text("Hello PDF!")
-                            .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
+        //                 page.Header()
+        //                     .Text("Hello PDF!")
+        //                     .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
 
-                        page.Content()
-                            .PaddingVertical(1, Unit.Centimetre)
-                            .Column(x =>
-                            {
-                                x.Spacing(20);
+        //                 page.Content()
+        //                     .PaddingVertical(1, Unit.Centimetre)
+        //                     .Column(x =>
+        //                     {
+        //                         x.Spacing(20);
 
-                                x.Item().Text($"{nameof(exist.Id)} : {exist.Id}");
-                                // x.Item().Text($"{nameof(exist.City)} : {exist.City}");
-                                x.Item().Text($"{nameof(exist.Date)} : {exist.Date}");
-                                x.Item().Text($"{nameof(exist.TemperatureC)} : {exist.TemperatureC}");
-                                x.Item().Text($"{nameof(exist.TemperatureF)} : {exist.TemperatureF}");
-                                x.Item().Text($"{nameof(exist.Summary)} : {exist.Summary}");
-                            });
+        //                         x.Item().Text($"{nameof(exist.Id)} : {exist.Id}");
+        //                         // x.Item().Text($"{nameof(exist.City)} : {exist.City}");
+        //                         x.Item().Text($"{nameof(exist.Date)} : {exist.Date}");
+        //                         x.Item().Text($"{nameof(exist.TemperatureC)} : {exist.TemperatureC}");
+        //                         x.Item().Text($"{nameof(exist.TemperatureF)} : {exist.TemperatureF}");
+        //                         x.Item().Text($"{nameof(exist.Summary)} : {exist.Summary}");
+        //                     });
 
-                        page.Footer()
-                            .AlignCenter()
-                            .Text(x =>
-                            {
-                                x.Span("Page ");
-                                x.CurrentPageNumber();
-                            });
-                    });
-            })
-            .GeneratePdf(ms);
-        ms.Position = 0;
-        // using var streamRef = new DotNetStreamReference(stream: ms);
-        // await Js.InvokeVoidAsync("downloadFileFromStream", "example.pdf", streamRef);
+        //                 page.Footer()
+        //                     .AlignCenter()
+        //                     .Text(x =>
+        //                     {
+        //                         x.Span("Page ");
+        //                         x.CurrentPageNumber();
+        //                     });
+        //             });
+        //     })
+        //     .GeneratePdf(ms);
+        // ms.Position = 0;
+        // // using var streamRef = new DotNetStreamReference(stream: ms);
+        // // await Js.InvokeVoidAsync("downloadFileFromStream", "example.pdf", streamRef);
 
-        await Js.InvokeVoidAsync("download", new
-        {
-            mimeType = "pdf",
-            byteArray = Convert.ToBase64String(ms.ToArray()),
-            fileName = "example.pdf"
-        });
-    }
+        // await Js.InvokeVoidAsync("download", new
+        // {
+        //     mimeType = "pdf",
+        //     byteArray = Convert.ToBase64String(ms.ToArray()),
+        //     fileName = "example.pdf"
+        // });
+    // }
 }

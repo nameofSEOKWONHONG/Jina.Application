@@ -26,6 +26,14 @@ namespace Jina.Domain.Infra.Session
 
         public SessionCurrentUser(IHttpContextAccessor accessor)
         {
+#if DEBUG
+            TenantId = "00000";
+            TimeZone = string.Empty;
+            UserId = "test";
+            UserName = "test";
+            RoleName = "test";
+            Claims = null;
+#else
             var user = accessor.HttpContext.User;
             TenantId = user.FindFirst(ApplicationClaimTypeConst.TenantId).Value;
             TimeZone = user.FindFirst(ApplicationClaimTypeConst.TimeZone)?.Value;
@@ -33,6 +41,7 @@ namespace Jina.Domain.Infra.Session
             UserName = user.FindFirst(ClaimTypes.Name)?.Value;
             RoleName = user.FindFirst(ClaimTypes.Role)?.Value;
             Claims = user.Claims.AsEnumerable().Select(item => new KeyValuePair<string, string>(item.Type, item.Value)).ToList();
+#endif
         }
     }
 }

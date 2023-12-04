@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetRefreshTokenService : DomainServiceImpl<GetRefreshTokenService, User, string>, IGetRefreshTokenService
+    public class GetRefreshTokenService : EfServiceImpl<GetRefreshTokenService, User, string>, IGetRefreshTokenService
     {
         public GetRefreshTokenService(AppDbContext db) : base(db, null)
         {

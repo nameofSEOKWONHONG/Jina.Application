@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Infra.Base
 {
-    public abstract class DomainServiceImpl<TSelf, TRequest, TResult> : ServiceImplBase<TSelf, TRequest, TResult>
+    public abstract class EfServiceImpl<TSelf, TRequest, TResult> : ServiceImplBase<TSelf, TRequest, TResult>
     {
         protected AppDbContext DbContext;
         protected ISessionContext SessionContext;
 
-        protected DomainServiceImpl(AppDbContext db, ISessionContext context)
+        protected EfServiceImpl(AppDbContext db, ISessionContext context)
         {
             this.DbContext = db;
             this.SessionContext = context;

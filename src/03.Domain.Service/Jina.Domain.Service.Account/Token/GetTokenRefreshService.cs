@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetTokenRefreshService : DomainServiceImpl<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
+    public class GetTokenRefreshService : EfServiceImpl<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
     {
         private readonly IGetPrincipalFromExpiredTokenService _getPrincipalFromExpiredTokenService;
         private readonly IGetSigningCredentialsService _getSigningCredentialsService;

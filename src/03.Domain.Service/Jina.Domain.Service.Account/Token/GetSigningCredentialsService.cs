@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetSigningCredentialsService : DomainServiceImpl<GetSigningCredentialsService, bool, SigningCredentials>, IGetSigningCredentialsService
+    public class GetSigningCredentialsService : EfServiceImpl<GetSigningCredentialsService, bool, SigningCredentials>, IGetSigningCredentialsService
     {
         private readonly IConfiguration _configuration;
 

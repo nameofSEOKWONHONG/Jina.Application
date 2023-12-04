@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Jina.Domain.Service.Account.Token;
 
 public class GetTokenService
-    : DomainServiceImpl<GetTokenService, TokenRequest, IResultBase<TokenResponse>>
+    : EfServiceImpl<GetTokenService, TokenRequest, IResultBase<TokenResponse>>
         , IGetTokenService
 {
     private readonly IPasswordHasher<User> _passwordHasher;

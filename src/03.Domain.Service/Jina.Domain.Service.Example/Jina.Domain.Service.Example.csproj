@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eXtensionSharp\src\eXtensionSharp.csproj" />
+    <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
+    <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
+    <ProjectReference Include="..\..\02.Domain\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
+    <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Infra.csproj" />
+    <ProjectReference Include="..\..\02.Domain\Jina.Domain\Jina.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

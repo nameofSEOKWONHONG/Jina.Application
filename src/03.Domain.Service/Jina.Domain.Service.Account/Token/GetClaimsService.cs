@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetClaimsService : DomainServiceImpl<GetClaimsService, User, IEnumerable<Claim>>, IGetClaimsService
+    public class GetClaimsService : EfServiceImpl<GetClaimsService, User, IEnumerable<Claim>>, IGetClaimsService
     {
         public GetClaimsService(AppDbContext db) : base(db, null)
         {

@@ -20,7 +20,7 @@ namespace Jina.Domain.Service.Account.Token
     {
     }
 
-    public class GetPrincipalFromExpiredTokenService : DomainServiceImpl<GetPrincipalFromExpiredTokenService, string, ClaimsPrincipal>, IGetPrincipalFromExpiredTokenService
+    public class GetPrincipalFromExpiredTokenService : EfServiceImpl<GetPrincipalFromExpiredTokenService, string, ClaimsPrincipal>, IGetPrincipalFromExpiredTokenService
     {
         private readonly IConfiguration _configuration;
 

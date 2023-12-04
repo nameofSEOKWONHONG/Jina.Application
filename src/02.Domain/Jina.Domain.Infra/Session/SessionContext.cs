@@ -18,8 +18,11 @@ namespace Jina.Domain.Infra.Session
         public SessionContext(ISessionCurrentUser user
             , ISessionDateTime time)
         {
+#if DEBUG
+            TenantId = "00000";
             CurrentUser = user;
             CurrentTime = time;
+#endif
         }
     }
 }

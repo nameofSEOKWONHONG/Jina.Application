@@ -1,10 +1,10 @@
 using eXtensionSharp;
 using Hangfire;
-using Jina.Domain.Kernel;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Infra.Const;
 using Jina.Domain.Infra.Session;
+using Jina.Domain.SharedKernel;
 using Jina.Injection;
 using Jina.Lang;
 using Jina.Lang.Abstract;
