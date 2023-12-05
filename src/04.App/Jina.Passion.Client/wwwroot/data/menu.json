@@ -46,25 +46,25 @@
     ]
   },
   {
-    "path": "/form",
-    "name": "Form page",
-    "key": "form",
-    "icon": "form",
+    "path": "/account",
+    "name": "Account page",
+    "key": "account",
+    "icon": "account",
     "children": [
       {
-        "path": "/form/basic-form",
-        "name": "Basic Form",
-        "key": "form.basic-form"
+        "path": "/account/index",
+        "name": "Account Form",
+        "key": "account.index"
       },
       {
-        "path": "/form/step-form",
+        "path": "/account/step-form",
         "name": "Step Form",
-        "key": "form.step-form"
+        "key": "account.step-form"
       },
       {
-        "path": "/form/advanced-form",
+        "path": "/account/advanced-form",
         "name": "Advanced Form",
-        "key": "form.advanced-form"
+        "key": "account.advanced-form"
       }
     ]
   }

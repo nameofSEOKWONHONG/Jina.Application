@@ -8,6 +8,11 @@ namespace Jina.Passion.Client.Base
     public abstract class FormPageComponent<TOption, TResult> : PageComponentBase<TOption, TResult>
         where TOption : DlgOptionsBase
     {
+        protected override async Task OnLoadAsync()
+        {
+            await OnSearch(null);
+        }
+
         public virtual async Task OnSearch(Func<Task<IResultBase>> callback)
         {
             if (callback.xIsEmpty()) return;

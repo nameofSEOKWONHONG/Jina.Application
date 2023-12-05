@@ -12,7 +12,7 @@
 @using KakaoMapBlazor.Models
 @using eXtensionSharp
 
-@inherits FormPageComponent<DlgOptions<WeatherForecast>, WeatherForecast>
+@inherits FormPageComponent<DlgOptions<WeatherForecastDto>, WeatherForecastDto>
 
 <PageContainer>
     <Content>
@@ -39,7 +39,7 @@
               <GridRow>
                  <GridCol Span="12">
                      <FormItem Label="@nameof(this.SelectedItem.Date)">
-                         <DatePicker TValue="DateOnly?" @bind-Value="this.SelectedItem.Date" Picker="@DatePickerType.Date" />
+                         <DatePicker TValue="DateTime?" @bind-Value="this.SelectedItem.Date" Picker="@DatePickerType.Date" />
                      </FormItem>
                  </GridCol>
                  <GridCol Span="12">
@@ -80,7 +80,7 @@
 
  @code {
     [Parameter]
-    public WeatherForecast SelectedItem { get; set; }
+    public WeatherForecastDto SelectedItem { get; set; }
 
     [Inject]
     public WeatherViewModel ViewModel { get; set; }
@@ -100,9 +100,9 @@
         return base.OnDlgParameterSetupAsync();
     }
 
-    protected override Task OnRoleSetupAsync()
+    protected override Task OnRoleAsync()
     {
-        return base.OnRoleSetupAsync();
+        return base.OnRoleAsync();
     }
 
     protected override Task OnSetupAsync()
@@ -160,7 +160,7 @@
         {
             // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
             // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
-            await (FeedbackRef as IOkCancelRef<WeatherForecast>).OkAsync(this.SelectedItem);
+            await (FeedbackRef as IOkCancelRef<WeatherForecastDto>).OkAsync(this.SelectedItem);
             // await base.OkCancelRefWithResult!.OnOk(this.SelectedItem);
         }
 

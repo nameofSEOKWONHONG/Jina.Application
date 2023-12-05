@@ -7,6 +7,9 @@ using Microsoft.JSInterop;
 
 namespace Jina.Passion.Client.Client.Base
 {
+    /// <summary>
+    /// 일반 페이지
+    /// </summary>
     public abstract class PageComponentBase : ComponentBase
     {
         protected CurrentRole CurrentRole { get; }
@@ -40,7 +43,7 @@ namespace Jina.Passion.Client.Client.Base
                 BreadcrumbItems.Add(link);
             }
 
-            await this.OnRoleSetupAsync();
+            await this.OnRoleAsync();
             await this.OnSetupAsync();
             await this.OnLoadAsync();
         }
@@ -49,7 +52,7 @@ namespace Jina.Passion.Client.Client.Base
         /// 권한 설정
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnRoleSetupAsync()
+        protected virtual Task OnRoleAsync()
         {
             return Task.CompletedTask;
         }
@@ -180,6 +183,11 @@ namespace Jina.Passion.Client.Client.Base
         }
     }
 
+    /// <summary>
+    /// 모달 지원 페이지
+    /// </summary>
+    /// <typeparam name="TOption"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
     public abstract class PageComponentBase<TOption, TResult> : FeedbackComponent<TOption, TResult>
     {
         protected CurrentRole CurrentRole { get; }
@@ -217,7 +225,7 @@ namespace Jina.Passion.Client.Client.Base
             {
                 await this.OnDlgParameterSetupAsync();
             }
-            await this.OnRoleSetupAsync();
+            await this.OnRoleAsync();
             await this.OnSetupAsync();
             await this.OnLoadAsync();
         }
@@ -235,7 +243,7 @@ namespace Jina.Passion.Client.Client.Base
         /// 권한 설정을 구현합니다.
         /// </summary>
         /// <returns></returns>
-        protected virtual Task OnRoleSetupAsync()
+        protected virtual Task OnRoleAsync()
         {
             return Task.CompletedTask;
         }
@@ -250,7 +258,8 @@ namespace Jina.Passion.Client.Client.Base
         }
 
         /// <summary>
-        /// 페이지 초기에 필요한 조회 로직을 구현합니다.
+        /// 페이지 초기에 필요한 부수 로직을 구현합니다.
+        /// 특수한 경우에만 재정의 합니다. 일반적으로는 호출과 동시에 OnSearch를 호출합니다.
         /// </summary>
         /// <returns></returns>
         protected virtual Task OnLoadAsync()

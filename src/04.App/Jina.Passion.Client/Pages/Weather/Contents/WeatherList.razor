@@ -8,7 +8,7 @@
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>>
+@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecastDto>>
 
 <PageContainer>
     <Content>
@@ -56,8 +56,8 @@
             </GridRow>
         </div>
         <Table @ref="table"
-               TItem="WeatherForecast"
-               DataSource="ViewModel.WeatherForecasts"
+               TItem="WeatherForecastDto"
+               DataSource="ViewModel.WeatherForecastDtos"
                @bind-SelectedRows="ViewModel.SelectedItems"
                Bordered=@true
                Loading="Loading"
@@ -98,19 +98,19 @@
         [Inject]
         public WeatherViewModel ViewModel { get; set; }
 
-    private WeatherForecast searchValue { get; set; } = new();
+    private WeatherForecastDto searchValue { get; set; } = new();
 
-    private Table<WeatherForecast> table;
+    private Table<WeatherForecastDto> table;
 
     protected override Task OnDlgParameterSetupAsync()
     {
         return base.OnDlgParameterSetupAsync();
     }
 
-    protected override Task OnRoleSetupAsync()
+    protected override Task OnRoleAsync()
     {
         Console.WriteLine("OnRoleSetupAsync");
-        return base.OnRoleSetupAsync();
+        return base.OnRoleAsync();
     }
 
     protected override Task OnSetupAsync()
@@ -122,12 +122,11 @@
     protected override async Task OnLoadAsync()
     {
         this.Loading = true;
-        await ViewModel.InitializeAsync();
-        await Task.Delay(500);
+        await ViewModel.GetWeathersAsync(null);
         this.Loading = false;
     }
 
-    private void ItemClick(WeatherForecast item)
+    private void ItemClick(WeatherForecastDto item)
     {
         ViewModel.SelectedItem = item;
         if (OnChange.HasDelegate)
@@ -136,9 +135,9 @@
         }
     }
 
-    async Task DeleteRowAsync(int id)
+    async Task DeleteRowAsync(long id)
     {
-        this.ViewModel.SelectedItem = this.ViewModel.WeatherForecasts.First(m => m.Id == id);
+        this.ViewModel.SelectedItem = this.ViewModel.WeatherForecastDtos.First(m => m.Id == id);
         await ViewModel.RemoveAsync();
     }
 
@@ -174,9 +173,9 @@
         //             return Task.CompletedTask;
         //         },
         //     };
-        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecast>, WeatherForecast>(options, new DlgOptions<WeatherForecast>()
+        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecastDto>, WeatherForecastDto>(options, new DlgOptions<WeatherForecastDto>()
         {
-            Param = new WeatherForecast()
+            Param = new WeatherForecastDto()
         });
         confirmd.OnOpen = () =>
         {
@@ -197,7 +196,7 @@
 
     // private async Task Pdf(int id)
     // {
-        // var exist = ViewModel.WeatherForecasts.FirstOrDefault(m => m.Id == id);
+        // var exist = ViewModel.WeatherForecastDtos.FirstOrDefault(m => m.Id == id);
         // if (exist.xIsEmpty()) return;
 
         // using var ms = new MemoryStream();

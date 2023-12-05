@@ -1,0 +1,212 @@
+﻿@using AntDesign.TableModels
+@using Jina.Domain.Account
+@using Jina.Domain.Example
+@using Jina.Domain.SharedKernel
+@using Jina.Domain.SharedKernel.Abstract
+@using Jina.Passion.Client.Base
+@using Jina.Passion.Client.Base.Abstract
+@using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Pages.Account.ViewModels
+@using Jina.Passion.Client.Pages.Weather.ViewModels
+@using eXtensionSharp
+
+@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<UserDto>>
+
+<PageContainer>
+    <Content>
+        <div>
+            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form">
+                <Row Gutter="24">
+                    <GridCol Span="6" @key="nameof(context.Name)">
+                        <FormItem Label="@nameof(context.Name)">
+                            <Input @bind-Value="@(context.Name)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.Email)">
+                        <FormItem Label="@nameof(context.Email)">
+                            <Input @bind-Value="@(context.Email)" Style="width: 80%;" Size="@InputSize.Small" />
+                        </FormItem>
+                    </GridCol>
+                </Row>
+                <Row>
+                    <GridCol Span="24" Style="text-align:right;">
+                        <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                        @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
+                    </GridCol>
+                </Row>
+            </Form>
+        </div>
+        <br />
+        <div>
+            <GridRow Justify="end">
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="4"></GridCol>
+                <GridCol Span="2">
+                    <Button OnClick="AddItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Add
+                    </Button>
+                    <Button OnClick="RemoveItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Remove
+                    </Button>
+                </GridCol>
+            </GridRow>
+        </div>
+        <Table @ref="table"
+               TItem="UserDto"
+               DataSource="ViewModel.Users"
+               @bind-SelectedRows="ViewModel.SelectedItems"               
+               Bordered=@true
+               Loading="Loading"
+               Title="User List"
+               Size="TableSize.Small"
+               OnChange="OnTableChange"
+               @bind-PageIndex="this.PageIndex"
+               @bind-PageSize="this.PageSize"
+               @bind-Total="this.Total"               
+               PaginationPosition="@this.DefaultPagingPosition"
+               Resizable
+               RowKey="m=>m.Id">
+               <ChildContent>
+                   <Selection Key="@context.Id" />
+                   <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
+                        <a @onclick='() => ItemClick(context)'>@context.Name</a>
+                   </PropertyColumn>
+                   <PropertyColumn Property="m => m.Email" />
+                   <PropertyColumn Property="m => m.Phone" />
+                   <PropertyColumn Property="m => m.RoleName" />
+                   <ActionColumn Title="Action">
+                       <Popconfirm Title="Sure to delete?"
+                                   OnConfirm="()=> DeleteRowAsync(context.Id)"
+                                   OkText="Yes"
+                                   CancelText="No">
+                           <a>Delete</a>
+                       </Popconfirm>
+                   </ActionColumn>
+               </ChildContent>
+               <PaginationTemplate>
+                   <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                               Total="context.Total"
+                               PageSize="context.PageSize"
+                               Current="context.PageIndex"
+                               ShowSizeChanger
+                               OnChange="context.HandlePageChange" />
+               </PaginationTemplate>
+        </Table>
+    </Content>
+
+    <ChildContent>
+    </ChildContent>
+</PageContainer>
+
+ @code {
+    [Parameter]
+    public EventCallback<string> OnChange { get; set; }
+
+    [Inject]
+    public UserViewModel ViewModel { get; set; }
+
+    private UserDto searchValue { get; set; } = new();
+
+    private Table<UserDto> table;
+
+    protected override Task OnDlgParameterSetupAsync()
+    {
+        return base.OnDlgParameterSetupAsync();
+    }
+
+    protected override Task OnRoleAsync()
+    {
+        Console.WriteLine("OnRoleSetupAsync");
+        return base.OnRoleAsync();
+    }
+
+    protected override Task OnSetupAsync()
+    {
+        Console.WriteLine("OnSetupAsync");
+        return base.OnSetupAsync();
+    }
+
+    protected override async Task OnLoadAsync()
+    {
+
+    }
+
+    public override async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
+    {
+        callback = async (pageNo, pageSize, sort, orderby) =>
+        {
+            Console.WriteLine("test");
+            return await ViewModel.GetUsersAsync(null);
+        };
+        await base.OnSearch(query, callback);
+    }
+
+    private void ItemClick(UserDto item)
+    {
+        ViewModel.SelectedItem = item;
+        if (OnChange.HasDelegate)
+        {
+            OnChange.InvokeAsync("Weather");
+        }
+    }
+
+    async Task DeleteRowAsync(string userId)
+    {
+        this.ViewModel.SelectedItem = this.ViewModel.Users.First(m => m.Id == userId);
+        await ViewModel.RemoveAsync();
+    }
+
+    async Task RemoveItemAsync()
+    {
+        if (this.ViewModel.SelectedItems.xIsEmpty())
+        {
+            await MessageService.Warning("delete data is empty");
+        }
+
+        await ViewModel.RemoveRangeAsync();
+
+        table.UnselectAll();
+    }
+
+    async Task AddItemAsync()
+    {
+        var options = new ModalOptions()
+            {
+                Maximizable = true,
+                Centered = true,
+                DefaultMaximized = true
+            };
+        // var options = new ConfirmOptions()
+        //     {
+        //         Width = "80%",
+        //         OnOk = e =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //         OnCancel = e =>
+        //         {
+        //             return Task.CompletedTask;
+        //         },
+        //     };
+        var confirmd = await this.ModalService.CreateModalAsync<User, DlgOptions<UserDto>, UserDto>(options, new DlgOptions<UserDto>()
+            {
+                Param = new UserDto()
+            });
+        confirmd.OnOpen = () =>
+        {
+            return Task.CompletedTask;
+        };
+
+        confirmd.OnClose = () =>
+        {
+            return Task.CompletedTask;
+        };
+
+        confirmd.OnOk = result =>
+        {
+            //Console.WriteLine(result.xToJson());
+            return Task.CompletedTask;
+        };
+    }
+}

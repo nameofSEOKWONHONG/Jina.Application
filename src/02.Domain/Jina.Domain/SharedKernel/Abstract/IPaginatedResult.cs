@@ -2,7 +2,7 @@
 
 public interface IPaginatedResult : IResultBase
 {
-    int CurrentPage { get; }
+    int PageNo { get; }
 
     int TotalPages { get; }
 

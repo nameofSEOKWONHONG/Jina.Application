@@ -11,13 +11,18 @@ namespace Jina.Passion.Client.Base
     public abstract class TablePageComponent<TOption, TResult> : PageComponentBase<TOption, TResult>
         where TOption : DlgOptionsBase
     {
-        protected int PageNo { get; set; }
-        protected int PageSize { get; set; }
-        protected int TotalPages { get; set; }
+        protected int PageIndex { get; set; } = 1;
+        protected int PageSize { get; set; } = 10;
+        protected int Total { get; set; }
 
         protected string DefaultPagingPosition = "bottomRight";
 
-        public virtual async Task OnSearch<T>(QueryModel<T> query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
+        protected virtual async Task OnTableChange(QueryModel query)
+        {
+            await OnSearch(query, null);
+        }
+
+        public virtual async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
         {
             if (callback.xIsEmpty()) return;
 
@@ -27,33 +32,40 @@ namespace Jina.Passion.Client.Base
             await Task.Delay(this.Interval);
 
             IPaginatedResult result = null;
-            if (query.SortModel.xIsNotEmpty())
+            if (query.xIsNotEmpty())
             {
-                var sort = query.SortModel.FirstOrDefault(m => m.Sort.xIsNotEmpty());
-                if (sort.xIsNotEmpty())
+                if (query.SortModel.xIsNotEmpty())
                 {
-                    if (sort.Sort == "ascend")
+                    var sort = query.SortModel.FirstOrDefault(m => m.Sort.xIsNotEmpty());
+                    if (sort.xIsNotEmpty())
                     {
-                        result = await callback(query.PageIndex, query.PageSize, sort!.FieldName, "ASC");
+                        if (sort.Sort == "ascend")
+                        {
+                            result = await callback(this.PageIndex, this.PageSize, sort!.FieldName, "ASC");
+                        }
+                        else
+                        {
+                            result = await callback(this.PageIndex, this.PageSize, sort!.FieldName, "DESC");
+                        }
                     }
                     else
                     {
-                        result = await callback(query.PageIndex, query.PageSize, sort!.FieldName, "DESC");
+                        result = await callback(this.PageIndex, this.PageSize, string.Empty, string.Empty);
                     }
                 }
                 else
                 {
-                    result = await callback(query.PageIndex, query.PageSize, string.Empty, string.Empty);
+                    result = await callback(this.PageIndex, this.PageSize, string.Empty, string.Empty);
                 }
             }
             else
             {
-                result = await callback(query.PageIndex, query.PageSize, string.Empty, string.Empty);
+                result = await callback(this.PageIndex, this.PageSize, string.Empty, string.Empty);
             }
 
             if (result.Succeeded)
             {
-                this.TotalPages = result.TotalCount;
+                this.Total = result.TotalCount;
             }
 
             this.Loading = false;

@@ -1,4 +1,6 @@
 using AntDesign.ProLayout;
+using Jina.Passion.Client.Pages.Account.Services;
+using Jina.Passion.Client.Pages.Account.ViewModels;
 using Jina.Passion.Client.Pages.Weather.Services;
 using Jina.Passion.Client.Pages.Weather.ViewModels;
 using Microsoft.AspNetCore.Components.Web;
@@ -36,8 +38,11 @@ namespace Jina.Passion.Client
             //    x.MenuHeaderRender = true;
             //});
             builder.Services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
+
             builder.Services.AddScoped<WeatherService>();
             builder.Services.AddScoped<WeatherViewModel>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<UserViewModel>();
 
             await builder.Build().RunAsync();
         }

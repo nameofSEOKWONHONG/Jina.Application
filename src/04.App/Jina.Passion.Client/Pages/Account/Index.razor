@@ -1,0 +1,29 @@
+﻿@page "/account/index"
+
+<Tabs Type="@TabType.EditableCard" HideAdd       
+       DefaultActiveKey="1"
+       @bind-ActiveKey="@activeKey"       
+      Animated>
+    <TabPane Key="1" Tab="User List" Closable="false">
+        <ChildContent>
+            <Jina.Passion.Client.Pages.Account.Contents.UserList />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="2" Tab="Role List" Closable="false">
+        <ChildContent>
+            <Jina.Passion.Client.Pages.Account.Contents.RoleList />
+        </ChildContent>
+    </TabPane>
+    <TabPane Key="3" Tab="MenuRole List" Closable="false">
+        <ChildContent>
+            <Jina.Passion.Client.Pages.Account.Contents.MenuRoleList />
+        </ChildContent>
+    </TabPane>
+</Tabs>
+
+
+
+@code {
+    private Tabs tabs;
+    string activeKey { get; set; } = "1";
+}

@@ -16,7 +16,7 @@ public class PaginatedResult<T> : IPaginatedResult
     internal PaginatedResult(bool succeeded, List<T> data = default, List<string> messages = null, int count = 0, int page = 1, int pageSize = 10)
     {
         Data = data;
-        CurrentPage = page;
+        PageNo = page;
         Succeeded = succeeded;
         PageSize = pageSize;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
@@ -56,16 +56,16 @@ public class PaginatedResult<T> : IPaginatedResult
         return Task.FromResult(Success(data, totalCount, currentPage, pageSize));
     }
 
-    public int CurrentPage { get; set; }
+    public int PageNo { get; set; }
 
     public int TotalPages { get; set; }
 
     public int TotalCount { get; set; }
     public int PageSize { get; set; }
 
-    public bool HasPreviousPage => CurrentPage > 1;
+    public bool HasPreviousPage => PageNo > 1;
 
-    public bool HasNextPage => CurrentPage < TotalPages;
+    public bool HasNextPage => PageNo < TotalPages;
 
     public List<string> Messages { get; set; } = new List<string>();
 

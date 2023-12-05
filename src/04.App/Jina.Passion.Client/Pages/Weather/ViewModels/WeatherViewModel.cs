@@ -1,34 +1,29 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
+using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Pages.Weather.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
-    public class WeatherViewModel
+    public class WeatherViewModel : FeViewModelBase
     {
         public WeatherService WeatherService { get; set; }
 
-        public List<WeatherForecast> WeatherForecasts { get; set; }
-        public IEnumerable<WeatherForecast> SelectedItems { get; set; }
-        public WeatherForecast SelectedItem { get; set; }
+        public List<WeatherForecastDto> WeatherForecastDtos { get; set; }
+        public IEnumerable<WeatherForecastDto> SelectedItems { get; set; }
+        public WeatherForecastDto SelectedItem { get; set; }
 
         public WeatherViewModel(WeatherService service)
         {
             this.WeatherService = service;
         }
 
-        public async Task InitializeAsync()
+        public async Task GetWeathersAsync(PaginatedRequest<WeatherForecastDto> request)
         {
             //1, 10
-            this.WeatherForecasts = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecast>());
-        }
-
-        public async Task GetWeathersAsync(PaginatedRequest<WeatherForecast> request)
-        {
-            //1, 10
-            this.WeatherForecasts = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecast>());
+            this.WeatherForecastDtos = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastDto>());
         }
 
         public async Task GetWeatherAsync(int id)
@@ -36,7 +31,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.SelectedItem = await this.WeatherService.GetWeatherAsync(id);
         }
 
-        public async Task SaveAsync(WeatherForecast item)
+        public async Task SaveAsync(WeatherForecastDto item)
         {
             if (item.Id <= 0)
             {
@@ -50,19 +45,19 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             var result = await WeatherService.SaveAsync(item);
             if (result.Succeeded)
             {
-                this.WeatherForecasts.Insert(0, item);
+                this.WeatherForecastDtos.Insert(0, item);
             }
         }
 
         public async Task RemoveAsync()
         {
-            var exist = this.WeatherForecasts.First(x => x.Id == this.SelectedItem.Id);
+            var exist = this.WeatherForecastDtos.First(x => x.Id == this.SelectedItem.Id);
             if (exist.xIsEmpty()) return;
 
             var result = await this.WeatherService.RemoveAsync(exist);
             if (result.Succeeded)
             {
-                this.WeatherForecasts.Remove(exist);
+                this.WeatherForecastDtos.Remove(exist);
             }
         }
 
@@ -72,7 +67,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
 
             foreach (var item in this.SelectedItems)
             {
-                this.WeatherForecasts.Remove(item);
+                this.WeatherForecastDtos.Remove(item);
             }
             await Task.Delay(1000);
         }

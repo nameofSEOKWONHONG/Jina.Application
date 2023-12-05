@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "99.Test", "99.Test", "{D54D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Validate", "..\JINA\src\Jina.Validate\Jina.Validate.csproj", "{14B57F0E-A000-4F10-89A8-2A47372937AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{8B9ED374-33B3-4D90-A678-7D676447EC95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{8B9ED374-33B3-4D90-A678-7D676447EC95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

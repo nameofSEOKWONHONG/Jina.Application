@@ -27,7 +27,7 @@
     {
         <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
             <ChildContent>
-                <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecast" />
+                <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecastDto" />
             </ChildContent>
             <TabContextMenu>
                 <Menu>
@@ -44,10 +44,10 @@
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
-    private WeatherForecast selectedItem;
-    private TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecast>> tablePage;
+    private WeatherForecastDto selectedItem;
+    private TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecastDto>> tablePage;
 
-    public record Pane(string Title, string Content, string Key, WeatherForecast WeatherForecast, bool Closable = true);
+    public record Pane(string Title, string Content, string Key, WeatherForecastDto WeatherForecastDto, bool Closable = true);
 
     private int newTabIndex;
 
