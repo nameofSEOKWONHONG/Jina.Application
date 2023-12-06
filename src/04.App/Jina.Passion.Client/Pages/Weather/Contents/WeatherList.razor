@@ -8,7 +8,7 @@
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<WeatherForecastDto>>
+@inherits TablePageComponent<WeatherForecastDto, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastDto>>
 
 <PageContainer>
     <Content>
@@ -57,7 +57,7 @@
         </div>
         <Table @ref="table"
                TItem="WeatherForecastDto"
-               DataSource="ViewModel.WeatherForecastDtos"
+               DataSource="ViewModel.Items"
                @bind-SelectedRows="ViewModel.SelectedItems"
                Bordered=@true
                Loading="Loading"
@@ -137,7 +137,7 @@
 
     async Task DeleteRowAsync(long id)
     {
-        this.ViewModel.SelectedItem = this.ViewModel.WeatherForecastDtos.First(m => m.Id == id);
+        this.ViewModel.SelectedItem = this.ViewModel.Items.First(m => m.Id == id);
         await ViewModel.RemoveAsync();
     }
 

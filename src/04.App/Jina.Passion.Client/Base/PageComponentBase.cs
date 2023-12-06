@@ -198,6 +198,7 @@ namespace Jina.Passion.Client.Client.Base
 
         [Inject] protected NavigationManager NavigationManager { get; set; }
         [Inject] protected NotificationService NotificationService { get; set; }
+        [Inject] protected ModalService ModalService { get; set; }
 
         [Inject] protected IConfirmService ConfirmService { get; set; }
 

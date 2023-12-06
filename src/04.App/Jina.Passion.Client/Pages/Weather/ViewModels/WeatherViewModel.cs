@@ -7,13 +7,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
-    public class WeatherViewModel : FeViewModelBase
+    public class WeatherViewModel : FeViewModelBase<WeatherForecastDto>
     {
         public WeatherService WeatherService { get; set; }
-
-        public List<WeatherForecastDto> WeatherForecastDtos { get; set; }
-        public IEnumerable<WeatherForecastDto> SelectedItems { get; set; }
-        public WeatherForecastDto SelectedItem { get; set; }
 
         public WeatherViewModel(WeatherService service)
         {
@@ -23,7 +19,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
         public async Task GetWeathersAsync(PaginatedRequest<WeatherForecastDto> request)
         {
             //1, 10
-            this.WeatherForecastDtos = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastDto>());
+            this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastDto>());
         }
 
         public async Task GetWeatherAsync(int id)
@@ -45,19 +41,19 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             var result = await WeatherService.SaveAsync(item);
             if (result.Succeeded)
             {
-                this.WeatherForecastDtos.Insert(0, item);
+                this.Items.Insert(0, item);
             }
         }
 
         public async Task RemoveAsync()
         {
-            var exist = this.WeatherForecastDtos.First(x => x.Id == this.SelectedItem.Id);
+            var exist = this.Items.First(x => x.Id == this.SelectedItem.Id);
             if (exist.xIsEmpty()) return;
 
             var result = await this.WeatherService.RemoveAsync(exist);
             if (result.Succeeded)
             {
-                this.WeatherForecastDtos.Remove(exist);
+                this.Items.Remove(exist);
             }
         }
 
@@ -67,7 +63,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
 
             foreach (var item in this.SelectedItems)
             {
-                this.WeatherForecastDtos.Remove(item);
+                this.Items.Remove(item);
             }
             await Task.Delay(1000);
         }

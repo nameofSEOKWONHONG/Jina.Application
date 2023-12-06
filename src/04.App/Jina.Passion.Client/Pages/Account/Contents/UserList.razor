@@ -10,7 +10,7 @@
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<DlgOptions<bool>, IEnumerable<UserDto>>
+@inherits TablePageComponent<UserDto, UserListViewModel, DlgOptions<bool>, IEnumerable<UserDto>>
 
 <PageContainer>
     <Content>
@@ -43,10 +43,10 @@
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="2">
-                    <Button OnClick="AddItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button OnClick="AddItem" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Add
                     </Button>
-                    <Button OnClick="RemoveItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button OnClick="RemoveRange" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Remove
                     </Button>
                 </GridCol>
@@ -54,30 +54,31 @@
         </div>
         <Table @ref="table"
                TItem="UserDto"
-               DataSource="ViewModel.Users"
-               @bind-SelectedRows="ViewModel.SelectedItems"               
+               DataSource="this.ViewModel.Items"
+               OnRowClick="OnSelectChanged"
+               @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
                Loading="Loading"
                Title="User List"
                Size="TableSize.Small"
                OnChange="OnTableChange"
-               @bind-PageIndex="this.PageIndex"
-               @bind-PageSize="this.PageSize"
-               @bind-Total="this.Total"               
-               PaginationPosition="@this.DefaultPagingPosition"
+               @bind-PageIndex="this.Paginateion.PageIndex"
+               @bind-PageSize="this.Paginateion.PageSize"
+               @bind-Total="this.Paginateion.Total"               
+               PaginationPosition="@this.Paginateion.DefaultPagingPosition"
                Resizable
                RowKey="m=>m.Id">
                <ChildContent>
                    <Selection Key="@context.Id" />
                    <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
-                        <a @onclick='() => ItemClick(context)'>@context.Name</a>
+                        @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
                    </PropertyColumn>
                    <PropertyColumn Property="m => m.Email" />
                    <PropertyColumn Property="m => m.Phone" />
                    <PropertyColumn Property="m => m.RoleName" />
                    <ActionColumn Title="Action">
                        <Popconfirm Title="Sure to delete?"
-                                   OnConfirm="()=> DeleteRowAsync(context.Id)"
+                                   OnConfirm="()=> Remove(context.Id)"
                                    OkText="Yes"
                                    CancelText="No">
                            <a>Delete</a>
@@ -101,63 +102,51 @@
 
  @code {
     [Parameter]
-    public EventCallback<string> OnChange { get; set; }
-
-    [Inject]
-    public UserViewModel ViewModel { get; set; }
+    public EventCallback<string> OnSelectedChange { get; set; }
 
     private UserDto searchValue { get; set; } = new();
 
     private Table<UserDto> table;
+
+    protected override Task OnSetupAsync()
+    {
+        return base.OnSetupAsync();
+    }
 
     protected override Task OnDlgParameterSetupAsync()
     {
         return base.OnDlgParameterSetupAsync();
     }
 
-    protected override Task OnRoleAsync()
-    {
-        Console.WriteLine("OnRoleSetupAsync");
-        return base.OnRoleAsync();
-    }
-
-    protected override Task OnSetupAsync()
-    {
-        Console.WriteLine("OnSetupAsync");
-        return base.OnSetupAsync();
-    }
-
-    protected override async Task OnLoadAsync()
-    {
-
-    }
-
     public override async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
     {
         callback = async (pageNo, pageSize, sort, orderby) =>
         {
-            Console.WriteLine("test");
+            Console.WriteLine("test");            
             return await ViewModel.GetUsersAsync(null);
         };
         await base.OnSearch(query, callback);
     }
 
-    private void ItemClick(UserDto item)
+    public override void OnSelectChanged(RowData<UserDto> item)
     {
-        ViewModel.SelectedItem = item;
-        if (OnChange.HasDelegate)
+        base.OnSelectChanged(item);
+        if (OnSelectedChange.HasDelegate)
         {
-            OnChange.InvokeAsync("Weather");
+            OnSelectedChange.InvokeAsync("Weather");
         }
     }
 
-    async Task DeleteRowAsync(string userId)
+    async Task Remove(string userId)
     {
-        this.ViewModel.SelectedItem = this.ViewModel.Users.First(m => m.Id == userId);
-        await ViewModel.RemoveAsync();
+        var callback = async () =>
+        {
+            return await ViewModel.RemoveAsync(userId);
+        };
+        await base.OnRemove(callback);
     }
 
-    async Task RemoveItemAsync()
+    async Task RemoveItemsAsync()
     {
         if (this.ViewModel.SelectedItems.xIsEmpty())
         {
@@ -169,7 +158,7 @@
         table.UnselectAll();
     }
 
-    async Task AddItemAsync()
+    public override async Task OnAddItem(Func<Task<IResultBase>> callback)
     {
         var options = new ModalOptions()
             {

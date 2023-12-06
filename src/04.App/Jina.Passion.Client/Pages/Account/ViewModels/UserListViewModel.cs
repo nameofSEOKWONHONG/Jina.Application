@@ -1,6 +1,4 @@
-﻿using AntDesign;
-using AntDesign.TableModels;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Domain.Account;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
@@ -9,15 +7,11 @@ using Jina.Passion.Client.Pages.Account.Services;
 
 namespace Jina.Passion.Client.Pages.Account.ViewModels
 {
-    public class UserViewModel : FeViewModelBase
+    public class UserListViewModel : FeViewModelBase<UserDto>
     {
         private readonly UserService _userService;
 
-        public List<UserDto> Users { get; set; }
-        public UserDto SelectedItem { get; set; }
-        public IEnumerable<UserDto> SelectedItems { get; set; }
-
-        public UserViewModel(UserService service)
+        public UserListViewModel(UserService service)
         {
             _userService = service;
         }
@@ -36,7 +30,7 @@ namespace Jina.Passion.Client.Pages.Account.ViewModels
             var result = await this._userService.GetUsersAsync(request);
             if (result.Succeeded)
             {
-                this.Users = result.Data;
+                this.Items = result.Data;
                 this.PageNo = result.PageNo;
                 this.PageSize = result.PageSize;
                 this.TotalCount = result.TotalCount;
@@ -60,9 +54,15 @@ namespace Jina.Passion.Client.Pages.Account.ViewModels
             return await this._userService.SaveAsync(users);
         }
 
-        public async Task<IResultBase<bool>> RemoveAsync()
+        public async Task<IResultBase<bool>> RemoveAsync(string id)
         {
-            return await this._userService.RemoveAsync(new[] { this.SelectedItem });
+            var exist = this.Items.First(x => x.Id == id);
+            var result = await this._userService.RemoveAsync(new[] { exist });
+            if (result.Succeeded)
+            {
+                this.Items.Remove(exist);
+            }
+            return result;
         }
 
         public async Task<IResultBase<bool>> RemoveRangeAsync()

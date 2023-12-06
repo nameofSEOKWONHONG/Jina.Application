@@ -39,17 +39,17 @@ namespace Jina.Passion.Client.Pages.Account.Services
 
         public async Task<IResultBase<string>> SaveAsync(UserDto user)
         {
-            return null;
+            return await Result<string>.SuccessAsync(data:Guid.NewGuid().ToString("N"));
         }
 
         public async Task<IResultBase<bool>> SaveAsync(IEnumerable<UserDto> users)
         {
-            return null;
+            return await Result<bool>.SuccessAsync();
         }
 
         public async Task<IResultBase<bool>> RemoveAsync(IEnumerable<UserDto> users)
         {
-            return null;
+            return await Result<bool>.SuccessAsync();
         }
     }
 }

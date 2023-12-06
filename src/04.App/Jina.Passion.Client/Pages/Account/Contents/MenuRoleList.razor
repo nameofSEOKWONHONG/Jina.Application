@@ -2,10 +2,11 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Pages.Account.ViewModels
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<DlgOptions<bool>, bool>
+@inherits TablePageComponent<MenuTemplate, DlgOptions<bool>, bool>
 
 <PageContainer>
     <Content>
@@ -144,22 +145,4 @@
         this.selectedMenuTemplate = this.menuRoleTemplate.First(m => m.RoleName == key).Menus;
         this.StateChanged();
     }
-
-    class MenuRoleTemplate
-    {
-        public string RoleName { get; set; }
-        public List<MenuTemplate> Menus { get; set; }
-    }
-
-    class MenuTemplate
-    {
-        public int Id { get; set; }
-        public string MenuName { get; set; }
-        public bool Read { get; set; }
-        public bool Write { get; set; }
-        public bool View { get; set; }
-        public bool Export { get; set; }
-        public bool Import { get; set; }
-    }
-
 }

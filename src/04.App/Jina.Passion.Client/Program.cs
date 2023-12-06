@@ -42,7 +42,7 @@ namespace Jina.Passion.Client
             builder.Services.AddScoped<WeatherService>();
             builder.Services.AddScoped<WeatherViewModel>();
             builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<UserViewModel>();
+            builder.Services.AddScoped<UserListViewModel>();
 
             await builder.Build().RunAsync();
         }
