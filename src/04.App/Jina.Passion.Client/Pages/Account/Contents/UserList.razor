@@ -1,5 +1,6 @@
 ﻿@using AntDesign.TableModels
 @using Jina.Domain.Account
+@using Jina.Domain.Account.Request
 @using Jina.Domain.Example
 @using Jina.Domain.SharedKernel
 @using Jina.Domain.SharedKernel.Abstract
@@ -15,7 +16,7 @@
 <PageContainer>
     <Content>
         <div>
-            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form">
+            <Form Model="searchRequest" Name="search" Class="ant-advanced-search-form">
                 <Row Gutter="24">
                     <GridCol Span="6" @key="nameof(context.Name)">
                         <FormItem Label="@nameof(context.Name)">
@@ -30,7 +31,8 @@
                 </Row>
                 <Row>
                     <GridCol Span="24" Style="text-align:right;">
-                        <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                        <Button Type="primary" @onclick="()=> OnSearch(null, null)">Clear</Button>
+                        @* <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button> *@
                         @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
                     </GridCol>
                 </Row>
@@ -43,16 +45,16 @@
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="2">
-                    <Button OnClick="AddItem" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Add
                     </Button>
-                    <Button OnClick="RemoveRange" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button @onclick="() => OnRemoveRange(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Remove
                     </Button>
                 </GridCol>
             </GridRow>
         </div>
-        <Table @ref="table"
+        <Table @ref="Table"
                TItem="UserDto"
                DataSource="this.ViewModel.Items"
                OnRowClick="OnSelectChanged"
@@ -78,7 +80,7 @@
                    <PropertyColumn Property="m => m.RoleName" />
                    <ActionColumn Title="Action">
                        <Popconfirm Title="Sure to delete?"
-                                   OnConfirm="()=> Remove(context.Id)"
+                                   OnConfirm="()=> OnRemove(null)"
                                    OkText="Yes"
                                    CancelText="No">
                            <a>Delete</a>
@@ -104,9 +106,7 @@
     [Parameter]
     public EventCallback<string> OnSelectedChange { get; set; }
 
-    private UserDto searchValue { get; set; } = new();
-
-    private Table<UserDto> table;
+    private UserSearchRequest searchRequest { get; set; } = new();
 
     protected override Task OnSetupAsync()
     {
@@ -122,8 +122,18 @@
     {
         callback = async (pageNo, pageSize, sort, orderby) =>
         {
-            Console.WriteLine("test");            
-            return await ViewModel.GetUsersAsync(null);
+            return await ViewModel.GetUsersAsync(new PaginatedRequest<UserDto>()
+            {
+                PageNo = pageNo,
+                PageSize = pageSize,
+                SortName = sort,
+                OrderBy = orderby,
+                SearchOption = new UserDto()
+                {
+                    Email = searchRequest.Email,
+                    Name = searchRequest.Name,
+                }
+            });
         };
         await base.OnSearch(query, callback);
     }
@@ -137,25 +147,22 @@
         }
     }
 
-    async Task Remove(string userId)
+    public override async Task OnRemove(Func<Task<IResultBase<bool>>> callback)
     {
-        var callback = async () =>
+        callback = async () =>
         {
-            return await ViewModel.RemoveAsync(userId);
+            return await ViewModel.RemoveAsync(this.ViewModel.SelectedItem.Id);
         };
         await base.OnRemove(callback);
     }
 
-    async Task RemoveItemsAsync()
+    public override async Task OnRemoveRange(Func<Task<IResultBase<bool>>> callback)
     {
-        if (this.ViewModel.SelectedItems.xIsEmpty())
+        callback = async () =>
         {
-            await MessageService.Warning("delete data is empty");
-        }
-
-        await ViewModel.RemoveRangeAsync();
-
-        table.UnselectAll();
+            return await ViewModel.RemoveRangeAsync();
+        };
+        await base.OnRemoveRange(callback);
     }
 
     public override async Task OnAddItem(Func<Task<IResultBase>> callback)

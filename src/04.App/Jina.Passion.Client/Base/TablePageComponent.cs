@@ -1,14 +1,10 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using eXtensionSharp;
-using Jina.Domain.Account;
-using Jina.Domain.Example;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Client.Base;
-using Jina.Passion.Client.Pages.Account.Contents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace Jina.Passion.Client.Base
 {
@@ -21,8 +17,13 @@ namespace Jina.Passion.Client.Base
         public string DefaultPagingPosition = "bottomRight";
     }
 
-    public abstract class TablePageComponent<TDto, TOption, TResult> : PageComponentBase<TOption, TResult>
+    public abstract class TablePageComponent<TDto, TViewModel, TOption, TResult> : PageComponentBase<TOption, TResult>
+        where TDto : class
+        where TViewModel : FeViewModelBase<TDto>
+        where TOption : DlgOptionsBase
     {
+        protected Table<TDto> Table { get; set; }
+
         protected readonly ViewPaginateion Paginateion = new ViewPaginateion();
 
         protected virtual async Task OnTableChange(QueryModel query)
@@ -32,6 +33,9 @@ namespace Jina.Passion.Client.Base
 
         public virtual async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
         {
+#if DEBUG
+            Console.WriteLine("call OnSearch");
+#endif
             if (callback.xIsEmpty()) return;
 
             this.
@@ -68,6 +72,8 @@ namespace Jina.Passion.Client.Base
             }
             else
             {
+                this.Paginateion.PageIndex = 1;
+                this.Paginateion.PageSize = 10;
                 result = await callback(this.Paginateion.PageIndex, this.Paginateion.PageSize, string.Empty, string.Empty);
             }
 
@@ -75,6 +81,8 @@ namespace Jina.Passion.Client.Base
             {
                 this.Paginateion.Total = result.TotalCount;
             }
+
+            this.Table.UnselectAll();
 
             this.Loading = false;
         }
@@ -90,11 +98,6 @@ namespace Jina.Passion.Client.Base
             this.Loading = false;
         }
 
-        public async Task AddItem(MouseEventArgs e)
-        {
-            await OnAddItem(null);
-        }
-
         public virtual async Task OnAddItem(Func<Task<IResultBase>> callback)
         {
             this.Loading = true;
@@ -107,20 +110,9 @@ namespace Jina.Passion.Client.Base
 
             this.Loading = false;
         }
-    }
 
-    public abstract class TablePageComponent<TDto, TViewModel, TOption, TResult> : TablePageComponent<TDto, TOption, TResult>
-        where TDto : class
-        where TViewModel : FeViewModelBase<TDto>
-        where TOption : DlgOptionsBase
-    {
         [Inject]
         public TViewModel ViewModel { get; set; }
-
-        public async Task RemoveRange(MouseEventArgs e)
-        {
-            await OnRemoveRange(null);
-        }
 
         public virtual async Task OnRemoveRange(Func<Task<IResultBase<bool>>> callback)
         {
@@ -136,6 +128,8 @@ namespace Jina.Passion.Client.Base
             {
                 await this.ShowMessageAsync("삭제 되었습니다.", ENUM_MESSAGE_TYPE.Success);
             }
+
+            Table.UnselectAll();
 
             this.Loading = false;
         }

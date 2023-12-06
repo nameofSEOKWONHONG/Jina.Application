@@ -10,6 +10,7 @@
       <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0" />      
     </ItemGroup>
     <ItemGroup>
+      <Folder Include="Account\Result\" />
       <Folder Include="MultiLanguage\" />
       <Folder Include="Net\" />
     </ItemGroup>

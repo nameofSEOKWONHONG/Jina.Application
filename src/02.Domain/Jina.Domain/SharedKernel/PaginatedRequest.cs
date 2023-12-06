@@ -29,4 +29,8 @@ public class PaginatedRequest
 public class PaginatedRequest<T> : PaginatedRequest
 {
     public T SearchOption { get; set; }
+
+    public PaginatedRequest()
+    {
+    }
 }

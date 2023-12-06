@@ -67,7 +67,15 @@ namespace Jina.Passion.Client.Pages.Account.ViewModels
 
         public async Task<IResultBase<bool>> RemoveRangeAsync()
         {
-            return await this._userService.RemoveAsync(this.SelectedItems);
+            var result = await this._userService.RemoveAsync(this.SelectedItems);
+            if (result.Succeeded)
+            {
+                foreach (var item in this.SelectedItems)
+                {
+                    this.Items.Remove(item);
+                }
+            }
+            return result;
         }
     }
 }

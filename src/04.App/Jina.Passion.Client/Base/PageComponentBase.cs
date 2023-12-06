@@ -270,11 +270,13 @@ namespace Jina.Passion.Client.Client.Base
 
         protected virtual async Task ShowMessageAsync(string message, ENUM_MESSAGE_TYPE type = ENUM_MESSAGE_TYPE.Info)
         {
+            const int duration = 2;
             switch (type)
             {
                 case ENUM_MESSAGE_TYPE.Info:
                     await this.NotificationService.Info(new NotificationConfig()
                     {
+                        Duration = duration,
                         Message = "Information",
                         Description = message
                     });
@@ -283,6 +285,7 @@ namespace Jina.Passion.Client.Client.Base
                 case ENUM_MESSAGE_TYPE.Success:
                     await this.NotificationService.Success(new NotificationConfig()
                     {
+                        Duration = duration,
                         Message = "Success",
                         Description = message
                     });
@@ -291,6 +294,7 @@ namespace Jina.Passion.Client.Client.Base
                 case ENUM_MESSAGE_TYPE.Warning:
                     await this.NotificationService.Warning(new NotificationConfig()
                     {
+                        Duration = duration,
                         Message = "Warning",
                         Description = message
                     });
@@ -299,6 +303,7 @@ namespace Jina.Passion.Client.Client.Base
                 case ENUM_MESSAGE_TYPE.Error:
                     await this.NotificationService.Error(new NotificationConfig()
                     {
+                        Duration = duration,
                         Message = "Error",
                         Description = message
                     });

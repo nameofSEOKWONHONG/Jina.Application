@@ -1,6 +1,8 @@
-﻿namespace Jina.Passion.Client.Pages.Account.ViewModels
+﻿using Jina.Passion.Client.Base;
+
+namespace Jina.Passion.Client.Pages.Account.ViewModels
 {
-    public class MenuRoleViewModel
+    public class MenuRoleViewModel : FeViewModelBase<MenuRoleTemplate>
     {
     }
 
