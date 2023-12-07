@@ -8,9 +8,11 @@ using Jina.Domain.SharedKernel;
 using Jina.Injection;
 using Jina.Lang;
 using Jina.Lang.Abstract;
+using Jina.Passion.Api.Hubs;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
@@ -200,6 +202,13 @@ builder.Services.AddRateLimiter(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+          new[] { "application/octet-stream" });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -227,5 +236,9 @@ app.MapControllers();
 app.UseHangfireDashboard();
 
 app.UseRouting();
+
+app.UseResponseCompression();
+
+app.MapHub<MessageHub>("/messageHub");
 
 app.Run();

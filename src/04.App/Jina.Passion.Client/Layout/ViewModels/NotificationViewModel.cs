@@ -21,23 +21,32 @@ namespace Jina.Passion.Client.Layout.ViewModels
 
         public async Task InitializeAsync()
         {
-            //_hubConnection = new HubConnectionBuilder()
-            //    .WithUrl(_navigation.ToAbsoluteUri("/messageHub"))
-            //    .Build();
+            var uri = _navigation.ToAbsoluteUri("/messageHub");
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(uri)
+                .Build();
 
-            //_hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-            //{
-            //    var encodedMsg = $"{user}: {message}";
+            _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+            {
+                var encodedMsg = $"{user}: {message}";
+                // message process
+                this.AddFavoriteMenu(new NoticeIconData()
+                {
+                    Title = user,
+                    Description = message,
+                    Avatar = "T",
+                    Key = Guid.NewGuid().ToString("N"),
+                    Read = false,
+                    Datetime = DateTime.Now,
+                });
 
-            //    // message process
+                if (OnChange.xIsNotEmpty())
+                {
+                    OnChange();
+                }
+            });
 
-            //    if (OnChange.xIsNotEmpty())
-            //    {
-            //        OnChange();
-            //    }
-            //});
-
-            //await _hubConnection.StartAsync();
+            await _hubConnection.StartAsync();
         }
 
         public void AddFavoriteMenu(NoticeIconData data)
