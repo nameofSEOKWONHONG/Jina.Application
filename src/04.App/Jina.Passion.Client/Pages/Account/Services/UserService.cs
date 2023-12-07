@@ -34,12 +34,22 @@ namespace Jina.Passion.Client.Pages.Account.Services
 
         public async Task<IResultBase<UserDto>> GetUserAsync(string userId)
         {
-            return null;
+            return await Result<UserDto>.SuccessAsync(new UserDto()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = "test@gmail.com",
+                Name = "test",
+                Phone = "010-1111-2222",
+                RoleName = "admin",
+                GroupName = "manage",
+                CreatedName = "test",
+                LastModifiedName = "test"
+            });
         }
 
         public async Task<IResultBase<string>> SaveAsync(UserDto user)
         {
-            return await Result<string>.SuccessAsync(data:Guid.NewGuid().ToString("N"));
+            return await Result<string>.SuccessAsync(data: Guid.NewGuid().ToString("N"));
         }
 
         public async Task<IResultBase<bool>> SaveAsync(IEnumerable<UserDto> users)

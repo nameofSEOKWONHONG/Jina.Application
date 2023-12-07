@@ -1,4 +1,5 @@
 using AntDesign.ProLayout;
+using Jina.Passion.Client.Layout.ViewModels;
 using Jina.Passion.Client.Pages.Account.Services;
 using Jina.Passion.Client.Pages.Account.ViewModels;
 using Jina.Passion.Client.Pages.Weather.Services;
@@ -44,8 +45,10 @@ namespace Jina.Passion.Client
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<UserListViewModel>();
             builder.Services.AddScoped<MenuRoleViewModel>();
+            builder.Services.AddScoped<NotificationViewModel>();
 
-            await builder.Build().RunAsync();
+            var build = builder.Build();
+            await build.RunAsync();
         }
     }
 }

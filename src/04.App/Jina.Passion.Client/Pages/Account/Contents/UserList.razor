@@ -7,6 +7,7 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Layout.ViewModels
 @using Jina.Passion.Client.Pages.Account.ViewModels
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
@@ -45,6 +46,9 @@
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="2">
+                    <Button @onclick="() => AddNoti()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                        Add
+                    </Button>
                     <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Add
                     </Button>
@@ -66,47 +70,49 @@
                OnChange="OnTableChange"
                @bind-PageIndex="this.Paginateion.PageIndex"
                @bind-PageSize="this.Paginateion.PageSize"
-               @bind-Total="this.Paginateion.Total"               
+               @bind-Total="this.Paginateion.Total"
                PaginationPosition="@this.Paginateion.DefaultPagingPosition"
                Resizable
-               RowKey="m=>m.Id">
-               <ChildContent>
-                   <Selection Key="@context.Id" />
-                   <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
-                        @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
-                   </PropertyColumn>
-                   <PropertyColumn Property="m => m.Email" />
-                   <PropertyColumn Property="m => m.Phone" />
-                   <PropertyColumn Property="m => m.RoleName" />
-                   <ActionColumn Title="Action">
-                       <Popconfirm Title="Sure to delete?"
-                                   OnConfirm="()=> OnRemove(null)"
-                                   OkText="Yes"
-                                   CancelText="No">
-                           <a>Delete</a>
-                       </Popconfirm>
-                   </ActionColumn>
-               </ChildContent>
-               <PaginationTemplate>
-                   <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
-                               Total="context.Total"
-                               PageSize="context.PageSize"
-                               Current="context.PageIndex"
-                               ShowSizeChanger
-                               OnChange="context.HandlePageChange" />
-               </PaginationTemplate>
-        </Table>
-    </Content>
+                RowKey="m=>m.Id">
+             <ChildContent>
+                 <Selection Key="@context.Id" />
+                 <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
+                     @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
+                 </PropertyColumn>
+                 <PropertyColumn Property="m => m.Email" />
+                 <PropertyColumn Property="m => m.Phone" />
+                 <PropertyColumn Property="m => m.RoleName" />
+                 <ActionColumn Title="Action">
+                     <Popconfirm Title="Sure to delete?"
+                                 OnConfirm="()=> OnRemove(null)"
+                                 OkText="Yes"
+                                 CancelText="No">
+                         <a>Delete</a>
+                     </Popconfirm>
+                 </ActionColumn>
+             </ChildContent>
+             <PaginationTemplate>
+                 <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                             Total="context.Total"
+                             PageSize="context.PageSize"
+                             Current="context.PageIndex"
+                                    ShowSizeChanger
+                             OnChange="context.HandlePageChange" />
+             </PaginationTemplate>
+         </Table>
+     </Content>
 
-    <ChildContent>
-    </ChildContent>
-</PageContainer>
+     <ChildContent>
+     </ChildContent>
+ </PageContainer>
 
  @code {
     [Parameter]
     public EventCallback<string> OnSelectedChange { get; set; }
 
     private UserSearchRequest searchRequest { get; set; } = new();
+
+    [Inject] public NotificationViewModel RightContentViewModel { get; set; }
 
     protected override Task OnSetupAsync()
     {
@@ -123,17 +129,17 @@
         callback = async (pageNo, pageSize, sort, orderby) =>
         {
             return await ViewModel.GetUsersAsync(new PaginatedRequest<UserDto>()
-            {
-                PageNo = pageNo,
-                PageSize = pageSize,
-                SortName = sort,
-                OrderBy = orderby,
-                SearchOption = new UserDto()
                 {
-                    Email = searchRequest.Email,
-                    Name = searchRequest.Name,
-                }
-            });
+                    PageNo = pageNo,
+                    PageSize = pageSize,
+                    SortName = sort,
+                    OrderBy = orderby,
+                    SearchOption = new UserDto()
+                    {
+                        Email = searchRequest.Email,
+                        Name = searchRequest.Name,
+                    }
+                });
         };
         await base.OnSearch(query, callback);
     }
@@ -204,5 +210,18 @@
             //Console.WriteLine(result.xToJson());
             return Task.CompletedTask;
         };
+    }
+
+    private void AddNoti()
+    {
+        RightContentViewModel.AddFavoriteMenu(new NoticeIconData()
+            {
+                Title = "test",
+                Description = "test",
+                Avatar = "test",
+                Key = Guid.NewGuid().ToString("N"),
+                Read = false,
+                Datetime = DateTime.Now,                
+            });
     }
 }

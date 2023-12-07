@@ -3,7 +3,7 @@
 <AntDesign.ProLayout.BasicLayout Logo="@("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")"
                                  MenuData="MenuData"                                                                  
                                  Collapsed="collapsed"
-                                 OnCollapse="e=>collapsed=e"
+                                 OnCollapse="e=>collapsed=e"                                 
                                  MenuAccordion>
      <HeaderContentRender>
          <Space Size="@("24")">
@@ -16,17 +16,17 @@
          </Space>
      </HeaderContentRender>
      <RightContentRender>
-
+        <RightContent/>
      </RightContentRender>
      <ChildContent>
          <ReuseTabs></ReuseTabs>
-         @*  @Body *@
+          @* @Body *@
      </ChildContent>
      <FooterRender>
          <FooterView Copyright="2021 Ant Design Blazor" Links="Links"></FooterView>
      </FooterRender>
  </AntDesign.ProLayout.BasicLayout>
- <SettingDrawer />
+@* <SettingDrawer @ref="settingDrawer" /> *@
 
 @inject HttpClient HttpClient
 @inject ReuseTabsService TabService;
@@ -35,15 +35,25 @@
     bool collapsed;
 
     private MenuDataItem[] MenuData { get; set; } = { };
+    @* private SettingDrawer settingDrawer; *@
 
     protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
+    {        
+        await base.OnInitializedAsync();   
         MenuData = await HttpClient.GetFromJsonAsync<MenuDataItem[]>("data/menu.json");
 
         // workaround for the reusetabs issue that can't open the default page.
         // will fix in next release. https://github.com/ant-design-blazor/ant-design-blazor/pull/3519
-        TabService.ReloadPage();
+        TabService.ReloadPage();        
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(firstRender)
+        {
+            InvokeAsync((Action)base.StateHasChanged);
+        }
+        base.OnAfterRender(firstRender);
     }
 
     public LinkItem[] Links { get; set; } =

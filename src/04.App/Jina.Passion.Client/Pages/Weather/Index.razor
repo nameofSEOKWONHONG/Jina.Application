@@ -5,7 +5,10 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Layout.ViewModels
 @using Jina.Passion.Client.Pages.Weather.ViewModels
+
+@inject IMessageService MessageService
 
 <Tabs Type="@TabType.EditableCard" HideAdd
       @ref="tabs"
@@ -39,8 +42,8 @@
 </Tabs>
 
 @code {
-    [Inject]
-    public WeatherViewModel ViewModel { get; set; }
+    [Inject] public WeatherViewModel ViewModel { get; set; }
+    [Inject] public NotificationViewModel RightContentViewModel { get; set; }
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
@@ -80,12 +83,24 @@
             Key = key
         };
 
-        this.MessageService.Loading(config);
-        await Task.Delay(2000);
+        using(var task = this.MessageService.Loading(config))
+        {   
+            await Task.Delay(2000);
+            config.Content = $"added favorite menu : {menuName}";
+            config.Duration = 2;
 
-        config.Content = $"added favorite menu : {menuName}";
-        config.Duration = 2;
+            await this.MessageService.Success(config);
+        }        
 
-        await this.MessageService.Success(config);
+        RightContentViewModel.AddFavoriteMenu(new NoticeIconData()
+        {
+            Title = menuName,
+            Description = menuName,
+            Avatar = menuName,
+            Key = Guid.NewGuid().ToString("N"),
+            Read = false,
+            Datetime = DateTime.Now,
+            Extra = "/"
+        });
     }
 }

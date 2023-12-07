@@ -10,16 +10,16 @@
 
 <PageContainer>
     <Content>
-        <div>            
+        <div>
             <Row Gutter="24">
                 <GridRow>
                     <GridCol Span="6">
-                        <SimpleSelect DefaultValue="" Style="width: auto;"                                      
+                        <SimpleSelect DefaultValue="" Style="width: auto;"
                                       OnSelectedItemChanged="@(item => SelectChanged(item))">
                             <SelectOptions>
                                 @foreach (var item in this.menuRoleTemplate)
                                 {
-                                    <SimpleSelectOption Value="@item.RoleName" Label="@item.RoleName"/>
+                                    <SimpleSelectOption Value="@item.RoleName" Label="@item.RoleName" />
                                 }
                             </SelectOptions>
                         </SimpleSelect>
@@ -28,7 +28,7 @@
                     </GridCol>
                     <GridCol Span="6">
                     </GridCol>
-                </GridRow>                
+                </GridRow>
             </Row>
             <Row>
                 <GridCol Span="24" Style="text-align:right;">
@@ -65,12 +65,12 @@
              <Selection Key="@(context.Id.ToString())" />
              <PropertyColumn Property="m => m.Id" />
              <PropertyColumn Property="m => m.MenuName" />
-            <PropertyColumn Property="m => m.View">
+             <PropertyColumn Property="m => m.View">
                  <Switch @bind-Value="@context.View" />
-            </PropertyColumn>
-            <PropertyColumn Property="m => m.Read">
+             </PropertyColumn>
+             <PropertyColumn Property="m => m.Read">
                  <Switch @bind-Value="@context.Read" />
-            </PropertyColumn>
+             </PropertyColumn>
              <PropertyColumn Property="m => m.Write">
                  <Switch @bind-Value="@context.Write" />
              </PropertyColumn>
@@ -80,12 +80,12 @@
              <PropertyColumn Property="m => m.Export">
                  <Switch @bind-Value="@context.Export" />
              </PropertyColumn>
-        </Table>
-    </Content>
+         </Table>
+     </Content>
 
-    <ChildContent>
-    </ChildContent>
-</PageContainer>
+     <ChildContent>
+     </ChildContent>
+ </PageContainer>
 
  @code {
     Table<MenuTemplate> table;
@@ -98,7 +98,7 @@
 
         var id = 1;
         var t = new string[] { "admin", "basic" };
-        for(var i=0; i<2; i++)
+        for (var i = 0; i < 2; i++)
         {
             int input = 123450;
             string output = "";
@@ -106,7 +106,7 @@
             var item = new MenuRoleTemplate();
             item.Menus = new();
             item.RoleName = t[i];
-            if(i >= 1)
+            if (i >= 1)
             {
                 input = 12345670;
             }
@@ -141,7 +141,7 @@
     }
 
     void SelectChanged(string key)
-    {        
+    {
         this.selectedMenuTemplate = this.menuRoleTemplate.First(m => m.RoleName == key).Menus;
         this.StateChanged();
     }

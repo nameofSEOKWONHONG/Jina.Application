@@ -55,10 +55,10 @@
                 </GridCol>
             </GridRow>
         </div>
-        <Table @ref="table"
+        <Table @ref="Table"
                TItem="WeatherForecastDto"
-               DataSource="ViewModel.Items"
-               @bind-SelectedRows="ViewModel.SelectedItems"
+               DataSource="this.ViewModel.Items"
+               @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
                Loading="Loading"
                Title="Weather List"
@@ -91,12 +91,9 @@
     </ChildContent>
 </PageContainer>
 
- @code {
-        [Parameter] 
-        public EventCallback<string> OnChange { get; set; }
-
-        [Inject]
-        public WeatherViewModel ViewModel { get; set; }
+@code {
+    [Parameter] 
+    public EventCallback<string> OnChange { get; set; }
 
     private WeatherForecastDto searchValue { get; set; } = new();
 
@@ -145,7 +142,7 @@
     {
         if(this.ViewModel.SelectedItems.xIsEmpty())
         {
-            await MessageService.Warning("delete data is empty");
+            await this.ShowMessageAsync("delete data is empty", ENUM_MESSAGE_TYPE.Warning);
         }        
 
         await ViewModel.RemoveRangeAsync();
