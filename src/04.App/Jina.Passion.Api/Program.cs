@@ -54,7 +54,7 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Application:Secret"]);
+var key = Encoding.UTF8.GetBytes(builder.Configuration["ApplicationOption:Secret"]);
 builder.Services
                 .AddAuthentication(authentication =>
                 {
@@ -168,7 +168,7 @@ builder.Services.AddCors(options =>
                 .AllowAnyOrigin();
         });
 });
-builder.Services.AddHangfire(x => x.UseSqlServerStorage("<connection string>"));
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
 builder.Services.AddHangfireServer();
 builder.Services
     .AddScoped<AppDbContext>()
@@ -209,9 +209,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseWebAssemblyDebugging();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
+
+app.UseBlazorFrameworkFiles();
 
 app.UseHttpsRedirection();
 
@@ -220,5 +225,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseHangfireDashboard();
+
+app.UseRouting();
 
 app.Run();

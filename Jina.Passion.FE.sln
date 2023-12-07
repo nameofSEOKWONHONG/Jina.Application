@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Validate", "..\JINA\sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{8B9ED374-33B3-4D90-A678-7D676447EC95}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Api", "src\04.App\Jina.Passion.Api\Jina.Passion.Api.csproj", "{ED77FE6A-142C-4D45-B400-26244824F5A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{8B9ED374-33B3-4D90-A678-7D676447EC95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B9ED374-33B3-4D90-A678-7D676447EC95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B9ED374-33B3-4D90-A678-7D676447EC95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED77FE6A-142C-4D45-B400-26244824F5A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED77FE6A-142C-4D45-B400-26244824F5A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED77FE6A-142C-4D45-B400-26244824F5A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED77FE6A-142C-4D45-B400-26244824F5A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{C263647A-7797-4339-BE22-7398C79FB203} = {5C97BB6E-1790-4E15-A309-7820E662D5F6}
 		{14B57F0E-A000-4F10-89A8-2A47372937AA} = {5C97BB6E-1790-4E15-A309-7820E662D5F6}
 		{8B9ED374-33B3-4D90-A678-7D676447EC95} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
+		{ED77FE6A-142C-4D45-B400-26244824F5A7} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3F399BD-DFC6-41B1-9452-44E74499EF10}

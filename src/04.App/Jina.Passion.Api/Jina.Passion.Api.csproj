@@ -15,6 +15,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +27,11 @@
     <ItemGroup>
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Infra.csproj" />
+      <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Account\Jina.Domain.Service.Account.csproj" />
+      <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Example\Jina.Domain.Service.Example.csproj" />
+      <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.MultiLanguage\Jina.Domain.Service.MultiLanguage.csproj" />
+      <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Net\Jina.Domain.Service.Net.csproj" />
+      <ProjectReference Include="..\Jina.Passion.Client\Jina.Passion.Client.csproj" />
     </ItemGroup>
 
 </Project>

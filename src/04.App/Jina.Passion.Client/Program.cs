@@ -48,6 +48,8 @@ namespace Jina.Passion.Client
             builder.Services.AddScoped<NotificationViewModel>();
 
             var build = builder.Build();
+            var vm = build.Services.GetRequiredService<NotificationViewModel>();
+            await vm.InitializeAsync();
             await build.RunAsync();
         }
     }
