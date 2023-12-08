@@ -22,6 +22,9 @@ namespace Jina.Passion.Client.Base
         where TViewModel : FeViewModelBase<TDto>
         where TOption : DlgOptionsBase
     {
+        [Inject]
+        public TViewModel ViewModel { get; set; }
+
         protected Table<TDto> Table { get; set; }
 
         protected readonly ViewPaginateion Paginateion = new ViewPaginateion();
@@ -110,9 +113,6 @@ namespace Jina.Passion.Client.Base
 
             this.Loading = false;
         }
-
-        [Inject]
-        public TViewModel ViewModel { get; set; }
 
         public virtual async Task OnRemoveRange(Func<Task<IResultBase<bool>>> callback)
         {

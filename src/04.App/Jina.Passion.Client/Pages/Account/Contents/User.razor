@@ -7,5 +7,18 @@
 <h3>User</h3>
 
 @code {
+    protected override Task OnRoleAsync()
+    {
+        return base.OnRoleAsync();
+    }
 
+    protected override Task OnSetupAsync()
+    {
+        return base.OnSetupAsync();
+    }
+
+    protected override Task OnLoadAsync()
+    {
+        return base.OnLoadAsync();
+    }
 }

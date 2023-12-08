@@ -1,5 +1,24 @@
-﻿<h3>Role List</h3>
+﻿@using Jina.Passion.Client.Base
+@using Jina.Passion.Client.Pages.Account.ViewModels
+@using Jina.Passion.Client.Base.Abstract
+
+@inherits TablePageComponent<MenuRoleTemplate, MenuRoleViewModel, DlgOptions<bool>, bool>
+
+<h3>Role List</h3>
 
 @code {
+    protected override Task OnRoleAsync()
+    {
+        return base.OnRoleAsync();
+    }
 
+    protected override Task OnSetupAsync()
+    {
+        return base.OnSetupAsync();
+    }
+
+    protected override Task OnLoadAsync()
+    {
+        return base.OnLoadAsync();
+    }
 }
