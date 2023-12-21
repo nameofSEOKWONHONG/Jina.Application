@@ -397,3 +397,8 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /src/02.Domain/Jina.Domain.Entity/Migrations
+.idea/.idea.Jina.Passion/.idea/.gitignore
+.idea/.idea.Jina.Passion/.idea/.name
+.idea/.idea.Jina.Passion/.idea/encodings.xml
+.idea/.idea.Jina.Passion/.idea/indexLayout.xml
+.idea/.idea.Jina.Passion/.idea/vcs.xml

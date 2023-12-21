@@ -24,5 +24,5 @@ app.UseRouting();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 app.UseResponseCompression();
-app.MapHub<MessageHub>("/messageHub");
+app.MapHub<ProtocalHub>("/messageHub");
 await app.RunAsync();

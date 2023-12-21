@@ -13,10 +13,10 @@ namespace Jina.Passion.Api.Controllers.Notification
 {
     public class NotificationController : JControllerBase
     {
-        private readonly IHubContext<MessageHub> _hubContext;
+        private readonly IHubContext<ProtocalHub> _hubContext;
         private readonly IBackgroundJobClient _client;
 
-        public NotificationController(IHubContext<MessageHub> hubContext,
+        public NotificationController(IHubContext<ProtocalHub> hubContext,
             IBackgroundJobClient client)
         {
             _hubContext = hubContext;
@@ -40,9 +40,9 @@ namespace Jina.Passion.Api.Controllers.Notification
 
     public class MyBackgroundJob
     {
-        private readonly IHubContext<MessageHub> _hubContext;
+        private readonly IHubContext<ProtocalHub> _hubContext;
 
-        public MyBackgroundJob(IHubContext<MessageHub> hubContext)
+        public MyBackgroundJob(IHubContext<ProtocalHub> hubContext)
         {
             _hubContext = hubContext;
         }

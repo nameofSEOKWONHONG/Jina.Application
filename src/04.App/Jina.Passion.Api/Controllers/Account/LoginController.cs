@@ -7,6 +7,7 @@ using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Jina.Domain.Account.Request;
 
 namespace Jina.Passion.Api.Controllers.Account;
 
@@ -38,7 +39,7 @@ public class LoginController : JControllerBase
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<ActionResult> Refresh(RefreshTokenRequest model,
+    public async Task<IActionResult> Refresh(RefreshTokenRequest model,
         [FromServices] IGetTokenRefreshService service)
     {
         IResultBase<TokenResponse> result = null;
@@ -56,5 +57,12 @@ public class LoginController : JControllerBase
             });
 
         return Ok(result);
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        return Ok();
     }
 }
