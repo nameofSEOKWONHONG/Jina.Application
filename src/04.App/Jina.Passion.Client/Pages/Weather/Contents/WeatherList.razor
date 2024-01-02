@@ -13,7 +13,7 @@
 <PageContainer>
     <Content>
         <div>
-            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form">
+            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form" Size="@AntSizeLDSType.Small">
                 <Row Gutter="24">
                     <GridCol Span="6" @key="nameof(context.Date)">
                         <FormItem Label="@nameof(context.Date)">
@@ -33,7 +33,7 @@
                 </Row>
                 <Row>
                     <GridCol Span="24" Style="text-align:right;">
-                        <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                        <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
                         @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
                     </GridCol>
                 </Row>
@@ -46,10 +46,10 @@
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="2">
-                    <Button OnClick="AddItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button OnClick="AddItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Add
                     </Button>
-                    <Button OnClick="RemoveItemAsync" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button OnClick="RemoveItemAsync" Type="@ButtonType.Primary" Style="margin-bottom:16px">
                         Remove
                     </Button>
                 </GridCol>

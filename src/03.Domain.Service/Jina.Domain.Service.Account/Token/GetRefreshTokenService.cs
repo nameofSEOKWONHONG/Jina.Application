@@ -1,20 +1,12 @@
 ﻿using eXtensionSharp;
-using Jina.Base.Service;
-using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Account.Token;
 using Jina.Domain.Entity;
-using Jina.Domain.Entity.Account;
 using Jina.Domain.Infra.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetRefreshTokenService : EfServiceImpl<GetRefreshTokenService, User, string>, IGetRefreshTokenService
+    public class GetRefreshTokenService : EfServiceImpl<GetRefreshTokenService, Entity.Account.User, string>, IGetRefreshTokenService
     {
         public GetRefreshTokenService(AppDbContext db) : base(db, null)
         {

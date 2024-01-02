@@ -1,23 +1,13 @@
-﻿using Jina.Base.Service;
-using Jina.Base.Service.Abstract;
-using Jina.Domain.Account;
-using Jina.Domain.Entity.Account;
-using Jina.Session.Abstract;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using eXtensionSharp;
+using Jina.Base.Service;
+using Jina.Domain.Abstract.Account.Token;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
-using eXtensionSharp;
-using Jina.Domain.Abstract.Account.Token;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GenerateJwtTokenService : ServiceImplBase<GenerateJwtTokenService, User, string>, IGenerateJwtTokenService
+    public class GenerateJwtTokenService : ServiceImplBase<GenerateJwtTokenService, Entity.Account.User, string>, IGenerateJwtTokenService
     {
         private readonly IConfiguration _configuration;
         private readonly IGenerateEncryptedTokenService _generateEncryptedTokenService;
@@ -44,7 +34,7 @@ namespace Jina.Domain.Service.Account.Token
         {
             SigningCredentials signingCredentials = null;
             IEnumerable<Claim> claims = null;
-            await ServiceInvoker<User, IEnumerable<Claim>>.Invoke(_getClaimsService)
+            await ServiceInvoker<Entity.Account.User, IEnumerable<Claim>>.Invoke(_getClaimsService)
                 .AddFilter(() => Request.xIsNotEmpty())
                 .SetParameter(() => Request)
                 .OnExecutedAsync((res) => claims = res);

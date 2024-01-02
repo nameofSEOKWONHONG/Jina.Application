@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Infra.Extension
 {
-    public static class CryptionExtensions
+    public static class EncryptionExtensions
     {
         public static string vToAESEncrypt(this string text)
         {

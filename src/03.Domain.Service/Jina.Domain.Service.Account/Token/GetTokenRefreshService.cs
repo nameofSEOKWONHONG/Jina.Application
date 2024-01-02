@@ -95,7 +95,7 @@ namespace Jina.Domain.Service.Account.Token
                 .SetParameter(() => true)
                 .OnExecutedAsync((res) => signingCredentials = res);
 
-            await ServiceInvoker<User, IEnumerable<Claim>>.Invoke(_getClaimsService)
+            await ServiceInvoker<Entity.Account.User, IEnumerable<Claim>>.Invoke(_getClaimsService)
                 .AddFilter(() => user.xIsNotEmpty())
                 .SetParameter(() => user)
                 .OnExecutedAsync((res) => claims = res);
@@ -109,7 +109,7 @@ namespace Jina.Domain.Service.Account.Token
                 })
                 .OnExecutedAsync((res) => token = res);
 
-            await ServiceInvoker<User, string>.Invoke(_getRefreshTokenService)
+            await ServiceInvoker<Entity.Account.User, string>.Invoke(_getRefreshTokenService)
                 .AddFilter(() => user.xIsNotEmpty())
                 .SetParameter(() => user)
                 .OnExecutedAsync((res) => user.RefreshToken = res);

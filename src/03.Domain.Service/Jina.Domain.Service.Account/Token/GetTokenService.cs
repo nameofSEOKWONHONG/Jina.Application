@@ -18,13 +18,13 @@ public class GetTokenService
     : EfServiceImpl<GetTokenService, TokenRequest, IResultBase<TokenResponse>>
         , IGetTokenService
 {
-    private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
     private readonly IGetRefreshTokenService _getRefreshTokenService;
     private readonly IGenerateJwtTokenService _generateJwtTokenService;
 
     public GetTokenService(AppDbContext db
         , ISessionContext context
-        , IPasswordHasher<User> passwordHasher
+        , IPasswordHasher<Entity.Account.User> passwordHasher
         , IGetRefreshTokenService getRefreshTokenService
         , IGenerateJwtTokenService generateJwtTokenService) : base(db, context)
     {
@@ -35,7 +35,7 @@ public class GetTokenService
 
     public override async Task<bool> OnExecutingAsync()
     {
-        var users = DbContext.Set<User>();
+        var users = DbContext.Set<Entity.Account.User>();
         var user = await users.AsNoTracking().FirstOrDefaultAsync(m => m.TenantId == SessionContext.TenantId &&
                                                                        m.Email == Request.Email);
         if (user.xIsEmpty())
@@ -83,11 +83,11 @@ public class GetTokenService
 
     public override async Task OnExecuteAsync()
     {
-        var users = DbContext.Set<User>();
+        var users = DbContext.Set<Entity.Account.User>();
         var user = await users.AsNoTracking().FirstOrDefaultAsync(m => m.TenantId == SessionContext.TenantId && m.Email == Request.Email);
 
         string token = string.Empty;
-        await ServiceInvoker<User, string>
+        await ServiceInvoker<Entity.Account.User, string>
             .Invoke(_getRefreshTokenService)
             .AddFilter(() => user.xIsNotEmpty())
             .SetParameter(() => user)
@@ -97,7 +97,7 @@ public class GetTokenService
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             });
 
-        await ServiceInvoker<User, string>.Invoke(_generateJwtTokenService)
+        await ServiceInvoker<Entity.Account.User, string>.Invoke(_generateJwtTokenService)
             .AddFilter(() => user.xIsNotEmpty())
             .SetParameter(() => user)
             .OnExecutedAsync((res) => token = res);
