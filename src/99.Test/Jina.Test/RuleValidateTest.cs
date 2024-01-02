@@ -100,7 +100,7 @@ namespace Jina.Test
                 TestContext.Out.WriteLine(item.Key);
                 TestContext.Out.WriteLine(item.Message);
                 TestContext.Out.WriteLine("=======================");
-                Assert.IsFalse(item.IsValid);
+                Assert.That(item.IsValid, Is.False);
             }
         }
     }
