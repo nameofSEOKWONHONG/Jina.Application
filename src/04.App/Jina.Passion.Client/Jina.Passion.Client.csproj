@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.17.1" />
-    <PackageReference Include="AntDesign.ProLayout" Version="0.16.2" />
+    <PackageReference Include="AntDesign.ProLayout" Version="0.17.1.2" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="KakaoMapBlazor" Version="2.0.5" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
