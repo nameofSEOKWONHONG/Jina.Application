@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eXtensionSharp\src\eXtensionSharp.csproj" />
     <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
     <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
     <ProjectReference Include="..\..\02.Domain\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
