@@ -18,7 +18,7 @@ namespace Jina.Test
         [Test]
         public void rule_try_validate_test()
         {
-            if (RuleValidatorCore.Core.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
+            if (JRuleValidatorEngine.Engine.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
             {
                 Key = "Name",
                 Value = "",
@@ -33,7 +33,7 @@ namespace Jina.Test
                 Assert.Fail();
             }
 
-            if (RuleValidatorCore.Core.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
+            if (JRuleValidatorEngine.Engine.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
             {
                 Key = "Age",
                 Value = 10,
@@ -49,7 +49,7 @@ namespace Jina.Test
                 Assert.Fail();
             }
 
-            if (RuleValidatorCore.Core.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
+            if (JRuleValidatorEngine.Engine.TryValidate(new Validate.RuleValidate.Abstract.RuleValidateOption()
             {
                 Key = "Amount",
                 Value = 30m,
@@ -94,7 +94,7 @@ namespace Jina.Test
                 CustomMessage = "test3"
             });
 
-            var results = RuleValidatorCore.Core.Validates(items);
+            var results = JRuleValidatorEngine.Engine.Validates(items);
             foreach (var item in results)
             {
                 TestContext.Out.WriteLine(item.Key);
