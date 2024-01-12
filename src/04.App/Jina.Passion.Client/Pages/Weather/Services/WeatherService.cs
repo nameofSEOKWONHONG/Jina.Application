@@ -1,8 +1,13 @@
-﻿using Jina.Domain.Example;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Passion.Client.Base;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace Jina.Passion.Client.Pages.Weather.Services
 {

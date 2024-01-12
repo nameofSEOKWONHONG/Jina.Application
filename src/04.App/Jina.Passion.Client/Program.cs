@@ -1,11 +1,16 @@
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using AntDesign.ProLayout;
 using Jina.Passion.Client.Layout.ViewModels;
 using Jina.Passion.Client.Pages.Account.Services;
 using Jina.Passion.Client.Pages.Account.ViewModels;
 using Jina.Passion.Client.Pages.Weather.Services;
 using Jina.Passion.Client.Pages.Weather.ViewModels;
+using Jina.Passion.Client.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Jina.Passion.Client
 {
@@ -46,6 +51,7 @@ namespace Jina.Passion.Client
             builder.Services.AddScoped<UserListViewModel>();
             builder.Services.AddScoped<MenuRoleViewModel>();
             builder.Services.AddScoped<NotificationViewModel>();
+            builder.Services.AddScoped<IChartService, ChartService>();
 
             var build = builder.Build();
             var vm = build.Services.GetRequiredService<NotificationViewModel>();

@@ -1,4 +1,6 @@
-﻿namespace Jina.Passion.Client.Base
+﻿using System.Collections.Generic;
+
+namespace Jina.Passion.Client.Base
 {
     public abstract class FeViewModelBase
     {

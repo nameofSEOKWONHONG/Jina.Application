@@ -1,4 +1,5 @@
-﻿using Jina.Passion.Client.Base;
+﻿using System.Collections.Generic;
+using Jina.Passion.Client.Base;
 
 namespace Jina.Passion.Client.Pages.Account.ViewModels
 {

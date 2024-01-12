@@ -1,4 +1,5 @@
-﻿using Jina.Domain.Account;
+﻿using System.Threading.Tasks;
+using Jina.Domain.Account;
 using Jina.Domain.Account.Token;
 using Jina.Domain.SharedKernel.Abstract;
 

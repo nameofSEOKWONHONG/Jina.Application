@@ -1,4 +1,6 @@
-﻿using eXtensionSharp;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using eXtensionSharp;
 using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
 using Jina.Passion.Client.Base;

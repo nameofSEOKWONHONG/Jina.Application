@@ -1,4 +1,6 @@
-﻿namespace Jina.Passion.Client.Base
+﻿using System.Net.Http;
+
+namespace Jina.Passion.Client.Base
 {
     public class FeServiceBase
     {

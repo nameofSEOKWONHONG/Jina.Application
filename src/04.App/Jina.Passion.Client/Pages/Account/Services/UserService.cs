@@ -1,4 +1,8 @@
-﻿using Jina.Domain.Account;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Jina.Domain.Account;
 using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;

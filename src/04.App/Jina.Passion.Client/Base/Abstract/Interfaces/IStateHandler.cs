@@ -1,4 +1,6 @@
-﻿namespace Jina.Passion.Client.Base.Abstract.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Jina.Passion.Client.Base.Abstract.Interfaces
 {
     public interface IStateHandler
     {

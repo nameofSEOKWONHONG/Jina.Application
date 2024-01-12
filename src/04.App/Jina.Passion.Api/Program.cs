@@ -19,7 +19,7 @@ app.UseStaticFiles()
    .UseHttpsRedirection()
    .UseAuthorization();
 app.MapControllers();
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
