@@ -16,7 +16,7 @@ namespace Jina.Domain.Account
         public string RoleId { get; set; }
         public string RoleName { get; set; }
 
-        public class Validator : JValidator<UserDto>
+        public class Validator : RuleValidator<UserDto>
         {
             public Validator()
             {

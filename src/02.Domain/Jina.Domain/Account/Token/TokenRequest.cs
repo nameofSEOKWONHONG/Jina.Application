@@ -21,7 +21,7 @@ namespace Jina.Domain.Account.Token
 
         public string ConnectionId { get; set; }
 
-        public class Validator : JValidator<TokenRequest>
+        public class Validator : RuleValidator<TokenRequest>
         {
             public Validator(ILocalizer localizer)
             {

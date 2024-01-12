@@ -15,7 +15,7 @@ namespace Jina.Domain.Account.Token
         public string Token { get; set; }
         public string RefreshToken { get; set; }
 
-        public class Valdiator : JValidator<RefreshTokenRequest>
+        public class Valdiator : RuleValidator<RefreshTokenRequest>
         {
             public Valdiator(ILocalizer localizer)
             {

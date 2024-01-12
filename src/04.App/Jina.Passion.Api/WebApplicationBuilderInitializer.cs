@@ -43,7 +43,7 @@ namespace Jina.Passion.Api
 
             #region [localizer]
 
-            builder.Services.AddSingleton<ILocalizer, JLocalizer>();
+            builder.Services.AddSingleton<ILocalizer, Localizer>();
 
             #endregion [localizer]
 
@@ -193,10 +193,8 @@ namespace Jina.Passion.Api
             #region [hangfire]
 
             builder.Services.AddHangfire(config =>
-                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                      .UseSimpleAssemblyNameTypeSerializer()
-                      .UseRecommendedSerializerSettings()
-                      .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+                config.UseSqlServerStorage(() => new Microsoft.Data.SqlClient.SqlConnection(
+                        builder.Configuration.GetConnectionString("HangfireConnection"))));
             builder.Services.AddHangfireServer();
 
             #endregion [hangfire]
