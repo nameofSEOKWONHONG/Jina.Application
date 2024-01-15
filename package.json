@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "An out-of-box UI solution for enterprise applications as a Blazor boilerplate.",
     "scripts": {
-        "start": "dotnet watch -p ./src/AntDesign.Pro run",
+        "start": "dotnet watch -p ./src/04.App/Jina.Passion.Client run",
         "build": "dotnet publish -o dist",
-        "gulp:pro": "gulp --gulpfile ./src/AntDesign.Pro/gulpfile.js",
+        "gulp:pro": "gulp --gulpfile ./src/04.App/Jina.Passion.Client/gulpfile.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "ant-design-blazor",
