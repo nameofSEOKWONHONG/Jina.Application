@@ -18,6 +18,7 @@ app.UseStaticFiles()
    .UseBlazorFrameworkFiles()
    .UseHttpsRedirection()
    .UseAuthorization();
+app.UseCors("AllowedCorsOrigins");
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();

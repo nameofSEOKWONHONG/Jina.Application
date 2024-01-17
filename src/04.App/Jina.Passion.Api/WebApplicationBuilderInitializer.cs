@@ -177,14 +177,14 @@ namespace Jina.Passion.Api
 
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
-                    corsPolicyBuilder =>
+                options.AddPolicy(name: "AllowedCorsOrigins",
+                    builder =>
                     {
-                        corsPolicyBuilder
-                            //.AllowCredentials()
+                        builder
+                            .SetIsOriginAllowed(IsOriginAllowed)
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowAnyOrigin();
+                            .AllowCredentials();
                     });
             });
 
@@ -259,6 +259,21 @@ namespace Jina.Passion.Api
             #endregion [swagger]
 
             return builder;
+        }
+
+        private static bool IsOriginAllowed(string origin)
+        {
+            var uri = new Uri(origin);
+            var env = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "n/a";
+
+            var isAllowed = uri.Host.Equals("example.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.Equals("another-example.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.EndsWith(".example.com", StringComparison.OrdinalIgnoreCase)
+                            || uri.Host.EndsWith(".another-example.com", StringComparison.OrdinalIgnoreCase);
+            if (!isAllowed && env.Contains("DEV", StringComparison.OrdinalIgnoreCase))
+                isAllowed = uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase);
+
+            return isAllowed;
         }
     }
 }

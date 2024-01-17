@@ -88,7 +88,7 @@ namespace Jina.Passion.Client.Base
                 this.Paginateion.Total = result.TotalCount;
             }
 
-            this.Table.UnselectAll();
+            // this.Table.ResetData();
 
             this.Loading = false;
         }

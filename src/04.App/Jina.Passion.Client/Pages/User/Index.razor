@@ -1,4 +1,5 @@
-﻿@page "/account/index"
+﻿@page "/user/index"
+@attribute [ReuseTabsPage(Title = "User")]
 
 <Tabs Type="@TabType.EditableCard" HideAdd       
        DefaultActiveKey="1"
@@ -6,17 +7,17 @@
       Animated>
     <TabPane Key="1" Tab="User List" Closable="false">
         <ChildContent>
-            <Jina.Passion.Client.Pages.Account.Contents.UserList />
+            <Jina.Passion.Client.Pages.User.Contents.UserList />
         </ChildContent>
     </TabPane>
     <TabPane Key="2" Tab="Role List" Closable="false">
         <ChildContent>
-            <Jina.Passion.Client.Pages.Account.Contents.RoleList />
+            <Jina.Passion.Client.Pages.User.Contents.RoleList />
         </ChildContent>
     </TabPane>
     <TabPane Key="3" Tab="MenuRole List" Closable="false">
         <ChildContent>
-            <Jina.Passion.Client.Pages.Account.Contents.MenuRoleList />
+            <Jina.Passion.Client.Pages.User.Contents.MenuRoleList />
         </ChildContent>
     </TabPane>
 </Tabs>

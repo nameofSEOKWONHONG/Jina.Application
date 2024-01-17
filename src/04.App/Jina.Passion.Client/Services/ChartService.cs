@@ -42,6 +42,6 @@ public class ChartService : FeServiceBase, IChartService
 
     private async Task<ChartData> GetChartDataAsync()
     {
-        return await this.Client.GetFromJsonAsync<ChartData>("data/fake_chart_data.json");
+        return await this.Client.GetFromJsonAsync<ChartData>("https://localhost:7007/data/fake_chart_data.json");
     }
 }

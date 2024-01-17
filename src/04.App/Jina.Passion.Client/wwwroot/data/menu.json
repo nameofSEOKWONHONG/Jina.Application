@@ -47,24 +47,24 @@
   },
   {
     "path": "/account",
-    "name": "Account page",
-    "key": "account",
-    "icon": "account",
+    "name": "User",
+    "key": "User",
+    "icon": "user",
     "children": [
       {
-        "path": "/account/index",
-        "name": "Account Form",
-        "key": "account.index"
+        "path": "/user/index",
+        "name": "Users",
+        "key": "user.index"
       },
       {
-        "path": "/account/step-form",
-        "name": "Step Form",
-        "key": "account.step-form"
+        "path": "/user/step-form",
+        "name": "User Form",
+        "key": "user.step-form"
       },
       {
-        "path": "/account/advanced-form",
-        "name": "Advanced Form",
-        "key": "account.advanced-form"
+        "path": "/user/advanced-form",
+        "name": "User Form",
+        "key": "user.advanced-form"
       }
     ]
   }

@@ -9,6 +9,7 @@
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 
 @inject IMessageService MessageService
+@attribute [ReuseTabsPage(Title = "Weather")]
 
 <Tabs Type="@TabType.EditableCard" HideAdd
       @ref="tabs"

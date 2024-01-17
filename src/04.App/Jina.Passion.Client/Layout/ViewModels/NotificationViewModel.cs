@@ -24,7 +24,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
 
         public async Task InitializeAsync()
         {
-            var uri = _navigation.ToAbsoluteUri("/messageHub");
+            var uri = "https://localhost:7103/messageHub";
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(uri)
                 .Build();

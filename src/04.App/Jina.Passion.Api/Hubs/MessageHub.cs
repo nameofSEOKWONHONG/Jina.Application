@@ -1,5 +1,4 @@
-﻿using AntDesign;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace Jina.Passion.Api.Hubs
 {

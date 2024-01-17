@@ -45,7 +45,7 @@
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="4"></GridCol>
                 <GridCol Span="2">
-                    <Button @onclick="() => AddNoti()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
+                    <Button @onclick="() => AddNotification()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
                         Add
                     </Button>
                     <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
@@ -72,9 +72,9 @@
                @bind-Total="this.Paginateion.Total"
                PaginationPosition="@this.Paginateion.DefaultPagingPosition"
                Resizable
-                RowKey="m=>m.Id">
+               RowKey="m=>m.Id">
              <ChildContent>
-                 <Selection Key="@context.Id" />
+                 <Selection Key="@(context.Id)" />
                  <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
                      @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
                  </PropertyColumn>
@@ -95,7 +95,7 @@
                              Total="context.Total"
                              PageSize="context.PageSize"
                              Current="context.PageIndex"
-                                    ShowSizeChanger
+                             ShowSizeChanger
                              OnChange="context.HandlePageChange" />
              </PaginationTemplate>
          </Table>
@@ -211,7 +211,7 @@
         };
     }
 
-    private void AddNoti()
+    private void AddNotification()
     {
         RightContentViewModel.AddFavoriteMenu(new NoticeIconData()
             {

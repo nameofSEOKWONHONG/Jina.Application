@@ -24,15 +24,27 @@ namespace Jina.Passion.Client.Pages.Account.Services
             {
                 new UserDto()
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Email = "test@gmail.com",
-                    Name = "test",
+                    Id = "1",
+                    Email = "test1@gmail.com",
+                    Name = "test1",
+                    Phone = "010-1111-2222",
+                    RoleName = "admin",
+                    GroupName = "manage",
+                    CreatedName = "test",
+                    LastModifiedName = "test"
+                },
+                new UserDto()
+                {
+                    Id = "2",
+                    Email = "test2@gmail.com",
+                    Name = "test2",
                     Phone = "010-1111-2222",
                     RoleName = "admin",
                     GroupName = "manage",
                     CreatedName = "test",
                     LastModifiedName = "test"
                 }
+                
             }, 20, 1, 10);
         }
 
