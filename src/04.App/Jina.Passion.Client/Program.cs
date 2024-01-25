@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AntDesign.ProLayout;
@@ -56,6 +57,8 @@ namespace Jina.Passion.Client
             builder.Services.AddScoped<MenuRoleViewModel>();
             builder.Services.AddScoped<NotificationViewModel>();
             builder.Services.AddScoped<IChartService, ChartService>();
+
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
             var build = builder.Build();
             var vm = build.Services.GetRequiredService<NotificationViewModel>();
