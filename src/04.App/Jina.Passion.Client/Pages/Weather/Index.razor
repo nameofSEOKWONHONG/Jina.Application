@@ -49,7 +49,6 @@
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
-    private WeatherForecastDto selectedItem;
     private TablePageComponent<WeatherForecastDto, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastDto>> tablePage;
 
     public record Pane(string Title, string Content, string Key, WeatherForecastDto WeatherForecastDto, bool Closable = true);

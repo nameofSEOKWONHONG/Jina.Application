@@ -19,7 +19,7 @@
     </Content>
 
     <ChildContent>
-        <p role="status">Current count: @currentCount</p>
+        <p role="status">Current count: @_currentCount</p>
         <Button Type="@ButtonType.Primary" OnClick="IncrementCount">Click me</Button>
         <br/>
         <DatePicker TValue="DateTime?" Picker="@DatePickerType.Date" />
@@ -27,10 +27,7 @@
 </PageContainer>
 
 @code {
-    private string currentUrl;
-    private List<string> _breadcrumbItems;
-
-    private int currentCount = 0;
+    private int _currentCount = 0;
 
     protected override void OnInitialized()
     {
@@ -39,6 +36,6 @@
 
     private void IncrementCount()
     {
-        currentCount++;
+        _currentCount++;
     }
 }

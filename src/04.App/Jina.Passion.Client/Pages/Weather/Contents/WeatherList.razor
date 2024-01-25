@@ -97,13 +97,6 @@
 
     private WeatherForecastDto searchValue { get; set; } = new();
 
-    private Table<WeatherForecastDto> table;
-
-    protected override Task OnDlgParameterSetupAsync()
-    {
-        return base.OnDlgParameterSetupAsync();
-    }
-
     protected override Task OnRoleAsync()
     {
         Console.WriteLine("OnRoleSetupAsync");
@@ -146,8 +139,7 @@
         }        
 
         await ViewModel.RemoveRangeAsync();
-
-        table.UnselectAll();
+        this.Table.UnselectAll();
     }
 
     async Task AddItemAsync()
