@@ -15,9 +15,10 @@ namespace Jina.Passion.Client.Layout
         private List<NoticeIconData> _events = new();
         private int _count = 0;
 
-        [Inject] protected NavigationManager NavigationManager { get; set; }
-        [Inject] protected MessageService MessageService { get; set; }
-        [Inject] protected NotificationViewModel ViewModel { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public MessageService MessageService { get; set; }
+        [Inject] public NotificationViewModel ViewModel { get; set; }
+        [Inject] public INotificationService NotificationService { get; set; } 
 
         private List<AutoCompleteDataItem<string>> DefaultOptions { get; set; } = new List<AutoCompleteDataItem<string>>
         {
@@ -50,8 +51,16 @@ namespace Jina.Passion.Client.Layout
         {
             await base.OnInitializedAsync();
             SetClassMap();
-            ViewModel.OnChange = () =>
+            ViewModel.OnChange = (notiData) =>
             {
+                var config = new NotificationConfig()
+                {
+                    NotificationType = NotificationType.Info,
+                    Message = notiData.Description,
+                    Placement = NotificationPlacement.TopRight,
+                };
+                
+                NotificationService.Open(config);                 
                 this.InvokeStateHasChangedAsync();
             };
             //_currentUser = await UserService.GetCurrentUserAsync();

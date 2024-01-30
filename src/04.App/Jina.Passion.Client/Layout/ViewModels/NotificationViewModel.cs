@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AntDesign;
 using AntDesign.ProLayout;
 using eXtensionSharp;
 using Microsoft.AspNetCore.Components;
@@ -16,10 +17,12 @@ namespace Jina.Passion.Client.Layout.ViewModels
         public List<NoticeIconData> FavoriteMenus { get; set; } = new();
         private HubConnection _hubConnection;
         private NavigationManager _navigation;
+        private INotificationService _notificationService;
 
-        public NotificationViewModel(NavigationManager navigationManager)
+        public NotificationViewModel(NavigationManager navigationManager, INotificationService notificationService)
         {
             _navigation = navigationManager;
+            _notificationService = notificationService;
         }
 
         public async Task InitializeAsync()
@@ -29,11 +32,10 @@ namespace Jina.Passion.Client.Layout.ViewModels
                 .WithUrl(uri)
                 .Build();
 
-            _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+            _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
             {
                 var encodedMsg = $"{user}: {message}";
-                // message process
-                this.AddFavoriteMenu(new NoticeIconData()
+                var notiData = new NoticeIconData()
                 {
                     Title = user,
                     Description = message,
@@ -41,12 +43,9 @@ namespace Jina.Passion.Client.Layout.ViewModels
                     Key = Guid.NewGuid().ToString("N"),
                     Read = false,
                     Datetime = DateTime.Now,
-                });
-
-                if (OnChange.xIsNotEmpty())
-                {
-                    OnChange();
-                }
+                };
+                // message process
+                this.AddFavoriteMenu(notiData);
             });
 
             await _hubConnection.StartAsync();
@@ -58,7 +57,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
             Count = FavoriteMenus.Count;
             if (OnChange.xIsNotEmpty())
             {
-                OnChange();
+                OnChange(data);
             }
         }
 
@@ -69,7 +68,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
                 Count = 0;
                 if (OnChange.xIsNotEmpty())
                 {
-                    OnChange();
+                    OnChange(null);
                 }
                 return;
             }
@@ -78,10 +77,10 @@ namespace Jina.Passion.Client.Layout.ViewModels
             FavoriteMenus.Clear();
             if (OnChange.xIsNotEmpty())
             {
-                OnChange();
+                OnChange(null);
             }
         }
 
-        public Action OnChange { get; set; }
+        public Action<NoticeIconData> OnChange { get; set; }
     }
 }
