@@ -13,11 +13,13 @@
 
 @inherits TablePageComponent<UserDto, UserListViewModel, DlgOptions<bool>, IEnumerable<UserDto>>
 
+<PageHeader Class="site-page-header" Title="User List" Subtitle="user list" />
+
 <PageContainer>
     <Content>
         <div>
             <Form Model="searchRequest" Name="search" Class="ant-advanced-search-form">
-                <Row Gutter="24">
+                <GridRow>
                     <GridCol Span="6" @key="nameof(context.Name)">
                         <FormItem Label="@nameof(context.Name)">
                             <Input @bind-Value="@(context.Name)" Style="width: 80%;" Size="@InputSize.Small" />
@@ -28,32 +30,17 @@
                             <Input @bind-Value="@(context.Email)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
                     </GridCol>
-                </Row>
-                <Row>
-                    <GridCol Span="24" Style="text-align:right;">
-                        <Button Type="primary" @onclick="()=> OnSearch(null, null)">Clear</Button>
-                        @* <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button> *@
-                        @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
-                    </GridCol>
-                </Row>
+                </GridRow>
             </Form>
         </div>
-        <br />
+        <Divider />
         <div>
-            <GridRow Justify="end">
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="2">
-                    <Button @onclick="() => AddNotification()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Add
-                    </Button>
-                    <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Add
-                    </Button>
-                    <Button @onclick="() => OnRemoveRange(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Remove
-                    </Button>
+            <GridRow>
+                <GridCol Span="24" Style="text-align:right;">
+                    <Button Type="primary" @onclick="()=> OnSearch(null, null)" Size="@ButtonSize.Small">Search</Button>
+                    <Button @onclick="() => AddNotification()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Notification</Button>
+                    <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Add</Button>
+                    <Button Danger @onclick="() => OnRemoveRange(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Remove</Button>
                 </GridCol>
             </GridRow>
         </div>
@@ -125,21 +112,18 @@
 
     public override async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
     {
-        callback = async (pageNo, pageSize, sort, orderby) =>
+        callback = async (pageNo, pageSize, sort, order) => await ViewModel.GetUsersAsync(new PaginatedRequest<UserDto>()
         {
-            return await ViewModel.GetUsersAsync(new PaginatedRequest<UserDto>()
-                {
-                    PageNo = pageNo,
-                    PageSize = pageSize,
-                    SortName = sort,
-                    OrderBy = orderby,
-                    SearchOption = new UserDto()
-                    {
-                        Email = searchRequest.Email,
-                        Name = searchRequest.Name,
-                    }
-                });
-        };
+            PageNo = pageNo,
+            PageSize = pageSize,
+            SortName = sort,
+            OrderBy = order,
+            SearchOption = new UserDto()
+            {
+                Email = searchRequest.Email,
+                Name = searchRequest.Name,
+            }
+        });
         await base.OnSearch(query, callback);
     }
 

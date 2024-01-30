@@ -1,7 +1,4 @@
-using System;
 using System.Globalization;
-using System.Net.Http;
-using System.Threading.Tasks;
 using AntDesign.ProLayout;
 using Jina.Passion.Client.Layout.ViewModels;
 using Jina.Passion.Client.Pages.Account.Services;
@@ -11,7 +8,6 @@ using Jina.Passion.Client.Pages.Weather.ViewModels;
 using Jina.Passion.Client.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Jina.Passion.Client
 {

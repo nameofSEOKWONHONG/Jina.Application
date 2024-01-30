@@ -8,6 +8,7 @@
     <GenerateRuntimeConfigDevFile>true</GenerateRuntimeConfigDevFile>
     <!--<RunAOTCompilation>true</RunAOTCompilation>-->
     <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+    <WasmEnableThreads>false</WasmEnableThreads>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(SolutionDir)'==''">

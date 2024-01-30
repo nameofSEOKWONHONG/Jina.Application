@@ -14,7 +14,7 @@
     <Content>
         <div>
             <Form Model="searchValue" Name="search" Class="ant-advanced-search-form" Size="@AntSizeLDSType.Small">
-                <Row Gutter="24">
+                <GridRow>
                     <GridCol Span="6" @key="nameof(context.Date)">
                         <FormItem Label="@nameof(context.Date)">
                             <DatePicker @bind-Value="@(context.Date)" Style="width: 80%;" Size="@InputSize.Small" />
@@ -30,30 +30,26 @@
                             <Input @bind-Value="@(context.Summary)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
                     </GridCol>
-                </Row>
-                <Row>
-                    <GridCol Span="24" Style="text-align:right;">
-                        <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
-                        @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
-                    </GridCol>
-                </Row>
+                </GridRow>
             </Form>
         </div>
         <br/>
         <div>
-            <GridRow Justify="end">
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="2">
-                    <Button OnClick="AddItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Add
-                    </Button>
-                    <Button OnClick="RemoveItemAsync" Type="@ButtonType.Primary" Style="margin-bottom:16px">
-                        Remove
-                    </Button>
+            <GridRow>
+                <GridCol Span="24" Style="text-align:right;">
+                    <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                    <Button OnClick="AddItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Add</Button>
+                    <Button Danger OnClick="RemoveItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Remove</Button>
                 </GridCol>
             </GridRow>
+            @* <GridRow Justify="end"> *@
+            @*     <GridCol Span="4"></GridCol> *@
+            @*     <GridCol Span="4"></GridCol> *@
+            @*     <GridCol Span="4"></GridCol> *@
+            @*     <GridCol Span="2"> *@
+            @* *@
+            @*     </GridCol> *@
+            @* </GridRow> *@
         </div>
         <Table @ref="Table"
                TItem="WeatherForecastDto"
@@ -63,27 +59,28 @@
                Loading="Loading"
                Title="Weather List"
                Size="TableSize.Small"
+               PaginationPosition="@this.Paginateion.DefaultPagingPosition"
                Resizable
-               RowKey="m=>m.Id">
-            <Selection Key="@(context.Id.ToString())" /> 
-             <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
+               RowKey="m => m.Id">
+            <Selection Key="@(context.Id.ToString())"/>
+            <PropertyColumn Property="m => m.Date" Sortable DefaultSortOrder="SortDirection.Ascending">
                 <a @onclick='() => ItemClick(context)'>@context.Date</a>
             </PropertyColumn>
-            <PropertyColumn Property="m => m.City" />
-            <PropertyColumn Property="m => m.TemperatureC" />
-            <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF" />
-            <PropertyColumn Title="Summary" Property="m => m.Summary" />
+            <PropertyColumn Property="m => m.City"/>
+            <PropertyColumn Property="m => m.TemperatureC"/>
+            <PropertyColumn Title="Temp. (F)" Property="m => m.TemperatureF"/>
+            <PropertyColumn Title="Summary" Property="m => m.Summary"/>
             <ActionColumn Title="Action">
-@*                 <Space>
-                    <SpaceItem><Button Danger OnClick="()=>Pdf(context.Id)">Delete</Button></SpaceItem>
-                 </Space> *@
-                 <Popconfirm Title="Sure to delete?"
-                             OnConfirm="()=> DeleteRowAsync(context.Id)"
-                             OkText="Yes"
-                             CancelText="No">
-                     <a>Delete</a>
-                 </Popconfirm>
-             </ActionColumn>
+                @*                 <Space>
+                        <SpaceItem><Button Danger OnClick="()=>Pdf(context.Id)">Delete</Button></SpaceItem>
+                     </Space> *@
+                <Popconfirm Title="Sure to delete?"
+                            OnConfirm="() => DeleteRowAsync(context.Id)"
+                            OkText="Yes"
+                            CancelText="No">
+                    <a>Delete</a>
+                </Popconfirm>
+            </ActionColumn>
         </Table>
     </Content>
 
@@ -166,19 +163,13 @@
         {
             Param = new WeatherForecastDto()
         });
-        confirmd.OnOpen = () =>
-        {
-            return Task.CompletedTask;
-        };
+        confirmd.OnOpen = () => Task.CompletedTask;
 
-        confirmd.OnClose = () =>
-        {
-            return Task.CompletedTask;
-        };
+        confirmd.OnClose = () => Task.CompletedTask;
 
         confirmd.OnOk = result =>
         {
-            //Console.WriteLine(result.xToJson());
+            Console.WriteLine(result.xToJson());
             return Task.CompletedTask;
         };
     }

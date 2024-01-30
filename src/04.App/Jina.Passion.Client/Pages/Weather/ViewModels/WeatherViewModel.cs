@@ -18,10 +18,11 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.WeatherService = service;
         }
 
-        public async Task GetWeathersAsync(PaginatedRequest<WeatherForecastDto> request)
+        public async Task<List<WeatherForecastDto>> GetWeathersAsync(PaginatedRequest<WeatherForecastDto> request)
         {
             //1, 10
             this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastDto>());
+            return this.Items;
         }
 
         public async Task GetWeatherAsync(int id)

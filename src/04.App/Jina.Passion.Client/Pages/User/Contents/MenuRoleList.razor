@@ -7,59 +7,39 @@
 
 @inherits TablePageComponent<MenuRoleTemplate, MenuRoleViewModel, DlgOptions<bool>, bool>
 
+<PageHeader Class="site-page-header" Title="Menu Role List" Subtitle="menu role list" />
+
 <PageContainer>
     <Content>
         <div>
-            <Row Gutter="24">
-                <GridRow>
-                    <GridCol Span="6">
-                        <SimpleSelect DefaultValue="admin" Style="width: auto;"
-                                      OnSelectedItemChanged="@(item => SelectChanged(item))">
-                            <SelectOptions>
-                                @foreach (var item in this.menuRoleTemplate)
-                                {
-                                    <SimpleSelectOption Value="@item.RoleName" Label="@item.RoleName" />
-                                }
-                            </SelectOptions>
-                        </SimpleSelect>
-                    </GridCol>
-                    <GridCol Span="6">
-                    </GridCol>
-                    <GridCol Span="6">
-                    </GridCol>
-                </GridRow>
-            </Row>
-            <Row>
-                <GridCol Span="24" Style="text-align:right;">
-                    <Button Type="primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
-                    @* <Button Style="margin: 0 8px;" OnClick="()=>{searchValue.Reset();}">Clear</Button> *@
+            <GridRow>
+                <GridCol Span="10">
+                    <SimpleSelect DefaultValue="admin" Style="width: auto;"
+                                  OnSelectedItemChanged="@(item => SelectChanged(item))">
+                        <SelectOptions>
+                            @foreach (var item in this.menuRoleTemplate)
+                            {
+                                <SimpleSelectOption Value="@item.RoleName" Label="@item.RoleName"/>
+                            }
+                        </SelectOptions>
+                    </SimpleSelect>
                 </GridCol>
-            </Row>
-        </div>
-        <br />
-        <div>
-            <GridRow Justify="end">
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="4"></GridCol>
-                <GridCol Span="2">
-                    <Button Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Add
-                    </Button>
-                    <Button Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">
-                        Remove
-                    </Button>
+                <GridCol Span="6">
+                </GridCol>
+                <GridCol Span="6">
                 </GridCol>
             </GridRow>
         </div>
+        <Divider/>
         <Table @ref="table"
                TItem="MenuTemplate"
                DataSource="selectedMenuTemplate"
                Bordered=@true
                Loading="Loading"
-               Title="Weather List"
+               Title="Menu Role List"
                Size="TableSize.Small"
                Resizable
+               PaginationPosition="none"
                RowKey="m=>m.Id">
              <Selection Key="@(context.Id.ToString())" />
              <PropertyColumn Property="m => m.Id" />
