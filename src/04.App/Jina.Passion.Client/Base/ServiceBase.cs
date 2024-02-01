@@ -2,11 +2,11 @@
 
 namespace Jina.Passion.Client.Base
 {
-    public class FeServiceBase
+    public class ServiceBase
     {
         protected HttpClient Client;
 
-        public FeServiceBase(HttpClient client)
+        public ServiceBase(HttpClient client)
         {
             Client = client;
         }

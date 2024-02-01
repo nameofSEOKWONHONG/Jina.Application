@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Passion.Client.Base.Abstract.Interfaces;
 using Jina.Passion.Client.Common.Consts;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Jina.Passion.Client.Base
 {
     public class AuthenticationStateProviderImpl : AuthenticationStateProvider
     {
         public ClaimsPrincipal AuthenticationStateUser { get; set; }
-        public string AceessToken { get; private set; }
+        public string Token { get; private set; }
 
         private readonly IStateHandler _stateHandler;
 
@@ -27,10 +23,8 @@ namespace Jina.Passion.Client.Base
         {
             try
             {
-                //최초 실행시 브라우저 로드된 상태가 아니면 Exception 발생함.
-                //blazor server 문제인지, 아니면 hosting 문제인지 여부는 확인 필요. WASM에서는 문제 없음.
-                AceessToken = await _stateHandler.GetStateAsync(StorageConst.Local.AuthToken);
-                if (AceessToken.xIsEmpty())
+                Token = await _stateHandler.GetStateAsync(StorageConst.Local.AuthToken);
+                if (Token.xIsEmpty())
                 {
                     return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
                 }
@@ -40,7 +34,7 @@ namespace Jina.Passion.Client.Base
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(GetClaimsFromJwt(AceessToken), "jwt")));
+            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(GetClaimsFromJwt(Token), "jwt")));
             AuthenticationStateUser = state.User;
 
             return state;

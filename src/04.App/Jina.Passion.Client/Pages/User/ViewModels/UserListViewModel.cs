@@ -10,7 +10,7 @@ using Jina.Passion.Client.Pages.Account.Services;
 
 namespace Jina.Passion.Client.Pages.Account.ViewModels
 {
-    public class UserListViewModel : FeViewModelBase<UserDto>
+    public class UserListViewModel : ViewModelBase<UserDto>
     {
         private readonly UserService _userService;
 

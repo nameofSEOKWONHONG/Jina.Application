@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Passion.Client.Pages.Weather.Services
 {
-    public class WeatherService : FeServiceBase
+    public class WeatherService : ServiceBase
     {
         public WeatherService(HttpClient httpClient) : base(httpClient)
         {

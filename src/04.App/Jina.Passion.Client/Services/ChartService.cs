@@ -14,7 +14,7 @@ public interface IChartService
     Task<RadarDataItem[]> GetRadarDataAsync();
 }
 
-public class ChartService : FeServiceBase, IChartService
+public class ChartService : ServiceBase, IChartService
 {
     public ChartService(HttpClient client) : base(client)
     {

@@ -22,7 +22,7 @@ namespace Jina.Passion.Client.Base
 
     public abstract class TablePageComponent<TDto, TViewModel, TOption, TResult> : PageComponentBase<TOption, TResult>
         where TDto : class
-        where TViewModel : FeViewModelBase<TDto>
+        where TViewModel : ViewModelBase<TDto>
         where TOption : DlgOptionsBase
     {
         [Inject]

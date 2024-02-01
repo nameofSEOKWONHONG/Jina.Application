@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
-    public class WeatherViewModel : FeViewModelBase<WeatherForecastDto>
+    public class WeatherViewModel : ViewModelBase<WeatherForecastDto>
     {
         public WeatherService WeatherService { get; set; }
 

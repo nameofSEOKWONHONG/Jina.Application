@@ -38,7 +38,7 @@
         protected bool IsImport { get; set; }
 
         /// <summary>
-        /// 접속자 관리자 권한
+        /// 관리자 권한
         /// </summary>
         protected bool IsAdmin { get; set; }
     }

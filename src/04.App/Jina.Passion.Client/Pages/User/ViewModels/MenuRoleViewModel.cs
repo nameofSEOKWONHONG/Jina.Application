@@ -3,7 +3,7 @@ using Jina.Passion.Client.Base;
 
 namespace Jina.Passion.Client.Pages.Account.ViewModels
 {
-    public class MenuRoleViewModel : FeViewModelBase<MenuRoleTemplate>
+    public class MenuRoleViewModel : ViewModelBase<MenuRoleTemplate>
     {
     }
 

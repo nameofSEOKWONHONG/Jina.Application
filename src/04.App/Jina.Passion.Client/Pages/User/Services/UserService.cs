@@ -10,7 +10,7 @@ using Jina.Passion.Client.Base;
 
 namespace Jina.Passion.Client.Pages.Account.Services
 {
-    public class UserService : FeServiceBase
+    public class UserService : ServiceBase
     {
         public UserService(HttpClient client) : base(client)
         {
