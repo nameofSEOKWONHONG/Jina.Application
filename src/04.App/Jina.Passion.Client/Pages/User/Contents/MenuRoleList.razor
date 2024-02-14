@@ -45,19 +45,19 @@
              <PropertyColumn Property="m => m.Id" />
              <PropertyColumn Property="m => m.MenuName" />
              <PropertyColumn Property="m => m.View">
-                 <Switch @bind-Value="@context.View" />
+                 <Checkbox @bind-Value="@context.View" />
              </PropertyColumn>
              <PropertyColumn Property="m => m.Read">
-                 <Switch @bind-Value="@context.Read" />
+                 <Checkbox @bind-Value="@context.Read" />
              </PropertyColumn>
              <PropertyColumn Property="m => m.Write">
-                 <Switch @bind-Value="@context.Write" />
+                 <Checkbox @bind-Value="@context.Write" />
              </PropertyColumn>
              <PropertyColumn Property="m => m.Import">
-                 <Switch @bind-Value="@context.Import" />
+                 <Checkbox @bind-Value="@context.Import" />
              </PropertyColumn>
              <PropertyColumn Property="m => m.Export">
-                 <Switch @bind-Value="@context.Export" />
+                 <Checkbox @bind-Value="@context.Export" />
              </PropertyColumn>
          </Table>
      </Content>
