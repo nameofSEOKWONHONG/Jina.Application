@@ -4,15 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Base;
 
-public abstract class EntityBase
+public abstract class EntityCore
 {
-    [Key, Column(Order = 0), Comment("테넌트 ID")]
-    [Required, MaxLength(5)]
-    public string TenantId { get; set; }
-
-    [Comment("활성화 여부")]
-    public bool IsActive { get; set; }
-
     [Required, MaxLength(140), Comment("생성자")]
     public string CreatedBy { get; set; }
 
@@ -30,4 +23,16 @@ public abstract class EntityBase
 
     [Comment("수정일")]
     public DateTime? LastModifiedOn { get; set; }
+}
+
+public abstract class EntityBase : EntityCore
+{
+    [Key, Column(Order = 0), Comment("테넌트 ID")]
+    [Required, MaxLength(5)]
+    public string TenantId { get; set; }
+
+    [Comment("활성화 여부")]
+    public bool IsActive { get; set; }
+
+
 }
