@@ -4,6 +4,7 @@ using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Infra.Const;
 using Jina.Domain.Infra.Session;
+using Jina.Domain.Service.Net.ExchangeRate;
 using Jina.Domain.SharedKernel;
 using Jina.Injection;
 using Jina.Lang;
@@ -170,8 +171,12 @@ namespace Jina.Passion.Api
 
             #endregion [service injection]
 
+            #region [add httpcontextaccessor]
+
             // Add services to the container.
             builder.Services.AddHttpContextAccessor();
+
+            #endregion
 
             #region [cors]
 
@@ -248,7 +253,11 @@ namespace Jina.Passion.Api
 
             #endregion [signar]
 
+            #region [add controllers]
+
             builder.Services.AddControllers();
+
+            #endregion
 
             #region [swagger]
 
@@ -257,6 +266,10 @@ namespace Jina.Passion.Api
             builder.Services.AddSwaggerGen();
 
             #endregion [swagger]
+
+            #region [backgroundService]
+            builder.Services.AddHostedService<SaveExchangeRateBackgroundService>();
+            #endregion
 
             return builder;
         }
