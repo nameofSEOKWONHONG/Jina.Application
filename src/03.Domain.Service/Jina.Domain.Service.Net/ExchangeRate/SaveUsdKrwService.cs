@@ -26,7 +26,7 @@ namespace Jina.Domain.Service.Net.ExchangeRate;
 /// <summary>
 /// 두나무 API 환율 조회 서비스, 한국산업은행 API는 정상동작 안함.
 /// </summary>
-public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, ExchangeRequest, bool>, ISaveExchangeRateService
+public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, bool, bool>, ISaveExchangeRateService
 {
     private readonly string _url = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD";
     private readonly AppDbContext _dbContext;
@@ -39,11 +39,6 @@ public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, ExchangeRequ
 
     public override Task<bool> OnExecutingAsync()
     {
-        if (this.Request.xIsEmpty()) return Task.FromResult(false);
-        if (this.Request.AuthKey.xIsEmpty()) return Task.FromResult(false);
-        if (this.Request.SearchDate.xIsEmpty()) return Task.FromResult(false);
-        if (this.Request.SearchType.xIsEmpty()) return Task.FromResult(false);
-
         return Task.FromResult(true);
     }
 

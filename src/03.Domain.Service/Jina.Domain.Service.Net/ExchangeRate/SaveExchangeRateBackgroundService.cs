@@ -25,13 +25,7 @@ namespace Jina.Domain.Service.Net.ExchangeRate
             //TODO : USD -> KRW 이외에 기타 환율이 필요하다면 구현되어야 하고 다수의 서비스를 호출하도록 변경되어야 함.
             //즉, GetKeyedServices<>(""); 로 변경되어야 함.
             var service = scope.ServiceProvider.GetService<ISaveExchangeRateService>();
-            await ServicePipeline<ExchangeRequest, bool>.Create(service)
-                .SetParameter(() => new ExchangeRequest()
-                {
-                    AuthKey = "CkfQylSDubHd0T21Hx8Bl85Csbmy98sH",
-                    SearchDate = DateTime.Now,
-                    SearchType = ENUM_EXCHANGE_DATA_TYPE.AP01
-                })
+            await ServicePipeline<bool, bool>.Create(service)                
                 .OnExecutedAsync(r => result = r);
 
             this.Logger.LogInformation("end {name} service", nameof(SaveExchangeRateBackgroundService));
