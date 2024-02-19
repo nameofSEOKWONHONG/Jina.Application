@@ -26,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\eXtensionSharp.AspNet\src\eXtensionSharp.AspNet.csproj" />
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Infra.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Account\Jina.Domain.Service.Account.csproj" />

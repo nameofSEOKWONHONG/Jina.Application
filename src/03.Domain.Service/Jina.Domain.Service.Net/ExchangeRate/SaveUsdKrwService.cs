@@ -61,8 +61,8 @@ public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, bool, bool>,
                 convertedList.Add(converted);
             });
 
-            await _dbContext.Exchanges.AddRangeAsync(convertedList);
-            await _dbContext.SaveChangesAsync();
+            //await _dbContext.Exchanges.AddRangeAsync(convertedList);
+            //await _dbContext.SaveChangesAsync();
         }
     }
 }
