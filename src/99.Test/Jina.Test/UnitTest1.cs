@@ -25,7 +25,7 @@ public class OpenApiTest
         var service = _serviceProvider.GetRequiredService<IOpenApiClientService>();
 
         var result = string.Empty;
-        await ServiceInvoker<string, string>.Invoke(service)
+        await ServicePipeline<string, string>.Create(service)
             .SetParameter(() => $"아래의 문장을 영어로 번역해줘.{Environment.NewLine} \"에러가 발생했습니다. 다시 시도 하시겠습니까?\"")
             .OnExecutedAsync(r => result = r);
 

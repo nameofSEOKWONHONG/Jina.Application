@@ -8,6 +8,8 @@ using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Jina.Domain.Account.Request;
+using Microsoft.EntityFrameworkCore.Internal;
+using Jina.Domain.Abstract.Account.User;
 
 namespace Jina.Passion.Api.Controllers.Account;
 
@@ -24,7 +26,7 @@ public class LoginController : JControllerBase
     {
         IResultBase<TokenResponse> result = null;
 
-        await ServiceInvoker<TokenRequest, IResultBase<TokenResponse>>.Invoke(service)
+        await ServicePipeline<TokenRequest, IResultBase<TokenResponse>>.Create(service)
             .AddFilter(() => request.xIsNotEmpty())
             .SetParameter(() => request)
             .OnExecutedAsync(r => result = r);
@@ -43,11 +45,11 @@ public class LoginController : JControllerBase
         [FromServices] IGetTokenRefreshService service)
     {
         IResultBase<TokenResponse> result = null;
-        await ServiceInvoker<RefreshTokenRequest, IResultBase<TokenResponse>>.Invoke(service)
+        await ServicePipeline<RefreshTokenRequest, IResultBase<TokenResponse>>.Create(service)
             .AddFilter(model.xIsNotEmpty)
             .SetParameter(() => model)
             .SetValidator(new RefreshTokenRequest.Valdiator(null))
-            .OnValidated(m =>
+            .OnError(m =>
             {
                 result = Result<TokenResponse>.Fail(m.Errors.First().ErrorMessage);
             })
@@ -61,8 +63,15 @@ public class LoginController : JControllerBase
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register(RegisterRequest request,
+        [FromServices] IRegisterUserService services)
     {
-        return Ok();
+        IResultBase<bool> result = null;
+        await ServicePipeline<RegisterRequest, IResultBase<bool>>.Create(services)
+            .AddFilter(() => request.xIsNotEmpty())
+            .SetParameter(() => request)
+            .OnExecutedAsync(m => result = m);
+
+        return Ok(result);
     }
 }

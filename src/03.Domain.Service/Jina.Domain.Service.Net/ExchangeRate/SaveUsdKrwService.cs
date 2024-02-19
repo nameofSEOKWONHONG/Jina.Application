@@ -1,13 +1,11 @@
-﻿using System.Net.Http.Json;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Net.ExchangeRate;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Net.ExchangeRate;
 using Jina.Domain.Net.ExchangeRate;
-using Jina.Domain.Net.ExchangeRate.Enums;
-using Uri = System.Uri;
 using Mapster;
+using System.Net.Http.Json;
 
 namespace Jina.Domain.Service.Net.ExchangeRate;
 
@@ -15,7 +13,6 @@ namespace Jina.Domain.Service.Net.ExchangeRate;
 /*
  * [로직 설명]
  * - 분당 1회 호출시 24시간 기준 1440회 호출함.
- * - open api call 제한은 일 1000회 이므로 인증키는 최소 2개 이상 필요.
  * 
  * BackgroundService -> Running ISaveExchangeRateService (per one minutes)
  *                               |
@@ -26,19 +23,15 @@ namespace Jina.Domain.Service.Net.ExchangeRate;
  * 
  */
 
-
 /// <summary>
-/// 환율 조회 서비스 (일 1000회 제한)
-/// singleton으로 동작해야 함.
-/// https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=AUTHKEY1234567890&searchdate=20180102&data=AP01
+/// 두나무 API 환율 조회 서비스, 한국산업은행 API는 정상동작 안함.
 /// </summary>
-public class SaveExchangeRateService : ServiceImplBase<SaveExchangeRateService, ExchangeRequest, ENUM_EXCHANGE_RESULT_TYPE>, ISaveExchangeRateService
+public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, ExchangeRequest, bool>, ISaveExchangeRateService
 {
-    private readonly string _host = "https://www.koreaexim.go.kr";
-    private readonly string _url = "site/program/financial/exchangeJSON";
+    private readonly string _url = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD";
     private readonly AppDbContext _dbContext;
     
-    public SaveExchangeRateService(AppDbContext dbContext, IHttpClientFactory factory) : base(factory)
+    public SaveUsdKrwService(AppDbContext dbContext, IHttpClientFactory factory) : base(factory)
     {
         _dbContext = dbContext;
     }
@@ -56,16 +49,13 @@ public class SaveExchangeRateService : ServiceImplBase<SaveExchangeRateService, 
 
     public override async Task OnExecuteAsync()
     {
-        var uri = new Uri($"{_host}/{_url}?authKey={this.Request.AuthKey}&searchdate={this.Request.SearchDate.ToString(ENUM_DATE_FORMAT.YYYYMMDD)}&data={this.Request.SearchType.Name}");
+        var uri = new Uri(_url);
         var res = await this.HttpClientFactory.CreateClient().GetAsync(uri);
         
         if (res.IsSuccessStatusCode)
         {
-            var result = await res.Content.ReadFromJsonAsync<IEnumerable<ExchangeResult>>();
-            if (ENUM_EXCHANGE_RESULT_TYPE.TryFromValue(result.First().Result, out ENUM_EXCHANGE_RESULT_TYPE valueResult))
-            {
-                this.Result = valueResult;
-            }
+            this.Result = true;
+            var result = await res.Content.ReadFromJsonAsync<IEnumerable<ExchangeResult>>();            
             
             var convertedList = new List<Exchange>();
             result.xForEach(item =>

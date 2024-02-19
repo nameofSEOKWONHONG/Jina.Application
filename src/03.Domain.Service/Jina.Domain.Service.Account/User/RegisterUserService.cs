@@ -1,5 +1,6 @@
 ﻿using eXtensionSharp;
 using Jina.Base.Service.Abstract;
+using Jina.Domain.Abstract.Account.User;
 using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
@@ -13,8 +14,7 @@ using System.Data.Entity;
 
 namespace Jina.Domain.Service.Account.User
 {
-    public class RegisterUserService : EfServiceImpl<RegisterUserService, RegisterRequest, IResultBase<bool>>
-        , IScopeService
+    public class RegisterUserService : EfServiceImpl<RegisterUserService, RegisterRequest, IResultBase<bool>>, IRegisterUserService        
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
 
@@ -129,6 +129,7 @@ namespace Jina.Domain.Service.Account.User
                 //    //BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
                 //    return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
                 //}
+
                 this.Result = await Result<bool>
                     .SuccessAsync("User Registered.");
             }

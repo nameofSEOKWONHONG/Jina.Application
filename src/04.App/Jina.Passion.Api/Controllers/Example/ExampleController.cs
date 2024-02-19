@@ -20,7 +20,7 @@ namespace Jina.Passion.Api.Controllers.Example
             [FromServices] IGetWeatherService service)
         {
             IResultBase<WeatherForecastDto> result = null;
-            await ServiceInvoker<int, IResultBase<WeatherForecastDto>>.Invoke(service)
+            await ServicePipeline<int, IResultBase<WeatherForecastDto>>.Create(service)
                 .AddFilter(() => id.xIsNotEmpty())
                 .SetParameter(() => id)
                 .OnExecutedAsync(r => result = r);
@@ -32,7 +32,7 @@ namespace Jina.Passion.Api.Controllers.Example
             [FromServices] IGetWeathersService service)
         {
             PaginatedResult<WeatherForecastDto> result = null;
-            await ServiceInvoker<PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>.Invoke(service)
+            await ServicePipeline<PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>.Create(service)
                 .AddFilter(() => request.xIsNotEmpty())
                 .SetParameter(() => request)
                 .OnExecutedAsync(r => result = r);
@@ -40,7 +40,7 @@ namespace Jina.Passion.Api.Controllers.Example
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save([FromBody] WeatherForecastDto request)
+        public async Task<IActionResult> Save(WeatherForecastDto request)
         {
             return Ok();
         }

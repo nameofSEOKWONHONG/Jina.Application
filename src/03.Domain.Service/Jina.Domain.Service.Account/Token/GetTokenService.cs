@@ -87,8 +87,8 @@ public class GetTokenService
         var user = await users.AsNoTracking().FirstOrDefaultAsync(m => m.TenantId == SessionContext.TenantId && m.Email == Request.Email);
 
         string token = string.Empty;
-        await ServiceInvoker<Entity.Account.User, string>
-            .Invoke(_getRefreshTokenService)
+        await ServicePipeline<Entity.Account.User, string>
+            .Create(_getRefreshTokenService)
             .AddFilter(() => user.xIsNotEmpty())
             .SetParameter(() => user)
             .OnExecutedAsync(r =>
@@ -97,7 +97,7 @@ public class GetTokenService
                 user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
             });
 
-        await ServiceInvoker<Entity.Account.User, string>.Invoke(_generateJwtTokenService)
+        await ServicePipeline<Entity.Account.User, string>.Create(_generateJwtTokenService)
             .AddFilter(() => user.xIsNotEmpty())
             .SetParameter(() => user)
             .OnExecutedAsync((res) => token = res);

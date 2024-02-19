@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Abstract.Account.Token
 {
-    public interface IGetClaimsService : IServiceImplBase<User, IEnumerable<Claim>>, IScopeService
+    public interface IGetClaimsService : IServiceImplBase<Jina.Domain.Entity.Account.User, IEnumerable<Claim>>, IScopeService
     {
     }
 }

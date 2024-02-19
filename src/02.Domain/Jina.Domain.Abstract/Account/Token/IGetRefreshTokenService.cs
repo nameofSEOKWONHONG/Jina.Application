@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Abstract.Account.Token
 {
-    public interface IGetRefreshTokenService : IServiceImplBase<User, string>, IScopeService
+    public interface IGetRefreshTokenService : IServiceImplBase<Jina.Domain.Entity.Account.User, string>, IScopeService
     {
     }
 }

@@ -50,7 +50,7 @@ namespace Jina.Domain.Service.Account.Token
             }
 
             ClaimsPrincipal userPrincipal = null;
-            await ServiceInvoker<string, ClaimsPrincipal>.Invoke(_getPrincipalFromExpiredTokenService)
+            await ServicePipeline<string, ClaimsPrincipal>.Create(_getPrincipalFromExpiredTokenService)
                 .AddFilter(() => this.Request.xIsNotEmpty())
                 .AddFilter(() => this.Request.Token.xIsNotEmpty())
                 .SetParameter(() => this.Request.Token)
@@ -77,7 +77,7 @@ namespace Jina.Domain.Service.Account.Token
         public override async Task OnExecuteAsync()
         {
             ClaimsPrincipal userPrincipal = null;
-            await ServiceInvoker<string, ClaimsPrincipal>.Invoke(_getPrincipalFromExpiredTokenService)
+            await ServicePipeline<string, ClaimsPrincipal>.Create(_getPrincipalFromExpiredTokenService)
                 .AddFilter(() => this.Request.xIsNotEmpty())
                 .AddFilter(() => this.Request.Token.xIsNotEmpty())
                 .SetParameter(() => this.Request.Token)
@@ -90,17 +90,17 @@ namespace Jina.Domain.Service.Account.Token
             SigningCredentials signingCredentials = null;
             IEnumerable<Claim> claims = null;
 
-            await ServiceInvoker<bool, SigningCredentials>.Invoke(_getSigningCredentialsService)
+            await ServicePipeline<bool, SigningCredentials>.Create(_getSigningCredentialsService)
                 .AddFilter(() => true)
                 .SetParameter(() => true)
                 .OnExecutedAsync((res) => signingCredentials = res);
 
-            await ServiceInvoker<Entity.Account.User, IEnumerable<Claim>>.Invoke(_getClaimsService)
+            await ServicePipeline<Entity.Account.User, IEnumerable<Claim>>.Create(_getClaimsService)
                 .AddFilter(() => user.xIsNotEmpty())
                 .SetParameter(() => user)
                 .OnExecutedAsync((res) => claims = res);
 
-            await ServiceInvoker<IdentityGenerateEncryptedTokenRequest, string>.Invoke(_generateEncryptedTokenService)
+            await ServicePipeline<IdentityGenerateEncryptedTokenRequest, string>.Create(_generateEncryptedTokenService)
                 .AddFilter(() => claims.xIsNotEmpty())
                 .SetParameter(() => new IdentityGenerateEncryptedTokenRequest()
                 {
@@ -109,7 +109,7 @@ namespace Jina.Domain.Service.Account.Token
                 })
                 .OnExecutedAsync((res) => token = res);
 
-            await ServiceInvoker<Entity.Account.User, string>.Invoke(_getRefreshTokenService)
+            await ServicePipeline<Entity.Account.User, string>.Create(_getRefreshTokenService)
                 .AddFilter(() => user.xIsNotEmpty())
                 .SetParameter(() => user)
                 .OnExecutedAsync((res) => user.RefreshToken = res);

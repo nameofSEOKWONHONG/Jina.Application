@@ -46,8 +46,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Domain.Service.Example", "src\03.Domain.Service\Jina.Domain.Service.Example\Jina.Domain.Service.Example.csproj", "{780DE87C-8245-4F27-BCBB-B67CE4F07243}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{69CDC1C2-82E2-43DF-B042-AE75718FD52D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,10 +108,6 @@ Global
 		{780DE87C-8245-4F27-BCBB-B67CE4F07243}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{780DE87C-8245-4F27-BCBB-B67CE4F07243}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{780DE87C-8245-4F27-BCBB-B67CE4F07243}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69CDC1C2-82E2-43DF-B042-AE75718FD52D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69CDC1C2-82E2-43DF-B042-AE75718FD52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69CDC1C2-82E2-43DF-B042-AE75718FD52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69CDC1C2-82E2-43DF-B042-AE75718FD52D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -133,7 +127,6 @@ Global
 		{584A48F8-D711-4BDD-B734-3300C66C836A} = {D54D4183-2360-42E0-8C86-A3F553F61E49}
 		{04C0959D-8ADD-4847-A994-300BC2341A0C} = {5C97BB6E-1790-4E15-A309-7820E662D5F6}
 		{780DE87C-8245-4F27-BCBB-B67CE4F07243} = {10E5DA75-9ACE-4679-989B-72EB734E4D99}
-		{69CDC1C2-82E2-43DF-B042-AE75718FD52D} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3F399BD-DFC6-41B1-9452-44E74499EF10}

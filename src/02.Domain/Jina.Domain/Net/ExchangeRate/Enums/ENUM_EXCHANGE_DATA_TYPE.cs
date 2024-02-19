@@ -35,7 +35,7 @@ public class ENUM_EXCHANGE_RESULT_TYPE : SmartEnum<ENUM_EXCHANGE_RESULT_TYPE>
     public static readonly ENUM_EXCHANGE_RESULT_TYPE ERROR = new ENUM_EXCHANGE_RESULT_TYPE(nameof(ERROR), 2);
     
     /// <summary>
-    /// 인증코드 오류
+    /// 인증코드 오류 / 데이터없음
     /// </summary>
     public static readonly ENUM_EXCHANGE_RESULT_TYPE NOT_AUTH = new ENUM_EXCHANGE_RESULT_TYPE(nameof(NOT_AUTH), 3);
     
