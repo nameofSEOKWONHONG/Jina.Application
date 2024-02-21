@@ -5,43 +5,49 @@
 @using Jina.Passion.Client.Base
 @using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Common.Consts
 @using Jina.Passion.Client.Layout.ViewModels
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 
 @inject IMessageService MessageService
 @attribute [ReuseTabsPage(Title = "Weather")]
 
-<Tabs Type="@TabType.EditableCard" HideAdd
-      @ref="tabs"
-      DefaultActiveKey="1"
-      @bind-ActiveKey="@activeKey" 
-      OnChange="OnTabChange"
-      Size="TabSize.Small"
-      Animated>
-    <TabPane Key="1" Tab="Weather List" Closable="false">        
-        <ChildContent>
-            <Jina.Passion.Client.Pages.Weather.Contents.WeatherList @ref="tablePage" OnChange="TabChange"/>
-        </ChildContent>
-        <TabContextMenu>
-            <Menu>
-                <MenuItem @onclick="Favorite">Add Favorite</MenuItem>
-            </Menu>
-        </TabContextMenu>
-    </TabPane>
-    @foreach(var pane in panes)
-    {
-        <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
-            <ChildContent>
-                <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecastDto" />
-            </ChildContent>
-            <TabContextMenu>
-                <Menu>
-                    <MenuItem OnClick="@(()=>Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
-                </Menu>
-            </TabContextMenu>
-        </TabPane>
-    }    
-</Tabs>
+<PageContainer>
+    <Content>
+        <Tabs Type="@TabType.EditableCard" HideAdd
+              @ref="tabs"
+              DefaultActiveKey="1"
+              @bind-ActiveKey="@activeKey"
+              OnChange="OnTabChange"
+              Size="TabSize.Small"
+              TabBarStyle="@StyleConst.DefaultTabBar"
+              Animated>
+            <TabPane Key="1" Tab="Weather List" Closable="false">
+                <ChildContent>
+                    <Jina.Passion.Client.Pages.Weather.Contents.WeatherList @ref="tablePage" OnChange="TabChange" />
+                </ChildContent>
+                <TabContextMenu>
+                    <Menu>
+                        <MenuItem @onclick="Favorite">Add Favorite</MenuItem>
+                    </Menu>
+                </TabContextMenu>
+            </TabPane>
+            @foreach (var pane in panes)
+            {
+                <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
+                    <ChildContent>
+                        <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecastDto" />
+                    </ChildContent>
+                    <TabContextMenu>
+                        <Menu>
+                            <MenuItem OnClick="@(()=>Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
+                        </Menu>
+                    </TabContextMenu>
+                </TabPane>
+            }
+        </Tabs>
+    </Content>    
+</PageContainer>
 
 @code {
     [Inject] public WeatherViewModel ViewModel { get; set; }

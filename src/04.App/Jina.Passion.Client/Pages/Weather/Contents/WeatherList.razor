@@ -13,7 +13,7 @@
 <PageContainer>
     <Content>
         <div>
-            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form" Size="@AntSizeLDSType.Small">
+            <Form Model="searchValue" Name="search" Class="ant-advanced-search-form" Size="@AntSizeLDSType.Small">                
                 <GridRow>
                     <GridCol Span="6" @key="nameof(context.Date)">
                         <FormItem Label="@nameof(context.Date)">
@@ -29,7 +29,66 @@
                         <FormItem Label="@nameof(context.Summary)">
                             <Input @bind-Value="@(context.Summary)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
-                    </GridCol>
+                    </GridCol>                    
+                </GridRow>
+            </Form>
+        </div>
+        <div>
+            <Form Model="searchControls" Class="ant-advanced-search-form">
+                <GridRow>
+                    @foreach(var control in context)
+                    {                    
+                        @if(control.Type == "Text")
+                        {
+                            <GridCol Span="6" @key="@control.Label">
+                                <FormItem Label="@control.Label">
+                                    <Input TValue="string" Value="@(control.Value.ToString())" Style="width: 80%;" Size="@InputSize.Small" ValueChanged="((string v) => control.Value = v)" />
+                                </FormItem>
+                            </GridCol>
+                        }
+                        else if(control.Type == "Number")
+                        {
+                            <GridCol Span="6" @key="@control.Label">
+                                <FormItem Label="@control.Label">
+                                    <AntDesign.InputNumber DefaultValue="0" Value="@((double)control.Value)" Style="width: 80%;" Size="@InputSize.Small" ValueChanged="((double val) => control.Value = val)" />
+                                </FormItem>
+                            </GridCol>
+                        }
+                        else if(control.Type == "DateTime")
+                        {
+                            <GridCol Span="6" @key="@control.Label">
+                                <FormItem Label="@control.Label">
+                                    <DatePicker @bind-Value="@(control.Value)" Style="width: 80%;" Size="@InputSize.Small" />
+                                </FormItem>
+                            </GridCol>
+                        }
+                        else if(control.Type == "Select")
+                        {
+                            <GridCol Span="6" @key="@control.Label">
+                                <FormItem Label="@control.Label">
+                                    <Select TItem="SelectControl"
+                                            TItemValue="string"
+                                            DataSource="@control.SelectControls"
+                                            ValueName="@nameof(SelectControl.Value)"
+                                            LabelName="@nameof(SelectControl.Name)"
+                                            DefaultValue="@control.Value.ToString()"
+                                            OnSelectedItemChanged="OnSelectedItemChangedHandler">
+                                        <ItemTemplate Context="selectContext">
+                                            <span>@((selectContext as SelectControl).DisplayName)</span>
+                                        </ItemTemplate>
+                                     </Select>                                        
+                                </FormItem>
+                            </GridCol>
+                        }
+                        else if(control.Type == "Checkbox")
+                        {
+
+                        }
+                        else if(control.Type == "Radio")
+                        {
+                            
+                        }
+                    }
                 </GridRow>
             </Form>
         </div>
@@ -37,7 +96,7 @@
         <div>
             <GridRow>
                 <GridCol Span="24" Style="text-align:right;">
-                    <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Small">Search</Button>
+                    <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Small" OnClick="Search">Search</Button>
                     <Button OnClick="AddItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Add</Button>
                     <Button Danger OnClick="RemoveItemAsync" Type="@ButtonType.Primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Remove</Button>
                 </GridCol>
@@ -93,6 +152,18 @@
     public EventCallback<string> OnChange { get; set; }
 
     private WeatherForecastDto searchValue { get; set; } = new();
+    private IEnumerable<Control> searchControls = new List<Control>()
+        {
+            new Control() { Type = "Text", Label="Name", Key="Name", Value = "test"},
+            new Control() { Type = "Number", Label="Age", Key="Age", Value = 20d},
+            new Control() { Type = "DateTime", Label="Birth", Key="Birth", Value=DateTime.Now},
+            new Control() { Type = "Select", Label="Sex", Key="Sex", Value="M", SelectControls = new List<SelectControl>()
+                {
+                    new SelectControl() { Key="Sex", Name="Man", Value="M", DisplayName="Man"},
+                    new SelectControl() { Key="Sex", Name="Woman", Value="W", DisplayName="Woman"},
+                }
+            }
+        };
 
     protected override Task OnRoleAsync()
     {
@@ -111,6 +182,26 @@
         this.Loading = true;
         await ViewModel.GetWeathersAsync(null);
         this.Loading = false;
+    }
+
+    private void Search()
+    {
+        searchControls.ForEach(item =>
+        {
+            Console.WriteLine($"K:{item.Label}, V:{item.Value}");
+        });
+    }
+
+    private void OnInputNumberValueChangedHandler(object o)
+    {
+        
+    }
+
+    private void OnSelectedItemChangedHandler(SelectControl value)
+    {
+        var exist = searchControls.First(m => m.Key == value.Key);
+        exist.Value = value.Value;
+        Console.WriteLine($"selected: ${exist.Value}");
     }
 
     private void ItemClick(WeatherForecastDto item)
@@ -176,57 +267,76 @@
 
     // private async Task Pdf(int id)
     // {
-        // var exist = ViewModel.WeatherForecastDtos.FirstOrDefault(m => m.Id == id);
-        // if (exist.xIsEmpty()) return;
+    // var exist = ViewModel.WeatherForecastDtos.FirstOrDefault(m => m.Id == id);
+    // if (exist.xIsEmpty()) return;
 
-        // using var ms = new MemoryStream();
-        // QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
-        // Document.Create(container =>
-        //     {              
-        //         container.Page(page =>
-        //             {
-        //                 page.Size(PageSizes.A4);
-        //                 page.Margin(2, Unit.Centimetre);
-        //                 page.PageColor(Colors.White);
-        //                 page.DefaultTextStyle(x => x.FontSize(20));
+    // using var ms = new MemoryStream();
+    // QuestPDF.Settings.CheckIfAllTextGlyphsAreAvailable = false;
+    // Document.Create(container =>
+    //     {              
+    //         container.Page(page =>
+    //             {
+    //                 page.Size(PageSizes.A4);
+    //                 page.Margin(2, Unit.Centimetre);
+    //                 page.PageColor(Colors.White);
+    //                 page.DefaultTextStyle(x => x.FontSize(20));
 
-        //                 page.Header()
-        //                     .Text("Hello PDF!")
-        //                     .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
+    //                 page.Header()
+    //                     .Text("Hello PDF!")
+    //                     .SemiBold().FontSize(36).FontColor(Colors.Blue.Medium);
 
-        //                 page.Content()
-        //                     .PaddingVertical(1, Unit.Centimetre)
-        //                     .Column(x =>
-        //                     {
-        //                         x.Spacing(20);
+    //                 page.Content()
+    //                     .PaddingVertical(1, Unit.Centimetre)
+    //                     .Column(x =>
+    //                     {
+    //                         x.Spacing(20);
 
-        //                         x.Item().Text($"{nameof(exist.Id)} : {exist.Id}");
-        //                         // x.Item().Text($"{nameof(exist.City)} : {exist.City}");
-        //                         x.Item().Text($"{nameof(exist.Date)} : {exist.Date}");
-        //                         x.Item().Text($"{nameof(exist.TemperatureC)} : {exist.TemperatureC}");
-        //                         x.Item().Text($"{nameof(exist.TemperatureF)} : {exist.TemperatureF}");
-        //                         x.Item().Text($"{nameof(exist.Summary)} : {exist.Summary}");
-        //                     });
+    //                         x.Item().Text($"{nameof(exist.Id)} : {exist.Id}");
+    //                         // x.Item().Text($"{nameof(exist.City)} : {exist.City}");
+    //                         x.Item().Text($"{nameof(exist.Date)} : {exist.Date}");
+    //                         x.Item().Text($"{nameof(exist.TemperatureC)} : {exist.TemperatureC}");
+    //                         x.Item().Text($"{nameof(exist.TemperatureF)} : {exist.TemperatureF}");
+    //                         x.Item().Text($"{nameof(exist.Summary)} : {exist.Summary}");
+    //                     });
 
-        //                 page.Footer()
-        //                     .AlignCenter()
-        //                     .Text(x =>
-        //                     {
-        //                         x.Span("Page ");
-        //                         x.CurrentPageNumber();
-        //                     });
-        //             });
-        //     })
-        //     .GeneratePdf(ms);
-        // ms.Position = 0;
-        // // using var streamRef = new DotNetStreamReference(stream: ms);
-        // // await Js.InvokeVoidAsync("downloadFileFromStream", "example.pdf", streamRef);
+    //                 page.Footer()
+    //                     .AlignCenter()
+    //                     .Text(x =>
+    //                     {
+    //                         x.Span("Page ");
+    //                         x.CurrentPageNumber();
+    //                     });
+    //             });
+    //     })
+    //     .GeneratePdf(ms);
+    // ms.Position = 0;
+    // // using var streamRef = new DotNetStreamReference(stream: ms);
+    // // await Js.InvokeVoidAsync("downloadFileFromStream", "example.pdf", streamRef);
 
-        // await Js.InvokeVoidAsync("download", new
-        // {
-        //     mimeType = "pdf",
-        //     byteArray = Convert.ToBase64String(ms.ToArray()),
-        //     fileName = "example.pdf"
-        // });
+    // await Js.InvokeVoidAsync("download", new
+    // {
+    //     mimeType = "pdf",
+    //     byteArray = Convert.ToBase64String(ms.ToArray()),
+    //     fileName = "example.pdf"
+    // });
     // }
+
+    public class Control
+    {
+        public string Type { get; set; }
+        public string Label { get; set; }
+
+        public string Key { get; set; }
+        public object Value { get; set; }
+
+        public IEnumerable<SelectControl> SelectControls { get; set; }
+    }
+
+    public class SelectControl
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+    }
 }

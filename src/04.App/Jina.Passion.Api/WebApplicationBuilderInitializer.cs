@@ -272,6 +272,26 @@ namespace Jina.Passion.Api
             builder.Services.AddHostedService<SaveExchangeRateBackgroundService>();
             #endregion
 
+            #region [distribute cache]
+            //아래 3개 중에 택일, MemoryCache, Redis-Cache, SqlServer-Cache
+            //memory
+            builder.Services.AddDistributedMemoryCache();
+            //redis
+            //builder.Services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+            //    options.InstanceName = "SampleInstance";
+            //});
+            //sql server
+            //builder.Services.AddDistributedSqlServerCache(options =>
+            //{
+            //    options.ConnectionString = builder.Configuration.GetConnectionString(
+            //        "SqlServerCacheConnection");
+            //    options.SchemaName = "dbo";
+            //    options.TableName = "CacheTable";
+            //});
+            #endregion
+
             return builder;
         }
 
@@ -279,11 +299,8 @@ namespace Jina.Passion.Api
         {
             var uri = new Uri(origin);
             var env = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "n/a";
-
-            var isAllowed = uri.Host.Equals("example.com", StringComparison.OrdinalIgnoreCase)
-                            || uri.Host.Equals("another-example.com", StringComparison.OrdinalIgnoreCase)
-                            || uri.Host.EndsWith(".example.com", StringComparison.OrdinalIgnoreCase)
-                            || uri.Host.EndsWith(".another-example.com", StringComparison.OrdinalIgnoreCase);
+            var allowUrls = new[] { "example.com", "another-example.com", ".example.com" };
+            var isAllowed = uri.Host.xContains(allowUrls);
             if (!isAllowed && env.Contains("DEV", StringComparison.OrdinalIgnoreCase))
                 isAllowed = uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase);
 

@@ -20,17 +20,17 @@ namespace Jina.Passion.Api.Controllers.Example
         public async Task<IActionResult> Get(int id,
             [FromServices] IGetWeatherService service)
         {
-            var isHttps = this.HttpContext.vIsHttps();
-            var host = this.HttpContext.vGetBaseHost();
-            var schme = this.HttpContext.vGetBaseScheme();
-            var isAuth = this.HttpContext.vIsAuthenticated();
-            var roles = this.HttpContext.vGetRoles();
+            var isHttps = this.HttpContext.xIsHttps();
+            var host = this.HttpContext.xGetBaseHost();
+            var schme = this.HttpContext.xGetBaseScheme();
+            var isAuth = this.HttpContext.xIsAuthenticated();
+            var roles = this.HttpContext.xGetRoles();
 
-            var controllerName = this.HttpContext.vGetControllerName();
-            var methodName = this.HttpContext.vGetMethod();
-            var n1 = this.HttpContext.vGetControllerFullName();
-            var n2 = this.HttpContext.vGetActionName();
-            var agent = this.HttpContext.vGetUserAgent();
+            var controllerName = this.HttpContext.xGetControllerName();
+            var methodName = this.HttpContext.xGetMethod();
+            var n1 = this.HttpContext.xGetControllerFullName();
+            var n2 = this.HttpContext.xGetActionName();
+            var agent = this.HttpContext.xGetUserAgent();
 
             IResultBase<WeatherForecastDto> result = null;
             await ServicePipeline<int, IResultBase<WeatherForecastDto>>.Create(service)
