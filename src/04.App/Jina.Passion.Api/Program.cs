@@ -1,5 +1,4 @@
 using Hangfire;
-using Jina.Domain.Entity.Net.ExchangeRate;
 using Jina.Passion.Api;
 using Jina.Passion.Api.Hubs;
 

@@ -1,15 +1,14 @@
 ﻿using eXtensionSharp;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Account.Token;
+using Jina.Domain.Abstract.Account.User;
+using Jina.Domain.Account.Request;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Infra.Base;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Jina.Domain.Account.Request;
-using Microsoft.EntityFrameworkCore.Internal;
-using Jina.Domain.Abstract.Account.User;
 
 namespace Jina.Passion.Api.Controllers.Account;
 

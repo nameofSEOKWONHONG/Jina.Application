@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
+    [Transaction(Scope)]
+    [Validator]
     public class GetTokenRefreshService : EfServiceImpl<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
     {
         private readonly IGetPrincipalFromExpiredTokenService _getPrincipalFromExpiredTokenService;
