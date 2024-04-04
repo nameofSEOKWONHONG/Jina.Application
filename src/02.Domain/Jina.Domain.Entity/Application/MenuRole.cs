@@ -4,7 +4,7 @@ using Jina.Domain.Entity.Base;
 
 namespace Jina.Domain.Entity.Application;
 
-[Table("MenuRoles", Schema = "Application")]
+[Table("MenuRoles", Schema = "application")]
 public class MenuRole : NumberEntityBase
 {
     [Key, Column(Order = 2), MaxLength(450)]

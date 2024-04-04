@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 
-namespace Jina.Domain.Infra.Extension;
+namespace Jina.Domain.Service.Infra.Extension;
 
 public static class ResultExtensions
 {

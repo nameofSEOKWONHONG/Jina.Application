@@ -3,14 +3,14 @@ using eXtensionSharp.AspNet;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Example;
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jina.Passion.Api.Controllers.Example
 {
-    public class ExampleController : JControllerBase
+	public class ExampleController : JControllerBase
     {
         public ExampleController()
         {

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
-namespace Jina.Domain.Infra.Const
+namespace Jina.Domain.Service.Infra.Const
 {
-    public class Permission
+	public class Permission
     {
         /// <summary>
         /// Returns a list of Permissions.

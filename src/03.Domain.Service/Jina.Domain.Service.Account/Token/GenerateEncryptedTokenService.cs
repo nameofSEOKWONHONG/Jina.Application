@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncryptedTokenService, IdentityGenerateEncryptedTokenRequest, string>, IGenerateEncryptedTokenService
+    public class GenerateEncryptedTokenService : ServiceImplCore<GenerateEncryptedTokenService, IdentityGenerateEncryptedTokenRequest, string>, IGenerateEncryptedTokenService
     {
         public GenerateEncryptedTokenService() : base()
         {

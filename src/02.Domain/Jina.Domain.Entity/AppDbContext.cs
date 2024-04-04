@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Jina.Domain.Entity.Account;
+﻿using Jina.Domain.Entity.Account;
 using Jina.Domain.Entity.Application;
 using Jina.Domain.Entity.Common;
 using Jina.Domain.Entity.Example;
-using Jina.Domain.Entity.Net.ExchangeRate;
 using Jina.Session.Abstract;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartEnum.EFCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Jina.Domain.Entity;
 
@@ -98,6 +96,4 @@ public class AppDbContext : AuditableContext
     public DbSet<Phone> Phones { get; set; }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
-    
-    public DbSet<Exchange> Exchanges { get; set; } 
 }

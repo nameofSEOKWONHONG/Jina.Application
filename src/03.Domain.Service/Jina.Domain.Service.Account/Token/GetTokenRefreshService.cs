@@ -1,27 +1,20 @@
 ﻿using eXtensionSharp;
+using Jina.Base.Attributes;
 using Jina.Base.Service;
-using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Account.Token;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Entity;
-using Jina.Domain.Entity.Account;
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    [Transaction(Scope)]
-    [Validator]
-    public class GetTokenRefreshService : EfServiceImpl<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
+	[TransactionOptions(System.Transactions.TransactionScopeOption.Required)]
+    public class GetTokenRefreshService : ServiceImplBase<GetTokenRefreshService, RefreshTokenRequest, IResultBase<TokenResponse>>, IGetTokenRefreshService
     {
         private readonly IGetPrincipalFromExpiredTokenService _getPrincipalFromExpiredTokenService;
         private readonly IGetSigningCredentialsService _getSigningCredentialsService;

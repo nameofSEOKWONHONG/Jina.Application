@@ -1,26 +1,21 @@
-﻿using Jina.Base.Service;
+﻿using eXtensionSharp;
 using Jina.Base.Service.Abstract;
 using Jina.Domain.Entity;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.Const;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.Const;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using eXtensionSharp;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public interface IGetPrincipalFromExpiredTokenService : IServiceImplBase<string, ClaimsPrincipal>, IScopeService
+	public interface IGetPrincipalFromExpiredTokenService : IServiceImplBase<string, ClaimsPrincipal>, IScopeService
     {
     }
 
-    public class GetPrincipalFromExpiredTokenService : EfServiceImpl<GetPrincipalFromExpiredTokenService, string, ClaimsPrincipal>, IGetPrincipalFromExpiredTokenService
+    public class GetPrincipalFromExpiredTokenService : ServiceImplBase<GetPrincipalFromExpiredTokenService, string, ClaimsPrincipal>, IGetPrincipalFromExpiredTokenService
     {
         private readonly IConfiguration _configuration;
 

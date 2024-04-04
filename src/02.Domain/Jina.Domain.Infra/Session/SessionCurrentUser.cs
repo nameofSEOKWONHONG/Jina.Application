@@ -1,16 +1,9 @@
-﻿using Jina.Domain.Infra.Const;
-using Jina.Session.Abstract;
+﻿using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Jina.Domain.Infra.Session
+namespace Jina.Domain.Service.Infra.Session
 {
-    public class SessionCurrentUser : ISessionCurrentUser
+	public class SessionCurrentUser : ISessionCurrentUser
     {
         public string TenantId { get; private set; }
 

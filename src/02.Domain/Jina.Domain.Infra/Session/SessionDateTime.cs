@@ -1,7 +1,7 @@
 ﻿using eXtensionSharp;
 using Jina.Session.Abstract;
 
-namespace Jina.Domain.Infra.Session
+namespace Jina.Domain.Service.Infra.Session
 {
     public class SessionDateTime : ISessionDateTime
     {

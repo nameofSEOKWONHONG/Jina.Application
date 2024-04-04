@@ -1,14 +1,9 @@
-﻿using Jina.Session;
+﻿using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Jina.Domain.Infra.Session
+namespace Jina.Domain.Service.Infra.Session
 {
-    public class SessionContext : ISessionContext
+	public class SessionContext : ISessionContext
     {
         public string TenantId { get; private set; }
 
@@ -16,16 +11,20 @@ namespace Jina.Domain.Infra.Session
 
         public ISessionDateTime CurrentTime { get; private set; }
 
+        public ILocalizer Localizer { get; private set; }
+
         public bool IsDecrypt { get; private set; }
 
         public SessionContext(ISessionCurrentUser user
-            , ISessionDateTime time)
+            , ISessionDateTime time
+            , ILocalizer localizer)
         {
+            this.Localizer = localizer;
 #if DEBUG
-            TenantId = "00000";
-            CurrentUser = user;
-            CurrentTime = time;
-            IsDecrypt = false;
+            this.TenantId = "00000";
+            this.CurrentUser = user;
+            this.CurrentTime = time;
+            this.IsDecrypt = false;
 #endif
         }
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Common;
 
-[Table("CodeGroups", Schema = "Common")]
+[Table("CodeGroups", Schema = "common")]
 public class CodeGroup : CodeEntityBase
 {
     [Key, Column(Order = 2), Comment("코드 그룹")]

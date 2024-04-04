@@ -1,17 +1,12 @@
 ﻿using Hangfire;
-using Hangfire.Annotations;
-using Hangfire.Common;
-using Hangfire.Server;
-using Hangfire.States;
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 using Jina.Passion.Api.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using MySqlX.XDevAPI;
 
 namespace Jina.Passion.Api.Controllers.Notification
 {
-    public class NotificationController : JControllerBase
+	public class NotificationController : JControllerBase
     {
         private readonly IHubContext<ProtocalHub> _hubContext;
         private readonly IBackgroundJobClient _client;

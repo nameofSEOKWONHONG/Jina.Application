@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jina.Domain.Infra.Const
+namespace Jina.Domain.Service.Infra.Const
 {
     public class ApplicationConsts
     {

@@ -1,4 +1,4 @@
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 
 namespace Jina.Passion.Api.Controllers.MultiLanguage;
 

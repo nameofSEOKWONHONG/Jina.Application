@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GenerateJwtTokenService : ServiceImplBase<GenerateJwtTokenService, Entity.Account.User, string>, IGenerateJwtTokenService
+    public class GenerateJwtTokenService : ServiceImplCore<GenerateJwtTokenService, Entity.Account.User, string>, IGenerateJwtTokenService
     {
         private readonly IConfiguration _configuration;
         private readonly IGenerateEncryptedTokenService _generateEncryptedTokenService;

@@ -28,7 +28,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\eXtensionSharp.AspNet\src\eXtensionSharp.AspNet.csproj" />
       <ProjectReference Include="..\..\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
-      <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Infra.csproj" />
+      <ProjectReference Include="..\..\02.Domain\Jina.Domain.Infra\Jina.Domain.Service.Infra.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Account\Jina.Domain.Service.Account.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Example\Jina.Domain.Service.Example.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.MultiLanguage\Jina.Domain.Service.MultiLanguage.csproj" />

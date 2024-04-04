@@ -4,7 +4,7 @@ using Jina.Domain.Entity.Base;
 
 namespace Jina.Domain.Entity.Application;
 
-[Table("MenuGroups", Schema = "Application")]
+[Table("MenuGroups", Schema = "application")]
 public class MenuGroup : NumberEntityBase
 {
     [Required, MaxLength(4000)]

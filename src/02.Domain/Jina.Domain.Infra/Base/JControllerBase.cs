@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
-namespace Jina.Domain.Infra.Base;
+namespace Jina.Domain.Service.Infra.Base;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

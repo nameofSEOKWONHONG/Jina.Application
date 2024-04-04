@@ -1,15 +1,15 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Abstract.Account.Token;
 using Jina.Domain.Entity;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.Const;
-using Jina.Domain.Infra.Extension;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.Const;
+using Jina.Domain.Service.Infra.Extension;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetClaimsService : EfServiceImpl<GetClaimsService, Entity.Account.User, IEnumerable<Claim>>, IGetClaimsService
+	public class GetClaimsService : ServiceImplBase<GetClaimsService, Entity.Account.User, IEnumerable<Claim>>, IGetClaimsService
     {
         public GetClaimsService(AppDbContext db) : base(db, null)
         {

@@ -1,11 +1,10 @@
 ﻿using eXtensionSharp;
-using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Account.User;
 using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.Extension;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.Extension;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Domain.SharedKernel.Consts;
@@ -14,7 +13,7 @@ using System.Data.Entity;
 
 namespace Jina.Domain.Service.Account.User
 {
-    public class RegisterUserService : EfServiceImpl<RegisterUserService, RegisterRequest, IResultBase<bool>>, IRegisterUserService        
+	public class RegisterUserService : ServiceImplBase<RegisterUserService, RegisterRequest, IResultBase<bool>>, IRegisterUserService        
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
 

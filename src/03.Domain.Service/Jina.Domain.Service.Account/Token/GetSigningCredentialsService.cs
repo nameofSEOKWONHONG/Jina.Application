@@ -1,21 +1,15 @@
 ﻿using eXtensionSharp;
-using Jina.Base.Service;
-using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Account.Token;
 using Jina.Domain.Entity;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.Const;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.Const;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.Token
 {
-    public class GetSigningCredentialsService : EfServiceImpl<GetSigningCredentialsService, bool, SigningCredentials>, IGetSigningCredentialsService
+	public class GetSigningCredentialsService : ServiceImplBase<GetSigningCredentialsService, bool, SigningCredentials>, IGetSigningCredentialsService
     {
         private readonly IConfiguration _configuration;
 

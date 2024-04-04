@@ -5,7 +5,7 @@ using Jina.Domain.Entity.Base;
 namespace Jina.Domain.Entity.Net.ExchangeRate;
 
 /// <summary>
-/// <see href="link">https://www.koreaexim.go.kr/ir/HPHKIR020M01?apino=2&viewtype=C&searchselect=&searchword=</see>
+/// <see href="link">https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD"</see>
 /// 환율
 /// </summary>
 public class Exchange : EntityCore
@@ -31,8 +31,8 @@ public class Exchange : EntityCore
     public double CashSellingPrice { get; set; }
     public int TtBuyingPrice { get; set; }
     public int TtSellingPrice { get; set; }
-    public object TcBuyingPrice { get; set; }
-    public object FcSellingPrice { get; set; }
+    public double? TcBuyingPrice { get; set; }
+    public double? FcSellingPrice { get; set; }
     public double ExchangeCommission { get; set; }
     public int UsDollarRate { get; set; }
     public double High52wPrice { get; set; }

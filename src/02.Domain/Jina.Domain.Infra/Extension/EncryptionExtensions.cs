@@ -1,14 +1,9 @@
 ﻿using eXtensionSharp;
-using Jina.Domain.Infra.Const;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Jina.Domain.Service.Infra.Const;
 
-namespace Jina.Domain.Infra.Extension
+namespace Jina.Domain.Service.Infra.Extension
 {
-    public static class EncryptionExtensions
+	public static class EncryptionExtensions
     {
         public static string vToAESEncrypt(this string text)
         {

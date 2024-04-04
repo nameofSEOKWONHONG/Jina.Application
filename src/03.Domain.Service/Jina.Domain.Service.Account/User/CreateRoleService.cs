@@ -3,20 +3,14 @@ using Jina.Base.Service.Abstract;
 using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
-using Jina.Session.Abstract;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Account.User
 {
-    public class CreateRoleService : EfServiceImpl<CreateRoleService, CreateRoleRequest, IResultBase<bool>>
+	public class CreateRoleService : ServiceImplBase<CreateRoleService, CreateRoleRequest, IResultBase<bool>>
         , IScopeService
     {
         public CreateRoleService(AppDbContext db) : base(db, null)
@@ -66,7 +60,7 @@ namespace Jina.Domain.Service.Account.User
         }
     }
 
-    public class CreateRoleClaimService : EfServiceImpl<CreateRoleClaimService, CreateRoleClaimRequest, IResultBase<bool>>
+    public class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, CreateRoleClaimRequest, IResultBase<bool>>
         , IScopeService
     {
         public CreateRoleClaimService(AppDbContext db) : base(db, null)

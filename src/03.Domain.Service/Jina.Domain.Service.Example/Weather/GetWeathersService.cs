@@ -3,15 +3,15 @@ using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.EfExtension;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.EfExtension;
 using Jina.Domain.SharedKernel;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
     public class GetWeathersService
-        : EfServiceImpl<GetWeathersService, PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>
+        : ServiceImplBase<GetWeathersService, PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>
             , IGetWeathersService
             , IScopeService
     {

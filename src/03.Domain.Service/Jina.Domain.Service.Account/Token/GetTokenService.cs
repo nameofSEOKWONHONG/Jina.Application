@@ -4,8 +4,8 @@ using Jina.Domain.Abstract.Account.Token;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.Const;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.Const;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Session.Abstract;
@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Jina.Domain.Service.Account.Token;
 
 public class GetTokenService
-    : EfServiceImpl<GetTokenService, TokenRequest, IResultBase<TokenResponse>>
+    : ServiceImplBase<GetTokenService, TokenRequest, IResultBase<TokenResponse>>
         , IGetTokenService
 {
     private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;

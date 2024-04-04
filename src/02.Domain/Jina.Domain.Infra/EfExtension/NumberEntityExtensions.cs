@@ -1,19 +1,18 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity.Base;
 using Jina.Domain.Example;
-using Jina.Domain.Infra.Extension;
+using Jina.Domain.Service.Infra.Extension;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Consts;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
-using System;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
-namespace Jina.Domain.Infra.EfExtension
+namespace Jina.Domain.Service.Infra.EfExtension
 {
-    public static class NumberEntityExtensions
+	public static class NumberEntityExtensions
     {
         public static async Task<T> vFirstAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
              where T : NumberEntityBase

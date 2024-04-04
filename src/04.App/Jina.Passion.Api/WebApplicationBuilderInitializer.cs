@@ -2,8 +2,8 @@
 using Hangfire;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
-using Jina.Domain.Infra.Const;
-using Jina.Domain.Infra.Session;
+using Jina.Domain.Service.Infra.Const;
+using Jina.Domain.Service.Infra.Session;
 using Jina.Domain.Service.Net.ExchangeRate;
 using Jina.Domain.SharedKernel;
 using Jina.Injection;
@@ -24,7 +24,7 @@ using System.Threading.RateLimiting;
 
 namespace Jina.Passion.Api
 {
-    public class WebApplicationBuilderInitializer
+	public class WebApplicationBuilderInitializer
     {
         public static WebApplicationBuilder Initialize(WebApplicationBuilder builder)
         {

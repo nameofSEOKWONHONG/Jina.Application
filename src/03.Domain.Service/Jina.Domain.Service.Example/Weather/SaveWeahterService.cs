@@ -1,14 +1,14 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
-using Jina.Domain.Infra.Base;
+using Jina.Domain.Service.Infra.Base;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-    public class SaveWeahterService : EfServiceImpl<SaveWeahterService, WeatherForecastDto, IResultBase<int>>
+	public class SaveWeahterService : ServiceImplBase<SaveWeahterService, WeatherForecastDto, IResultBase<int>>
     {
         public SaveWeahterService(AppDbContext db, ISessionContext context) : base(db, context)
         {

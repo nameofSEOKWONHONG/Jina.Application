@@ -3,15 +3,15 @@ using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
-using Jina.Domain.Infra.Base;
-using Jina.Domain.Infra.EfExtension;
+using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra.EfExtension;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-    public class GetWeatherService : EfServiceImpl<GetWeatherService, int, IResultBase<WeatherForecastDto>>, IGetWeatherService, IScopeService
+	public class GetWeatherService : ServiceImplBase<GetWeatherService, int, IResultBase<WeatherForecastDto>>, IGetWeatherService, IScopeService
     {
         public GetWeatherService(AppDbContext db, ISessionContext context) : base(db, context)
         {
