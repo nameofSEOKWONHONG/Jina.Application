@@ -13,22 +13,22 @@ namespace Jina.Domain.Entity;
 public class AppDbContext : AuditableContext
 {
     private readonly ISessionCurrentUser _user;
-    private readonly ISessionDateTime _dt;
+    private readonly ISessionDateTime _sessionDate;
 
     public AppDbContext(DbContextOptions<AppDbContext> options
-    // , ISessionCurrentUser user
-    // , ISessionDateTime dt
+     , ISessionCurrentUser user
+     , ISessionDateTime sessionDate
     ) : base(options)
     {
-        // _user = user;
-        // _dt = dt;
+        _user = user;
+        _sessionDate = sessionDate;
     }
 
     public AppDbContext(string connection) : base(CreateOption(connection))
     {
     }
 
-    private static DbContextOptions CreateOption(string connection)
+	private static DbContextOptions CreateOption(string connection)
     {
         return new DbContextOptionsBuilder().UseSqlServer(connection).Options;
     }

@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using eXtensionSharp;
 using Jina.Domain.SharedKernel.Abstract;
-using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Client.Base;
 
 namespace Jina.Passion.Client.Base

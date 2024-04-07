@@ -1,7 +1,7 @@
 ﻿using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
 
-namespace Jina.Domain.Service.Infra.Session
+namespace Jina.Domain.Service.Infra
 {
 	public class SessionCurrentUser : ISessionCurrentUser
     {

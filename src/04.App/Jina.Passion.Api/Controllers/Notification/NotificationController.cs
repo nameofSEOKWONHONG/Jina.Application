@@ -1,5 +1,5 @@
 ﻿using Hangfire;
-using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra;
 using Jina.Passion.Api.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;

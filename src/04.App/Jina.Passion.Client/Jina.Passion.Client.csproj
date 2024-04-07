@@ -16,17 +16,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.17.4" />
+    <PackageReference Include="AntDesign" Version="0.18.2" />
     <PackageReference Include="AntDesign.Charts" Version="0.5.1" />
-    <PackageReference Include="AntDesign.ProLayout" Version="0.17.3" />
+    <PackageReference Include="AntDesign.Components.Authentication" Version="0.15.5" />
+    <PackageReference Include="AntDesign.ProLayout" Version="0.18.2" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="KakaoMapBlazor" Version="2.0.5" />
+    
+    <PackageReference Include="Toolbelt.Blazor.HttpClientInterceptor" Version="10.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.3" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.2" />            
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.3" />            
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />    
   </ItemGroup>
 
   <ItemGroup>
@@ -63,5 +68,16 @@
   <ItemGroup>
     <Watch Include="**\*.razor" />
     <Watch Include="**\*.less" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Watch Remove="Layout\UserLayout.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\Exception\403\403.razor" />
+    <None Include="Pages\Exception\404\404.razor" />
+    <None Include="Pages\Exception\500\500.razor" />
+    <None Include="Pages\User\Login\Login.razor" />
   </ItemGroup>
 </Project>

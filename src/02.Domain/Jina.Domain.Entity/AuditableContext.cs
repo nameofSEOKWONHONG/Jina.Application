@@ -23,14 +23,6 @@ public abstract class AuditableContext : IdentityDbContext<User, Role, string, I
         base.OnModelCreating(builder);
     }
     
-    public virtual async Task<int> SaveChangesAsync(string tenantId, string userId = null, CancellationToken cancellationToken = new())
-    {
-        var auditEntries = OnBeforeSaveChanges(tenantId, userId);
-        var result = await base.SaveChangesAsync(cancellationToken);
-        await OnAfterSaveChanges(auditEntries, cancellationToken);
-        return result;
-    }
-    
     private List<AuditEntry> OnBeforeSaveChanges(string tenantId, string userId)
     {
         ChangeTracker.DetectChanges();

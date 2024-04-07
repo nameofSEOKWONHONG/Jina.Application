@@ -1,7 +1,7 @@
 ﻿using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
 
-namespace Jina.Domain.Service.Infra.Session
+namespace Jina.Domain.Service.Infra
 {
 	public class SessionContext : ISessionContext
     {

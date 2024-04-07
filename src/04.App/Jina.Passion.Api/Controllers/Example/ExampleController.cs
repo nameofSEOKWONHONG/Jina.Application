@@ -3,7 +3,7 @@ using eXtensionSharp.AspNet;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Example;
-using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Mvc;

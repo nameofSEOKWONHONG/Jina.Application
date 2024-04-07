@@ -1,7 +1,7 @@
 ﻿using eXtensionSharp;
-using Jina.Domain.Service.Infra.Const;
+using Jina.Domain.SharedKernel.Consts;
 
-namespace Jina.Domain.Service.Infra.Extension
+namespace Jina.Domain.Service.Infra
 {
 	public static class EncryptionExtensions
     {

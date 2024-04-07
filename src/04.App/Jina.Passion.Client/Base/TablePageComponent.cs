@@ -5,7 +5,6 @@ using AntDesign;
 using AntDesign.TableModels;
 using eXtensionSharp;
 using Jina.Domain.SharedKernel.Abstract;
-using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Client.Base;
 using Microsoft.AspNetCore.Components;
 

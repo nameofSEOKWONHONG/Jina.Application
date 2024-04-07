@@ -1,11 +1,9 @@
 ﻿using eXtensionSharp;
 using Jina.Base.Service;
-using Jina.Domain.Abstract.Account.Token;
-using Jina.Domain.Abstract.Account.User;
+using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Request;
 using Jina.Domain.Account.Token;
-using Jina.Domain.Service.Infra.Base;
-using Jina.Domain.SharedKernel;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +19,11 @@ public class LoginController : JControllerBase
     [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Login(TokenRequest request
-        , [FromServices] IGetTokenService service)
+        , [FromServices] ILoginService service)
     {
-        IResultBase<TokenResponse> result = null;
+        IResultBase<TokenResult> result = null;
 
-        await ServicePipeline<TokenRequest, IResultBase<TokenResponse>>.Create(service)
+        await ServicePipeline<TokenRequest, IResultBase<TokenResult>>.Create(service)
             .AddFilter(() => request.xIsNotEmpty())
             .SetParameter(() => request)
             .OnExecutedAsync(r => result = r);
@@ -38,39 +36,53 @@ public class LoginController : JControllerBase
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    [AllowAnonymous]
-    [HttpPost]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest model,
-        [FromServices] IGetTokenRefreshService service)
-    {
-        IResultBase<TokenResponse> result = null;
-        await ServicePipeline<RefreshTokenRequest, IResultBase<TokenResponse>>.Create(service)
-            .AddFilter(model.xIsNotEmpty)
-            .SetParameter(() => model)
-            .SetValidator(new RefreshTokenRequest.Valdiator(null))
-            .OnError(m =>
-            {
-                result = Result<TokenResponse>.Fail(m.Errors.First().ErrorMessage);
-            })
-            .OnExecutedAsync(m =>
-            {
-                result = m;
-            });
+    //[AllowAnonymous]
+    //[HttpPost]
+    //public async Task<IActionResult> Refresh(RefreshTokenRequest model,
+    //    [FromServices] IGetTokenRefreshService service)
+    //{
+    //    IResultBase<TokenResult> result = null;
+    //    await ServicePipeline<RefreshTokenRequest, IResultBase<TokenResult>>.Create(service)
+    //        .AddFilter(model.xIsNotEmpty)
+    //        .SetParameter(() => model)
+    //        .SetValidator(new RefreshTokenRequest.Valdiator(null))
+    //        .OnError(m =>
+    //        {
+    //            result = Result<TokenResult>.Fail(m.Errors.First().ErrorMessage);
+    //        })
+    //        .OnExecutedAsync(m =>
+    //        {
+    //            result = m;
+    //        });
 
-        return Ok(result);
-    }
+    //    return Ok(result);
+    //}
 
     [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Register(RegisterRequest request,
-        [FromServices] IRegisterUserService services)
+        [FromServices] IRegisterUserService service)
     {
         IResultBase<bool> result = null;
-        await ServicePipeline<RegisterRequest, IResultBase<bool>>.Create(services)
+        await ServicePipeline<RegisterRequest, IResultBase<bool>>.Create(service)
             .AddFilter(() => request.xIsNotEmpty())
             .SetParameter(() => request)
             .OnExecutedAsync(m => result = m);
 
         return Ok(result);
     }
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> AdminInit(CreateTenantRequest request, 
+        [FromServices] ICreateTenantService service)
+    {
+		IResultBase<bool> result = null;
+		await ServicePipeline<CreateTenantRequest, IResultBase<bool>>.Create(service)
+			.AddFilter(() => request.xIsNotEmpty())
+			.SetParameter(() => request)
+			.OnExecutedAsync(m => result = m);
+
+		return Ok(result);
+	}
 }

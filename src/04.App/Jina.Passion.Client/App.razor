@@ -1,13 +1,34 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-        <CascadingValue Value="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
-        </CascadingValue>
-    </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(Layout.MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@using Jina.Passion.Client.Pages.User
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+    @*     <Found Context="routeData">
+            <CascadingValue Value="routeData">
+                <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+            </CascadingValue>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(Layout.MainLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound> *@
+        <Found Context="routeData">
+            <AuthorizeView>
+                 <Authorized>
+                    <CascadingValue Value="routeData">
+                        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)"/>
+                    </CascadingValue>
+                 </Authorized>
+                <NotAuthorized>
+                    <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.UserLayout)"/>
+                 </NotAuthorized>
+            </AuthorizeView>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(BasicLayout)">
+                <p>Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
 <AntContainer />

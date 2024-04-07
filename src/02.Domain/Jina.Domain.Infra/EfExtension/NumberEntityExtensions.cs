@@ -1,7 +1,6 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity.Base;
 using Jina.Domain.Example;
-using Jina.Domain.Service.Infra.Extension;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Consts;
 using Jina.Session.Abstract;
@@ -10,7 +9,7 @@ using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
-namespace Jina.Domain.Service.Infra.EfExtension
+namespace Jina.Domain.Service.Infra
 {
 	public static class NumberEntityExtensions
     {
@@ -112,7 +111,7 @@ namespace Jina.Domain.Service.Infra.EfExtension
             if (query == null) throw new Exception("queriable is empty");
             if (ctx.xIsEmpty()) throw new Exception("context is empty");
 
-            if (ctx.CurrentUser.RoleName != RoleConst.AdminRole)
+            if (ctx.CurrentUser.RoleName != RoleConstants.AdminRole)
             {
                 query = query.Where(m => m.IsActive == true);
             }
@@ -142,7 +141,7 @@ namespace Jina.Domain.Service.Infra.EfExtension
             if (query == null) throw new Exception("queriable is empty");
             if (ctx.xIsEmpty()) throw new Exception("context is empty");
 
-            if (ctx.CurrentUser.RoleName != RoleConst.AdminRole)
+            if (ctx.CurrentUser.RoleName != RoleConstants.AdminRole)
             {
                 query = query.Where(m => m.IsActive == true);
             }
@@ -185,7 +184,7 @@ namespace Jina.Domain.Service.Infra.EfExtension
             if (query == null) throw new Exception("queriable is empty");
             if (ctx.xIsEmpty()) throw new Exception("context is empty");
 
-            if (ctx.CurrentUser.RoleName != RoleConst.AdminRole)
+            if (ctx.CurrentUser.RoleName != RoleConstants.AdminRole)
             {
                 query = query.Where(m => m.IsActive == true);
             }

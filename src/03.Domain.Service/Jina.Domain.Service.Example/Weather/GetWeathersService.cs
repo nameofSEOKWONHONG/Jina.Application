@@ -3,14 +3,13 @@ using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
-using Jina.Domain.Service.Infra.Base;
-using Jina.Domain.Service.Infra.EfExtension;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-    public class GetWeathersService
+	public class GetWeathersService
         : ServiceImplBase<GetWeathersService, PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>
             , IGetWeathersService
             , IScopeService

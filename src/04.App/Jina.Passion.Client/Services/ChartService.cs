@@ -14,10 +14,12 @@ public interface IChartService
     Task<RadarDataItem[]> GetRadarDataAsync();
 }
 
-public class ChartService : ServiceBase, IChartService
+public class ChartService : IChartService
 {
-    public ChartService(HttpClient client) : base(client)
+    private readonly HttpClient _client;
+    public ChartService(HttpClient client)
     {
+        _client = client;
     }
 
     public async Task<ChartDataItem[]> GetVisitDataAsync()
@@ -42,6 +44,6 @@ public class ChartService : ServiceBase, IChartService
 
     private async Task<ChartData> GetChartDataAsync()
     {
-        return await this.Client.GetFromJsonAsync<ChartData>("https://localhost:7007/data/fake_chart_data.json");
+        return await this._client.GetFromJsonAsync<ChartData>("https://localhost:7007/data/fake_chart_data.json");
     }
 }

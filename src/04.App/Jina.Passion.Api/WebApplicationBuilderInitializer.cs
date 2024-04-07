@@ -2,10 +2,10 @@
 using Hangfire;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
-using Jina.Domain.Service.Infra.Const;
-using Jina.Domain.Service.Infra.Session;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.Service.Net.ExchangeRate;
 using Jina.Domain.SharedKernel;
+using Jina.Domain.SharedKernel.Consts;
 using Jina.Injection;
 using Jina.Lang;
 using Jina.Lang.Abstract;
@@ -66,7 +66,7 @@ namespace Jina.Passion.Api
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            var key = Encoding.UTF8.GetBytes(builder.Configuration["ApplicationOption:Secret"]);
+            var key = Encoding.UTF8.GetBytes(builder.Configuration["ApplicationConfig:Secret"]);
             builder.Services
                             .AddAuthentication(authentication =>
                             {
@@ -153,12 +153,12 @@ namespace Jina.Passion.Api
             builder.Services.AddAuthorization(options =>
             {
                 // Here I stored necessary permissions/roles in a constant
-                foreach (var prop in typeof(Permission).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                foreach (var prop in typeof(PermissionConsts).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
                 {
                     var propertyValue = prop.GetValue(null);
                     if (propertyValue is not null)
                     {
-                        options.AddPolicy(propertyValue.xValue<string>(), policy => policy.RequireClaim(ApplicationClaimTypeConst.Permission, propertyValue.xValue<string>()));
+                        options.AddPolicy(propertyValue.xValue<string>(), policy => policy.RequireClaim(ApplicationClaimTypes.Permission, propertyValue.xValue<string>()));
                     }
                 }
             });
@@ -210,7 +210,9 @@ namespace Jina.Passion.Api
             builder.Services
                 .AddScoped<AppDbContext>()
                 .AddDbContext<AppDbContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
+                    sqlServerOptions => sqlServerOptions.CommandTimeout(int.MaxValue))
+                 );
 
             #endregion [dbcontext]
 
@@ -276,23 +278,28 @@ namespace Jina.Passion.Api
             //아래 3개 중에 택일, MemoryCache, Redis-Cache, SqlServer-Cache
             //memory
             builder.Services.AddDistributedMemoryCache();
-            //redis
-            //builder.Services.AddStackExchangeRedisCache(options =>
-            //{
-            //    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
-            //    options.InstanceName = "SampleInstance";
-            //});
-            //sql server
-            //builder.Services.AddDistributedSqlServerCache(options =>
-            //{
-            //    options.ConnectionString = builder.Configuration.GetConnectionString(
-            //        "SqlServerCacheConnection");
-            //    options.SchemaName = "dbo";
-            //    options.TableName = "CacheTable";
-            //});
-            #endregion
 
-            return builder;
+			//redis
+			//builder.Services.AddStackExchangeRedisCache(options =>
+			//{
+			//    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
+			//    options.InstanceName = "SampleInstance";
+			//});
+			//sql server
+			//builder.Services.AddDistributedSqlServerCache(options =>
+			//{
+			//    options.ConnectionString = builder.Configuration.GetConnectionString(
+			//        "SqlServerCacheConnection");
+			//    options.SchemaName = "dbo";
+			//    options.TableName = "CacheTable";
+			//});
+			#endregion
+
+			#region [configuration]
+			builder.Services.Configure<ApplicationConfig>(builder.Configuration.GetSection(nameof(ApplicationConfig)));
+			#endregion
+
+			return builder;
         }
 
         private static bool IsOriginAllowed(string origin)

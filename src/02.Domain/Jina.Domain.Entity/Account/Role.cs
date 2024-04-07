@@ -21,7 +21,7 @@ public class Role : IdentityRole
     public string CreatedBy { get; set; }
 
     [Required, Comment("생성일")]
-    public DateTime? CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     [MaxLength(140), Comment("수정자")]
     public string LastModifiedBy { get; set; }
@@ -31,12 +31,19 @@ public class Role : IdentityRole
 
     public virtual ICollection<RoleClaim> RoleClaims { get; set; }
 
-    public Role()
-    {
-        RoleClaims = new HashSet<RoleClaim>();
-    }
+	public Role() : base()
+	{
+		RoleClaims = new HashSet<RoleClaim>();
+	}
 
-    public static void EntityModelBuild(ModelBuilder modelBuilder)
+	public Role(string tenantId, string roleName, string roleDescription = null) : base(roleName)
+	{
+		TenantId = tenantId;
+		RoleClaims = new HashSet<RoleClaim>();
+		Description = roleDescription;
+	}
+
+	public static void EntityModelBuild(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<IdentityRole>()
         //    .ToTable("Roles", "Account");

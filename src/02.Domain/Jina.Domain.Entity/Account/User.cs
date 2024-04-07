@@ -21,7 +21,10 @@ public class User : IdentityUser<string>
     [MaxLength(256)]
     public string RefreshToken { get; set; }
 
-    public DateTime RefreshTokenExpiryTime { get; set; }
+    [MaxLength(4000)]
+    public string ProfilePictureDataUrl { get; set; }
+
+	public DateTime RefreshTokenExpiryTime { get; set; }
 
     [Comment("활성화 여부")]
     public bool IsActive { get; set; }

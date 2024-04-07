@@ -1,7 +1,7 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
-using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Session.Abstract;

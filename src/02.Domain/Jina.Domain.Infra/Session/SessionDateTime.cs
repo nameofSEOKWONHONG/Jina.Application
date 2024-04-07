@@ -1,7 +1,7 @@
 ﻿using eXtensionSharp;
 using Jina.Session.Abstract;
 
-namespace Jina.Domain.Service.Infra.Session
+namespace Jina.Domain.Service.Infra
 {
     public class SessionDateTime : ISessionDateTime
     {
@@ -34,5 +34,5 @@ namespace Jina.Domain.Service.Infra.Session
         }
 
         public DateTime ToUtc(DateTime local) => local.ToUniversalTime();
-    }
+	}
 }

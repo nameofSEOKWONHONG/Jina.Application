@@ -1,4 +1,4 @@
-using Jina.Domain.Service.Infra.Base;
+using Jina.Domain.Service.Infra;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jina.Passion.Api.Controllers.Account;

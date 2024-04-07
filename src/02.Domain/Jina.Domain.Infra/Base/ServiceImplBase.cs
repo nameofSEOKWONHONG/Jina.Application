@@ -2,7 +2,7 @@
 using Jina.Domain.Entity;
 using Jina.Session.Abstract;
 
-namespace Jina.Domain.Service.Infra.Base
+namespace Jina.Domain.Service.Infra
 {
 	public abstract class ServiceImplBase<TSelf, TRequest, TResult> : ServiceImplCore<TSelf, TRequest, TResult>
     {
