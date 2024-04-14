@@ -13,20 +13,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Transactions;
+using Jina.Base.Service;
 
 namespace Jina.Domain.Service.Account
 {
     /// <summary>
     /// create tenant
     /// </summary>
-	[TransactionOptions(TransactionScopeOption.Required)]
-    public class CreateTenantService : ServiceImplBase<CreateTenantService, CreateTenantRequest, IResultBase<bool>>,
+    [TransactionOptions()]
+    public class CreateTenantService : ServiceImplBase<CreateTenantService, AppDbContext, CreateTenantRequest, IResultBase<bool>>,
         ICreateTenantService
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
 
-        public CreateTenantService(AppDbContext db, ISessionContext context,
-            IPasswordHasher<Entity.Account.User> passwordHasher) : base(db, context)
+        public CreateTenantService(ISessionContext ctx, ServicePipeline svc,
+            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, svc)
         {
             _passwordHasher = passwordHasher;
         }
@@ -38,7 +39,7 @@ namespace Jina.Domain.Service.Account
 
         public override async Task OnExecuteAsync()
         {
-            var rootTenant = await DbContext.Tenants.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId);
+            var rootTenant = await this.Db.Tenants.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId);
             if (rootTenant.xIsEmpty())
             {
                 rootTenant = new Tenant()
@@ -49,8 +50,8 @@ namespace Jina.Domain.Service.Account
                     TimeZone = Request.TimeZone.xValue("Korea Standard Time"),
                 };
 
-                await DbContext.Tenants.AddAsync(rootTenant);
-                await DbContext.SaveChangesAsync();
+                await this.Db.Tenants.AddAsync(rootTenant);
+                await this.Db.SaveChangesAsync();
             }
 
             //Check if Role Exists
@@ -61,13 +62,13 @@ namespace Jina.Domain.Service.Account
                 CreatedBy = "SYSTEM",
                 CreatedOn = DateTime.Now,
             };
-            var adminRoleInDb = await DbContext.Roles.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Name == RoleConstants.AdminRole);
+            var adminRoleInDb = await this.Db.Roles.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Name == RoleConstants.AdminRole);
             if (adminRoleInDb.xIsEmpty())
             {
-                await DbContext.Roles.AddAsync(adminRole);
-                await DbContext.SaveChangesAsync();
+                await this.Db.Roles.AddAsync(adminRole);
+                await this.Db.SaveChangesAsync();
 
-                adminRoleInDb = await DbContext.Roles.FirstAsync(m => m.TenantId == Request.TenantId && m.Name == RoleConstants.AdminRole);
+                adminRoleInDb = await this.Db.Roles.FirstAsync(m => m.TenantId == Request.TenantId && m.Name == RoleConstants.AdminRole);
             }
 
             //Check if User Exists
@@ -90,11 +91,11 @@ namespace Jina.Domain.Service.Account
             adminUser.PasswordHash = passwordHash;
             adminUser.SecurityStamp = CreateSecurityStamp(adminUser);
 
-            var rootUserInDb = await DbContext.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == adminUser.Email);
+            var rootUserInDb = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == adminUser.Email);
             if (rootUserInDb.xIsEmpty())
             {
-                await DbContext.Users.AddAsync(adminUser);
-                await DbContext.SaveChangesAsync();
+                await this.Db.Users.AddAsync(adminUser);
+                await this.Db.SaveChangesAsync();
                 var userRole = new UserRole()
                 {
                     TenantId = Request.TenantId,
@@ -104,21 +105,21 @@ namespace Jina.Domain.Service.Account
                     CreatedOn = DateTime.Now,
                 };
 
-                await DbContext.UserRoles.AddAsync(userRole);
-                await DbContext.SaveChangesAsync();
+                await this.Db.UserRoles.AddAsync(userRole);
+                await this.Db.SaveChangesAsync();
 
                 foreach (var permission in PermissionConsts.GetRegisteredPermissions())
                 {
                     var result = await AddPermissionClaim(adminRoleInDb, permission);
                     if (result.Succeeded.xIsFalse())
                     {
-                        Result = await Result<bool>.SuccessAsync(false);
+                        Result = await ResultBase<bool>.SuccessAsync(false);
                         return;
                     }
                 }
             }
 
-            Result = await Result<bool>.SuccessAsync(true);
+            Result = await ResultBase<bool>.SuccessAsync(true);
         }
 
 
@@ -131,7 +132,7 @@ namespace Jina.Domain.Service.Account
 
         private async Task<IdentityResult> AddPermissionClaim(Role role, string permission)
         {
-            var allClaims = await DbContext.RoleClaims.Where(m => m.TenantId == role.TenantId && m.RoleId == role.Id)
+            var allClaims = await this.Db.RoleClaims.Where(m => m.TenantId == role.TenantId && m.RoleId == role.Id)
                 .ToListAsync();
             var list = new List<RoleClaim>();
             if (!allClaims.Any(a => a.ClaimType == ApplicationClaimTypes.Permission && a.ClaimValue == permission))
@@ -150,8 +151,8 @@ namespace Jina.Domain.Service.Account
 
             if (list.xIsNotEmpty())
             {
-                await DbContext.RoleClaims.AddRangeAsync(list);
-                await DbContext.SaveChangesAsync();
+                await this.Db.RoleClaims.AddRangeAsync(list);
+                await this.Db.SaveChangesAsync();
                 return IdentityResult.Success;
             }
 

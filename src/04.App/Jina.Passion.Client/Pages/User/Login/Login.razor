@@ -10,8 +10,8 @@
             <Tabs ActiveKey="@context.LoginType">
                 <TabPane Key="1" Tab="Account Login">
                     <FormItem>
-                        <AntDesign.Input Placeholder="TenantId" Size="large" @bind-Value="@context.TenantId">
-                            <Prefix><Icon Type="symbol" /></Prefix>
+                        <AntDesign.Input Placeholder="GroupId" Size="large" @bind-Value="@context.TenantId">
+                            <Prefix><Icon Type="group" /></Prefix>
                         </AntDesign.Input>
                     </FormItem>
                     <FormItem>
@@ -20,7 +20,7 @@
                         </AntDesign.Input>
                     </FormItem>
                     <FormItem>
-                        <AntDesign.Input Placeholder="Password: ant.design" Size="large" @bind-Value="@context.Password" Type="password">
+                        <AntDesign.Input Placeholder="Password:" Size="large" @bind-Value="@context.Password" Type="password">
                             <Prefix><Icon Type="lock" /></Prefix>
                         </AntDesign.Input>
                     </FormItem>
@@ -46,21 +46,18 @@
                 </TabPane> *@
             </Tabs>
             <div>
-                <Checkbox Checked="@context.AutoLogin">
-                    Auto Login
-                </Checkbox>
                 <a style="float: right;">
                     Forgot Password
                 </a>
             </div>
             <Button Type="primary" HtmlType="submit" Class="submit" Size="large" Block>Log in </Button>
-            <div class="other">
+@*             <div class="other">
                 Other Login Methods
                 <Icon Class="icon" Type="alipay-circle" />
                 <Icon Class="icon" Type="taobao-circle" />
                 <Icon Class="icon" Type="weibo-circle" />
                 <a class="register" href="/user/register">Register Account</a>
-            </div>
+            </div> *@
         </Form>
     </div>
 </div>

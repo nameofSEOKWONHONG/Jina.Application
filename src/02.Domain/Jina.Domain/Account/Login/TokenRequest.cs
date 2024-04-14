@@ -19,7 +19,7 @@ namespace Jina.Domain.Account.Token
 
         public string ConnectionId { get; set; }
 
-        public bool AutoLogin { get; set; }
+        public bool RemamberMe { get; set; }
         public string LoginType { get; set; } = "1";
 
         public class Validator : Validator<TokenRequest>

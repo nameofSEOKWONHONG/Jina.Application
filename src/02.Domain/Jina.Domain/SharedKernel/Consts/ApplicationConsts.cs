@@ -29,6 +29,7 @@
             public const string CULTURE_NAME = "culture";
             public const string INDEXED_DB_NAME = "jina";
             public const string INDEXED_DB_STORE_NAME = "jina-data-store";
+            public const string TITLE = "GlobalizeHub";
         }
 
         public class Timezone

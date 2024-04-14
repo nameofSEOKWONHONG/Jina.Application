@@ -21,6 +21,9 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
+using Jina.Base.Service;
+using Jina.Database;
+using Jina.Database.Abstract;
 
 namespace Jina.Passion.Api
 {
@@ -109,7 +112,7 @@ namespace Jina.Passion.Api
                                         {
                                             c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             c.Response.ContentType = "application/json";
-                                            var result = Result.Fail("The Token is expired.").xToJson();
+                                            var result = ResultBase.Fail("The Token is expired.").xToJson();
                                             return c.Response.WriteAsync(result);
                                         }
                                         else
@@ -134,7 +137,7 @@ namespace Jina.Passion.Api
                                         {
                                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             context.Response.ContentType = "application/json";
-                                            var result = Result.Fail("You are not Authorized.").xToJson();
+                                            var result = ResultBase.Fail("You are not Authorized.").xToJson();
                                             return context.Response.WriteAsync(result);
                                         }
 
@@ -144,7 +147,7 @@ namespace Jina.Passion.Api
                                     {
                                         context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                                         context.Response.ContentType = "application/json";
-                                        var result = Result.Fail("You are not authorized to access this resource.").xToJson();
+                                        var result = ResultBase.Fail("You are not authorized to access this resource.").xToJson();
                                         return context.Response.WriteAsync(result);
                                     },
                                 };
@@ -206,13 +209,15 @@ namespace Jina.Passion.Api
             #endregion [hangfire]
 
             #region [dbcontext]
-
+            builder.Services.AddTransient<ServicePipeline>();
             builder.Services
-                .AddScoped<AppDbContext>()
+                .AddScoped<IDbContext, AppDbContext>()
                 .AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
                     sqlServerOptions => sqlServerOptions.CommandTimeout(int.MaxValue))
                  );
+            builder.Services.AddJinaDatabase<MsSqlProvider>(() =>
+                new MsSqlProvider(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             #endregion [dbcontext]
 
@@ -271,7 +276,7 @@ namespace Jina.Passion.Api
             #endregion [swagger]
 
             #region [backgroundService]
-            builder.Services.AddHostedService<SaveExchangeRateBackgroundService>();
+            //builder.Services.AddHostedService<SaveExchangeRateBackgroundService>();
             #endregion
 
             #region [distribute cache]

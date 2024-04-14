@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
+using Jina.Domain.Entity;
 
 namespace Jina.Domain.Service.Infra
 {

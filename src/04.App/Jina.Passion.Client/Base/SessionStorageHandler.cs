@@ -53,5 +53,11 @@ namespace Jina.Passion.Client.Base
         {
             await _service.RemoveItemAsync(key);
         }
+        
+        public async Task RemoveAllAsync(string[] keys)
+        {
+            var tasks = keys.Select(RemoveAsync);
+            await Task.WhenAll(tasks);
+        }        
     }
 }

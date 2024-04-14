@@ -15,22 +15,22 @@
         <div>
             <Form Model="searchValue" Name="search" Class="ant-advanced-search-form" Size="@AntSizeLDSType.Small">                
                 <GridRow>
-                    <GridCol Span="6" @key="nameof(context.Date)">
+                    <GridCol Span="4" @key="nameof(context.Date)">
                         <FormItem Label="@nameof(context.Date)">
                             <DatePicker @bind-Value="@(context.Date)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
                     </GridCol>
-                    <GridCol Span="6" @key="nameof(context.TemperatureC)">
+                    <GridCol Span="4" @key="nameof(context.TemperatureC)">
                         <FormItem Label="@nameof(context.TemperatureC)">
                             <Input @bind-Value="@(context.TemperatureC)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
                     </GridCol>
-                    <GridCol Span="6" @key="nameof(context.Summary)">
+                    <GridCol Span="4" @key="nameof(context.Summary)">
                         <FormItem Label="@nameof(context.Summary)">
                             <Input @bind-Value="@(context.Summary)" Style="width: 80%;" Size="@InputSize.Small" />
                         </FormItem>
                     </GridCol>                    
-                </GridRow>
+                </GridRow>              
             </Form>
         </div>
         <div>

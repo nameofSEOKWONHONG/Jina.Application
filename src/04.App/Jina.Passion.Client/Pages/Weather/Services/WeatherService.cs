@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using Jina.Domain.Example;
+﻿using Jina.Domain.Example;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Jina.Passion.Client.Base;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
+using Jina.Passion.Client.Common.Infra;
 
 namespace Jina.Passion.Client.Pages.Weather.Services
 {
     public class WeatherService : ServiceBase
     {
-        public WeatherService(HttpClient httpClient) : base(httpClient)
+        public WeatherService(IRestClient httpClient) : base(httpClient)
         {
         }
 
@@ -45,15 +40,16 @@ namespace Jina.Passion.Client.Pages.Weather.Services
 
         public async Task<WeatherForecastDto> GetWeatherAsync(int id)
         {
-            var result = await Client.GetFromJsonAsync<WeatherForecastDto>("get");
-            return result;
+            var url = $"api/example/get/{id}";
+            var result = await Client.ExecuteAsync<int, IResultBase<WeatherForecastDto>>(HttpMethod.Get, url, 0);
+            return result.Data;
         }
 
         public async Task<IResultBase> SaveAsync(WeatherForecastDto item)
         {
             //call api
 
-            var result = await Result.SuccessAsync();
+            var result = await ResultBase.SuccessAsync();
             return result;
         }
 
@@ -61,7 +57,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
         {
             //call api
 
-            var result = await Result.SuccessAsync();
+            var result = await ResultBase.SuccessAsync();
             return result;
         }
 
@@ -69,7 +65,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
         {
             //call api
 
-            var result = await Result.SuccessAsync();
+            var result = await ResultBase.SuccessAsync();
             return result;
         }
     }

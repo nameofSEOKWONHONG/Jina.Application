@@ -1,8 +1,9 @@
-﻿using FluentValidation;
-using Jina.Passion.Client.Services.Account;
+﻿using Jina.Passion.Client.Services.Account;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
+using AntDesign;
 using Toolbelt.Blazor;
+using ILogger = Serilog.ILogger;
 
 namespace Jina.Passion.Client.Common.Infra
 {
@@ -10,15 +11,19 @@ namespace Jina.Passion.Client.Common.Infra
     {
         private readonly HttpClientInterceptor _interceptor;
         private readonly IAccountService _accountService;
-        private readonly NavigationManager _navigationManager;        
-
+        private readonly NavigationManager _navigationManager;
+        private readonly IMessageService _messageService;
+        private readonly ILogger _logger = Serilog.Log.ForContext<HttpInterceptorManager>();
+        
         public HttpInterceptorManager(HttpClientInterceptor interceptor,
             IAccountService accountService,
-            NavigationManager navigationManager)
+            NavigationManager navigationManager,
+            IMessageService messageService)
         {
             _interceptor = interceptor;
             _accountService = accountService;
-            _navigationManager = navigationManager;                        
+            _navigationManager = navigationManager;
+            _messageService = messageService;
         }
 
         public void DisposeEvent() => _interceptor.BeforeSendAsync -= InterceptBeforeHttpAsync;
@@ -28,24 +33,23 @@ namespace Jina.Passion.Client.Common.Infra
             var absPath = e.Request.RequestUri.AbsolutePath;
             if (!absPath.Contains("token") && !absPath.Contains("accounts"))
             {
-//                try
-//                {
-//                    var token = await _accountService.TryRefreshToken();
-//                    if (!string.IsNullOrEmpty(token))
-//                    {
-//                        _snackBar.Add("Refreshed Token.", Severity.Success);
-//                        e.Request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-//                    }
-//                }
-//                catch (Exception ex)
-//                {
-//#if DEBUG
-//                    _logger.LogError(ex, "InterceptBeforeHttpAsync Error : {Error}", ex.Message);
-//#endif
-//                    _snackBar.Add("You are Logged Out.", Severity.Error);
-//                    await _accountService.Logout();
-//                    _navigationManager.NavigateTo("/Login");
-//                }
+                try
+                {
+                    var token = await _accountService.TryRefreshToken();
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        await _messageService.Success("Refreshed Token.");
+                        e.Request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "InterceptBeforeHttpAsync:{msg}", ex.Message);
+                    await _messageService.Error("You are Logged Out.");
+                    await Task.Delay(1000);
+                    await _accountService.Logout();
+                    _navigationManager.NavigateTo("/Login");
+                }
             }
         }
 

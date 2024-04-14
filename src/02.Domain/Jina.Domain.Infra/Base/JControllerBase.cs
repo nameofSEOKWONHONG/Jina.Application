@@ -1,4 +1,7 @@
+using eXtensionSharp;
+using Jina.Base.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace Jina.Domain.Service.Infra;
@@ -8,9 +11,18 @@ namespace Jina.Domain.Service.Infra;
 public abstract class JControllerBase : ControllerBase
 {
     protected ILogger Logger => Log.Logger;
-    
+    private ServicePipeline _svc;
+
+    protected ServicePipeline Pip
+    {
+        get
+        {
+            if (_svc.xIsEmpty()) _svc = this.HttpContext.RequestServices.GetRequiredService<ServicePipeline>();
+            return _svc;
+        }
+    }
+
     protected JControllerBase()
     {
-        
     }
 }

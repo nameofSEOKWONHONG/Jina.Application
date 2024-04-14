@@ -19,9 +19,10 @@ namespace Jina.Passion.Client.Common.Infra
             where TResult : IResultBase
         {
             var createdUrl = CreateCachedUrl(url);
-            var msg = new HttpRequestMessage(method, createdUrl)
+            var msg = new HttpRequestMessage(method, createdUrl);
+            if(body.xIsNotEmpty())
             {
-                Content = new StringContent(body.xToJson(), Encoding.UTF8, "application/json")
+                msg.Content = new StringContent(body.xToJson(), Encoding.UTF8, "application/json");
             };
 
             msg.SetBrowserRequestCache(cache);

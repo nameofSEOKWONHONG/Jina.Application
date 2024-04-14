@@ -9,39 +9,41 @@ using Jina.Domain.SharedKernel.Abstract;
 using Jina.Domain.SharedKernel.Consts;
 using Microsoft.AspNetCore.Identity;
 using System.Data.Entity;
+using Jina.Base.Service;
+using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
 {
-	public class RegisterUserService : ServiceImplBase<RegisterUserService, RegisterRequest, IResultBase<bool>>, 
+	public class RegisterUserService : ServiceImplBase<RegisterUserService, AppDbContext, RegisterRequest, IResultBase<bool>>, 
         IRegisterUserService        
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
 
-        public RegisterUserService(AppDbContext db,
-            IPasswordHasher<Entity.Account.User> passwordHasher) : base(db, null)
+        public RegisterUserService(ISessionContext ctx, ServicePipeline svc,
+            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, svc)
         {
             _passwordHasher = passwordHasher;
         }
 
         public override async Task<bool> OnExecutingAsync()
         {
-            var user = await this.DbContext.Users.AnyAsync(m =>
+            var user = await this.Db.Users.AnyAsync(m =>
                 m.TenantId == this.Request.TenantId &&
                 m.Email == this.Request.Email);
 
             if (user.xIsNotEmpty())
             {
-                this.Result = await Result<bool>.FailAsync("Email already exist");
+                this.Result = await ResultBase<bool>.FailAsync("Email already exist");
                 return false;
             }
 
-            var phone = await this.DbContext.Users.AnyAsync(m =>
+            var phone = await this.Db.Users.AnyAsync(m =>
                 m.TenantId == this.Request.TenantId &&
                 m.PhoneNumber == this.Request.PhoneNumber.vToAESEncrypt());
 
             if (phone.xIsNotEmpty())
             {
-                this.Result = await Result<bool>.FailAsync("Phone already exist");
+                this.Result = await ResultBase<bool>.FailAsync("Phone already exist");
                 return false;
             }
 
@@ -50,13 +52,13 @@ namespace Jina.Domain.Service.Account.User
 
         public override async Task OnExecuteAsync()
         {
-            var userWithSameUserName = await this.DbContext.Users.FirstOrDefaultAsync(m =>
+            var userWithSameUserName = await this.Db.Users.FirstOrDefaultAsync(m =>
                 m.TenantId == this.Request.TenantId &&
                 m.Email == this.Request.Email);
 
             if (userWithSameUserName.xIsNotEmpty())
             {
-                this.Result = await Result<bool>.FailAsync("Email already taken.");
+                this.Result = await ResultBase<bool>.FailAsync("Email already taken.");
                 return;
             }
 
@@ -74,45 +76,45 @@ namespace Jina.Domain.Service.Account.User
 
             if (this.Request.PhoneNumber.xIsNotEmpty())
             {
-                var userWithSamePhoneNumber = await this.DbContext.Users
+                var userWithSamePhoneNumber = await this.Db.Users
                     .FirstOrDefaultAsync(x => x.TenantId == this.Request.TenantId &&
                         x.PhoneNumber == this.Request.PhoneNumber.vToAESEncrypt());
 
                 if (userWithSamePhoneNumber.xIsNotEmpty())
                 {
-                    this.Result = await Result<bool>.FailAsync("Phone number already registered.");
+                    this.Result = await ResultBase<bool>.FailAsync("Phone number already registered.");
                     return;
                 }
             }
 
-            var userWithSameEmail = await this.DbContext.Users
+            var userWithSameEmail = await this.Db.Users
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
                 m.Email == this.Request.Email);
             if (userWithSameEmail.xIsNotEmpty())
             {
-                this.Result = await Result<bool>.FailAsync($"User Create Failed.");
+                this.Result = await ResultBase<bool>.FailAsync($"User Create Failed.");
                 return;
             }
 
             var hashedPassword = _passwordHasher.HashPassword(user, this.Request.Password);
             user.PasswordHash = hashedPassword;
             user.SecurityStamp = $"{user.Id}{user.FirstName}{user.LastName}{user.Email}{DateTime.Now}".xGetHashCode();
-            await this.DbContext.Users.AddAsync(user);
-            await this.DbContext.SaveChangesAsync();
+            await this.Db.Users.AddAsync(user);
+            await this.Db.SaveChangesAsync();
 
             if (user.Id.xIsNotEmpty())
             {
-                var basicRole = await this.DbContext.Roles
+                var basicRole = await this.Db.Roles
                     .FirstAsync(m => m.TenantId == this.Request.TenantId &&
                     m.Name == RoleConstants.NormalRole);
 
-                await this.DbContext.UserRoles.AddAsync(new UserRole()
+                await this.Db.UserRoles.AddAsync(new UserRole()
                 {
                     TenantId = this.Request.TenantId,
                     UserId = user.Id,
                     RoleId = basicRole.Id,
                 });
-                await this.DbContext.SaveChangesAsync();
+                await this.Db.SaveChangesAsync();
 
                 //if (!this.Request.AutoConfirmEmail)
                 //{
@@ -129,7 +131,7 @@ namespace Jina.Domain.Service.Account.User
                 //    return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
                 //}
 
-                this.Result = await Result<bool>
+                this.Result = await ResultBase<bool>
                     .SuccessAsync("User Registered.");
             }
         }

@@ -1,18 +1,46 @@
-﻿using Jina.Base.Service;
-using Jina.Domain.Entity;
+﻿using eXtensionSharp;
+using Jina.Base.Service;
+using Jina.Database.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Infra
 {
 	public abstract class ServiceImplBase<TSelf, TRequest, TResult> : ServiceImplCore<TSelf, TRequest, TResult>
+        where TSelf : class
     {
-        protected AppDbContext DbContext;
         protected ISessionContext SessionContext;
+        protected ServicePipeline Svc;
 
-        protected ServiceImplBase(AppDbContext db, ISessionContext context)
+        protected ServiceImplBase(ISessionContext context, ServicePipeline svc)
         {
-            this.DbContext = db;
+            this.Self = this;
             this.SessionContext = context;
+            this.Svc = svc;
+        }
+    }
+
+    public abstract class ServiceImplBase<TSelf, TDbContext, TRequest, TResult> : ServiceImplBase<TSelf, TRequest, TResult>
+        where TSelf : class
+        where TDbContext : IDbContext
+    {
+        protected TDbContext Db => this.SessionContext.DbContext.xAs<TDbContext>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ctx"></param>
+        protected ServiceImplBase(ISessionContext ctx) : base(ctx, null)
+        {
+            
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="svc"></param>
+        protected ServiceImplBase(ISessionContext context, ServicePipeline svc) : base(context, svc)
+        {
         }
     }
 }

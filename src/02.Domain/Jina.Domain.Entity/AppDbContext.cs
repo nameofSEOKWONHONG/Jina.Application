@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using SmartEnum.EFCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Jina.Database.Abstract;
 
 namespace Jina.Domain.Entity;
 
-public class AppDbContext : AuditableContext
+public class AppDbContext : AuditableContext, IDbContext
 {
     private readonly ISessionCurrentUser _user;
     private readonly ISessionDateTime _sessionDate;

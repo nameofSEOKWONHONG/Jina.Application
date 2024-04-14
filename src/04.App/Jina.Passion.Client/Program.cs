@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Globalization;
 using System.Reflection;
+using Serilog;
+using Serilog.Core;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace Jina.Passion.Client
@@ -34,26 +36,14 @@ namespace Jina.Passion.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            #region [http 설정]
-
-            builder.Services.AddTransient<IHttpInterceptorManager, HttpInterceptorManager>();
-            builder.Services.AddTransient<AuthenticationHeaderHandler>();
-            builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>()
-                .CreateClient(ClientName)
-                .EnableIntercept(sp))
-                .AddHttpClient(ClientName, client =>
-                {
-                    var culture = CultureInfo.DefaultThreadCurrentCulture;
-                    if(culture.xIsEmpty())
-                    client.DefaultRequestHeaders.AcceptLanguage.Clear();
-                    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd($"{culture.ToString()},{culture.Name}");
-                    client.BaseAddress = new Uri("https://localhost:7103");
-                })
-                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
-            builder.Services.AddHttpClientInterceptor();
-
-            #endregion [http 설정]
-
+            var levelSwitch = new LoggingLevelSwitch();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitch)
+                .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
+                .WriteTo.BrowserHttp(endpointUrl: $"{builder.HostEnvironment.BaseAddress}ingest", controlLevelSwitch: levelSwitch)
+                .CreateLogger();
+            
+            #region [antblazor 설정]
             builder.Services.AddAntDesign();
             //builder.Services.Configure<ProSettings>(x =>
             //{
@@ -75,30 +65,62 @@ namespace Jina.Passion.Client
             //    x.MenuHeaderRender = true;
             //});
             builder.Services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
+            #endregion
 
-            builder.Services.AddScoped<IAccountService, AccountService>();
+            #region [http 설정]
 
-            builder.Services.AddScoped<WeatherService>();
-            builder.Services.AddScoped<WeatherViewModel>();
-            builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<UserListViewModel>();
-            builder.Services.AddScoped<MenuRoleViewModel>();
-            builder.Services.AddScoped<NotificationViewModel>();
-            builder.Services.AddScoped<IChartService, ChartService>();
-            builder.Services.AddScoped<INotificationService, NotificationService>();
+            builder.Services.AddTransient<IHttpInterceptorManager, HttpInterceptorManager>();
+            builder.Services.AddTransient<AuthenticationHeaderHandler>();
+            builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>()
+                .CreateClient(ClientName)
+                .EnableIntercept(sp))
+                .AddHttpClient(ClientName, client =>
+                {
+                    var culture = CultureInfo.DefaultThreadCurrentCulture;                    
+                    client.DefaultRequestHeaders.AcceptLanguage.Clear();
+                    client.DefaultRequestHeaders.AcceptLanguage.ParseAdd($"{culture.ToString()},{culture.Name}");
+                    client.BaseAddress = new Uri("https://localhost:7103");
+                })
+                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+            builder.Services.AddHttpClientInterceptor();
+            builder.Services.AddSingleton<IRestClient, RestClient>();
+            #endregion [http 설정]
 
+            #region [인증 설정]
             builder.Services.AddAuthorizationCore(options =>
             {
                 RegisterPermissionClaims(options);
             });
-
-            builder.Services.AddSingleton<IRestClient, RestClient>();
             builder.Services.AddSingleton<AuthenticationStateProviderImpl>();
             builder.Services.AddSingleton<AuthenticationStateProvider, AuthenticationStateProviderImpl>();
-            builder.Services.AddSingleton<ISessionStorageHandler, SessionStorageHandler>();
-            builder.Services.AddBlazoredSessionStorageAsSingleton();
+            #endregion
 
+
+            #region [계정 설정]
+            builder.Services.AddSingleton<IAccountService, AccountService>();
+            builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton<UserListViewModel>();
+            #endregion
+
+            #region [메뉴 설정]
+            builder.Services.AddSingleton<MenuRoleViewModel>();
+            #endregion
+
+            #region [저장 장치 설정]
+            builder.Services.AddBlazoredSessionStorageAsSingleton();
+            builder.Services.AddSingleton<ISessionStorageHandler, SessionStorageHandler>();
+            #endregion
+
+            builder.Services.AddSingleton<WeatherService>();
+            builder.Services.AddSingleton<WeatherViewModel>();
+
+            builder.Services.AddSingleton<NotificationViewModel>();
+            builder.Services.AddSingleton<IChartService, ChartService>();
+            builder.Services.AddSingleton<INotificationService, NotificationService>();
+
+            #region [기본 언어 설정]
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+            #endregion
 
             var build = builder.Build();
             var vm = build.Services.GetRequiredService<NotificationViewModel>();

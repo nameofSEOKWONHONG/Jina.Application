@@ -1,4 +1,5 @@
-﻿@using OneOf
+﻿@using Jina.Domain.SharedKernel.Consts
+@using OneOf
 @inherits LayoutComponentBase
 
 <div class="container__b__0">
@@ -9,15 +10,15 @@
         <div class="top">
             <div class="header">
                 <a>
-                    <img alt="logo" class="logo" src="assets/logo.svg" />
-                    <span class="title">Ant Design</span>
+                    <img alt="logo" class="logo" src="assets/title_globalizehub1.jpg" />
+                    <span class="title">@ApplicationConsts.Client.TITLE</span>
                 </a>
             </div>
-            <div class="desc">Ant Design Blazor</div>
+            <div class="desc">@ApplicationConsts.Client.TITLE</div>
         </div>
         <Jina.Passion.Client.Pages.User.Login/>
     </div>
-    <FooterView Copyright="2021 Ant Design Blazor" Links="Links"></FooterView>
+    <FooterView Copyright="2024 JDT Software" Links="Links"></FooterView>
 </div>
 
 @code

@@ -1,5 +1,6 @@
 using Hangfire;
 using Jina.Domain.Entity;
+using Jina.Domain.Service.Infra.Middleware;
 using Jina.Passion.Api;
 using Jina.Passion.Api.Hubs;
 
@@ -48,5 +49,6 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 app.UseResponseCompression();
 app.MapHub<ProtocalHub>("/messageHub");
+app.UseTransactionMiddleware();
 
 await app.RunAsync();

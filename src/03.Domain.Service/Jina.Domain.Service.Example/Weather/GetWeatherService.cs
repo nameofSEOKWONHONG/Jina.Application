@@ -1,4 +1,5 @@
 ﻿using eXtensionSharp;
+using Jina.Base.Service;
 using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Example;
 using Jina.Domain.Entity;
@@ -10,9 +11,9 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public class GetWeatherService : ServiceImplBase<GetWeatherService, int, IResultBase<WeatherForecastDto>>, IGetWeatherService, IScopeService
+	public class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, IResultBase<WeatherForecastDto>>, IGetWeatherService, IScopeService
     {
-        public GetWeatherService(AppDbContext db, ISessionContext context) : base(db, context)
+        public GetWeatherService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {
         }
 
@@ -20,7 +21,7 @@ namespace Jina.Domain.Service.Example.Weather
         {
             if (this.Request.xIsEmpty())
             {
-                this.Result = await Result<WeatherForecastDto>.FailAsync("request is empty");
+                this.Result = await ResultBase<WeatherForecastDto>.FailAsync("request is empty");
                 return false;
             }
             return true;
@@ -28,7 +29,7 @@ namespace Jina.Domain.Service.Example.Weather
 
         public override async Task OnExecuteAsync()
         {
-            var exist = await this.DbContext.WeatherForecasts.vFirstAsync(this.SessionContext, m => m.Id == this.Request, m => new WeatherForecastDto()
+            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.SessionContext, m => m.Id == this.Request, m => new WeatherForecastDto()
             {
                 Id = m.Id,
                 City = m.City,
@@ -39,11 +40,11 @@ namespace Jina.Domain.Service.Example.Weather
 
             if (exist.xIsEmpty())
             {
-                this.Result = await Result<WeatherForecastDto>.FailAsync("result is empty");
+                this.Result = await ResultBase<WeatherForecastDto>.FailAsync("result is empty");
                 return;
             }
 
-            this.Result = await Result<WeatherForecastDto>.SuccessAsync(exist);
+            this.Result = await ResultBase<WeatherForecastDto>.SuccessAsync(exist);
         }
     }
 }

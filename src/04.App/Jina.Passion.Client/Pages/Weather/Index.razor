@@ -24,7 +24,7 @@
               Animated>
             <TabPane Key="1" Tab="Weather List" Closable="false">
                 <ChildContent>
-                    <Jina.Passion.Client.Pages.Weather.Contents.WeatherList @ref="tablePage" OnChange="TabChange" />
+                    <Jina.Passion.Client.Pages.Weather.Contents.WeatherList @ref="tablePage" OnChange="TabChange"/>
                 </ChildContent>
                 <TabContextMenu>
                     <Menu>
@@ -36,17 +36,17 @@
             {
                 <TabPane Key="@pane.Key" Tab="@pane.Title" Closable="@pane.Closable">
                     <ChildContent>
-                        <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecastDto" />
+                        <Jina.Passion.Client.Pages.Weather.Contents.Weather SelectedItem="pane.WeatherForecastDto"/>
                     </ChildContent>
                     <TabContextMenu>
                         <Menu>
-                            <MenuItem OnClick="@(()=>Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
+                            <MenuItem OnClick="@(() => Close(pane))" Disabled="!pane.Closable">Close @pane.Title</MenuItem>
                         </Menu>
                     </TabContextMenu>
                 </TabPane>
             }
         </Tabs>
-    </Content>    
+    </Content>
 </PageContainer>
 
 @code {

@@ -15,20 +15,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Jina.Base.Service;
 
-namespace Jina.Domain.Service.Account.Login
+namespace Jina.Domain.Service.Account
 {
-	[TransactionOptions(System.Transactions.TransactionScopeOption.Required)]
-	public class LoginService : ServiceImplBase<LoginService, TokenRequest, IResultBase<TokenResult>>, ILoginService
+	[TransactionOptions()]
+	public class LoginService : ServiceImplBase<LoginService, AppDbContext, TokenRequest, IResultBase<TokenResult>>, ILoginService
 	{
 		private readonly IPasswordHasher<Jina.Domain.Entity.Account.User> _passwordHasher;
 		private Jina.Domain.Entity.Account.User _user;
 		private readonly ApplicationConfig _config;
 
-		public LoginService(AppDbContext db, 
-			ISessionContext context, 
+		public LoginService(ISessionContext ctx, ServicePipeline svc,
 			IPasswordHasher<Jina.Domain.Entity.Account.User> passwordHasher,
-			IOptions<ApplicationConfig> options) : base(db, context)
+			IOptions<ApplicationConfig> options) : base(ctx, svc)
 		{
 			_passwordHasher = passwordHasher;
 			_config = options.Value;
@@ -36,28 +36,33 @@ namespace Jina.Domain.Service.Account.Login
 
 		public override async Task OnExecutingAsync()
 		{
-			_user = await this.DbContext.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == Request.Email);
+			_user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == Request.Email);
 			if (_user.xIsEmpty())
 			{
-				this.Result = await Result<TokenResult>.FailAsync("User Not Found.");
+				this.Result = await ResultBase<TokenResult>.FailAsync("User Not Found.");
+				return;
 			}
 			if (!_user.IsActive)
 			{
-				this.Result = await Result<TokenResult>.FailAsync("User Not Active. Please contact the administrator.");
+				this.Result = await ResultBase<TokenResult>.FailAsync("User Not Active. Please contact the administrator.");
+				return;
 			}
 			if (!_user.EmailConfirmed)
 			{
-				this.Result = await Result<TokenResult>.FailAsync("E-Mail not confirmed.");
+				this.Result = await ResultBase<TokenResult>.FailAsync("E-Mail not confirmed.");
+				return;
 			}
 			if (_user.TenantId != Request.TenantId)
 			{
-				this.Result = await Result<TokenResult>.FailAsync("Tenant-Id not Matched.");
+				this.Result = await ResultBase<TokenResult>.FailAsync("Tenant-Id not Matched.");
+				return;
 			}
 
 			var passwordValid = _passwordHasher.VerifyHashedPassword(_user, _user.PasswordHash, Request.Password);
 			if (passwordValid != PasswordVerificationResult.Success)
 			{
-				this.Result = await Result<TokenResult>.FailAsync("Invalid Credentials.");				
+				this.Result = await ResultBase<TokenResult>.FailAsync("Invalid Credentials.");
+				return;
 			}
 		}
 
@@ -65,15 +70,15 @@ namespace Jina.Domain.Service.Account.Login
 		{
 			_user.RefreshToken = GenerateRefreshToken();
 			_user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
-			this.DbContext.Users.Update(_user);
-			await this.DbContext.SaveChangesAsync();
+			this.Db.Users.Update(_user);
+			await this.Db.SaveChangesAsync();
 
 			var token = await GenerateJwtAsync(_user);
 			var response = new TokenResult { Token = token, 
 				RefreshToken = _user.RefreshToken, 
 				UserImageURL = _user.ProfilePictureDataUrl };
 
-			this.Result = await Result<TokenResult>.SuccessAsync(response);
+			this.Result = await ResultBase<TokenResult>.SuccessAsync(response);
 		}
 
 		#region [private method]
@@ -95,16 +100,16 @@ namespace Jina.Domain.Service.Account.Login
 		private async Task<IEnumerable<Claim>> GetClaimsAsync(Jina.Domain.Entity.Account.User user)
 		{
 			var userClaims = new List<Claim>();
-			var tenant = await this.DbContext.Tenants.FirstOrDefaultAsync(m => m.TenantId == user.TenantId);
-			var userRole = await this.DbContext.UserRoles.FirstOrDefaultAsync(m => m.TenantId == user.TenantId && m.UserId == user.Id);
-			var roles = await this.DbContext.Roles.Where(m => m.TenantId == user.TenantId && m.Id == userRole.RoleId).ToListAsync();
+			var tenant = await this.Db.Tenants.FirstOrDefaultAsync(m => m.TenantId == user.TenantId);
+			var userRole = await this.Db.UserRoles.FirstOrDefaultAsync(m => m.TenantId == user.TenantId && m.UserId == user.Id);
+			var roles = await this.Db.Roles.Where(m => m.TenantId == user.TenantId && m.Id == userRole.RoleId).ToListAsync();
 			var roleClaims = new List<Claim>();
 			var permissionClaims = new List<Claim>();
 
 			foreach (var role in roles)
 			{
 				roleClaims.Add(new Claim(ClaimTypes.Role, role.Name));
-				var results = await this.DbContext.RoleClaims.Where(m => m.TenantId == user.TenantId && m.RoleId == role.Id)
+				var results = await this.Db.RoleClaims.Where(m => m.TenantId == user.TenantId && m.RoleId == role.Id)
 					.ToListAsync();
 				var allPermissionsForThisRoles = new List<Claim>();
 				results.ForEach(item =>

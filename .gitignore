@@ -403,3 +403,7 @@ FodyWeavers.xsd
 .idea/.idea.Jina.Passion/.idea/indexLayout.xml
 .idea/.idea.Jina.Passion/.idea/vcs.xml
 /.idea
+
+# Client css
+/src/04.App/Jina.Passion.Client/Layout/*.css
+/src/04.App/Jina.Passion.Client/Pages/*.css

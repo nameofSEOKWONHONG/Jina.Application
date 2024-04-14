@@ -3,6 +3,7 @@ using Jina.Base.Service;
 using Jina.Domain.Abstract.Net.ExchangeRate;
 using Jina.Domain.Net.ExchangeRate;
 using Jina.Domain.Net.ExchangeRate.Enums;
+using Jina.Session.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -24,9 +25,13 @@ namespace Jina.Domain.Service.Net.ExchangeRate
 
             //TODO : USD -> KRW 이외에 기타 환율이 필요하다면 구현되어야 하고 다수의 서비스를 호출하도록 변경되어야 함.
             //즉, GetKeyedServices<>(""); 로 변경되어야 함.
+            
             var service = scope.ServiceProvider.GetService<ISaveExchangeRateService>();
-            await ServicePipeline<bool, bool>.Create(service)                
-                .OnExecutedAsync(r => result = r);
+            var context = scope.ServiceProvider.GetService<ISessionContext>();
+            
+            using var sp = new ServicePipeline(context);
+            sp.Register(service)
+                .OnExecuted(r => result = r);
 
             this.Logger.LogInformation("end {name} service", nameof(SaveExchangeRateBackgroundService));
 

@@ -1,5 +1,9 @@
-﻿using Jina.Lang.Abstract;
+﻿using Jina.Base.Service;
+using Jina.Database.Abstract;
+using Jina.Domain.Entity;
+using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
+using Microsoft.AspNetCore.Http;
 
 namespace Jina.Domain.Service.Infra
 {
@@ -12,20 +16,35 @@ namespace Jina.Domain.Service.Infra
         public ISessionDateTime CurrentTime { get; private set; }
 
         public ILocalizer Localizer { get; private set; }
+        
+        public IDbContext DbContext { get; }
+        
+        public IDbProviderBase DbProvider { get; }
+        public IHttpContextAccessor HttpContextAccessor { get; }
+        public IHttpClientFactory HttpClientFactory { get; }
+
+        public CancellationToken CancellationToken { get; }
 
         public bool IsDecrypt { get; private set; }
 
-        public SessionContext(ISessionCurrentUser user
+        public SessionContext(
+            AppDbContext dbContext
+            , IDbProviderBase dbProvider
+            , ISessionCurrentUser user
             , ISessionDateTime time
-            , ILocalizer localizer)
+            , ILocalizer localizer
+            , IHttpClientFactory factory
+            , IHttpContextAccessor accessor)
         {
+            this.DbContext = dbContext;
             this.Localizer = localizer;
-#if DEBUG
-            this.TenantId = "00000";
+            this.DbProvider = dbProvider;
             this.CurrentUser = user;
             this.CurrentTime = time;
             this.IsDecrypt = false;
-#endif
+            this.Localizer = localizer;
+            this.HttpContextAccessor = accessor;
+            this.HttpClientFactory = factory;
         }
     }
 }

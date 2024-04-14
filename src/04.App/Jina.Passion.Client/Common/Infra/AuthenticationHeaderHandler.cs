@@ -1,4 +1,5 @@
-﻿using Jina.Passion.Client.Base.Abstract;
+﻿using eXtensionSharp;
+using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Common.Consts;
 using System.Net.Http.Headers;
 
@@ -6,11 +7,13 @@ namespace Jina.Passion.Client.Common.Infra
 {
     public class AuthenticationHeaderHandler : DelegatingHandler
     {
+        private readonly AuthenticationStateProviderImpl _authenticationStateProviderImpl;
         private readonly ISessionStorageHandler _sessionStorageHandler;
 
-        public AuthenticationHeaderHandler(ISessionStorageHandler sessionStorageHandler)
+        public AuthenticationHeaderHandler(ISessionStorageHandler sessionStorageHandler, AuthenticationStateProviderImpl authenticationStateProviderImpl)
         {
             this._sessionStorageHandler = sessionStorageHandler;
+            this._authenticationStateProviderImpl = authenticationStateProviderImpl;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(
@@ -21,7 +24,7 @@ namespace Jina.Passion.Client.Common.Infra
             {
                 var savedToken = await this._sessionStorageHandler.GetAsync(StorageConsts.Local.AuthToken);
 
-                if (!string.IsNullOrWhiteSpace(savedToken))
+                if (savedToken.xIsNotEmpty())
                 {
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", savedToken);
                 }

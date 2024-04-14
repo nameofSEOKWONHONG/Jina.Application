@@ -7,35 +7,42 @@ using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using System.Data.Entity;
+using Jina.Base.Service;
+using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
 {
-	public class CreateRoleService : ServiceImplBase<CreateRoleService, CreateRoleRequest, IResultBase<bool>>
+	public class CreateRoleService : ServiceImplBase<CreateRoleService, AppDbContext, CreateRoleRequest, IResultBase<bool>>
         , IScopeService
     {
-        public CreateRoleService(AppDbContext db) : base(db, null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="svc"></param>
+        public CreateRoleService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {
         }
 
         public override async Task<bool> OnExecutingAsync()
         {
-            var id = await this.DbContext.Roles
+            var id = await this.Db.Roles
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
                 m.Id == this.Request.Id);
 
             if (id.xIsEmpty())
             {
-                this.Result = await Result<bool>.FailAsync("already exist");
+                this.Result = await ResultBase<bool>.FailAsync("already exist");
                 return false;
             }
 
-            var name = await this.DbContext.Roles
+            var name = await this.Db.Roles
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
                 m.Name == this.Request.Name);
 
             if (name.xIsNotEmpty())
             {
-                this.Result = await Result<bool>.FailAsync("already exist");
+                this.Result = await ResultBase<bool>.FailAsync("already exist");
                 return false;
             }
 
@@ -44,7 +51,7 @@ namespace Jina.Domain.Service.Account.User
 
         public override async Task OnExecuteAsync()
         {
-            var existingRole = await this.DbContext.Roles
+            var existingRole = await this.Db.Roles
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
                 m.Name == this.Request.Name);
 
@@ -55,50 +62,8 @@ namespace Jina.Domain.Service.Account.User
                 Description = this.Request.Description,
                 NormalizedName = $"{this.Request.TenantId}_{this.Request.Name.ToUpper()}",
             };
-            await this.DbContext.Roles.AddAsync(role);
-            await this.DbContext.SaveChangesAsync();
-        }
-    }
-
-    public class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, CreateRoleClaimRequest, IResultBase<bool>>
-        , IScopeService
-    {
-        public CreateRoleClaimService(AppDbContext db) : base(db, null)
-        {
-        }
-
-        public override async Task<bool> OnExecutingAsync()
-        {
-            var exist = await this.DbContext.RoleClaims
-                .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
-                    m.Id == this.Request.Id &&
-                    m.RoleId == this.Request.RoleId &&
-                    m.ClaimType == this.Request.Type &&
-                    m.ClaimValue == this.Request.Value);
-
-            if (exist.xIsNotEmpty())
-            {
-                this.Result = await Result<bool>.FailAsync("already exists");
-                return false;
-            }
-
-            return true;
-        }
-
-        public override async Task OnExecuteAsync()
-        {
-            var roleClaim = new RoleClaim()
-            {
-                TenantId = this.Request.TenantId,
-                RoleId = this.Request.RoleId,
-                ClaimType = this.Request.Type,
-                ClaimValue = this.Request.Value,
-                Description = this.Request.Description,
-                Group = this.Request.Group
-            };
-            await this.DbContext.RoleClaims.AddAsync(roleClaim);
-            await this.DbContext.SaveChangesAsync();
-            this.Result = await Result<bool>.SuccessAsync("Role Claim created.");
+            await this.Db.Roles.AddAsync(role);
+            await this.Db.SaveChangesAsync();
         }
     }
 }

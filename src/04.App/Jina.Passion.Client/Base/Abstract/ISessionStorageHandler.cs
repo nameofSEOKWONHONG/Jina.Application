@@ -13,6 +13,7 @@ namespace Jina.Passion.Client.Base.Abstract
         Task<string> GetOnceAsync(string key);
 
         Task RemoveAsync(string key);
+        Task RemoveAllAsync(string[] keys);
 
         Task ClearAsync();
     }

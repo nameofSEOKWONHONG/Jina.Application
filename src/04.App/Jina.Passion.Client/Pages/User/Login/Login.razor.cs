@@ -31,7 +31,7 @@ namespace Jina.Passion.Client.Pages.User
                 NavigationManager.NavigateTo("/");
             }
 
-            _model.AutoLogin = await BrowserStorageHandler.GetAsync<bool>(nameof(TokenRequest.AutoLogin));
+            _model.RemamberMe = await BrowserStorageHandler.GetAsync<bool>(nameof(TokenRequest.RemamberMe));
             _model.TenantId = await BrowserStorageHandler.GetAsync(nameof(TokenRequest.TenantId));
             _model.Email = await BrowserStorageHandler.GetAsync(nameof(TokenRequest.Email));
         }
@@ -47,12 +47,12 @@ namespace Jina.Passion.Client.Pages.User
                 return;
             }
 
-            if (_model.AutoLogin == true)
-            {
-                await BrowserStorageHandler.SetAsync<bool>(nameof(TokenRequest.AutoLogin), _model.AutoLogin);
-                await BrowserStorageHandler.SetAsync(nameof(TokenRequest.TenantId), _model.TenantId);
-                await BrowserStorageHandler.SetAsync(nameof(TokenRequest.Email), _model.Email);
-            }
+            //if (_model.RemamberMe == true)
+            //{
+            //    await BrowserStorageHandler.SetAsync<bool>(nameof(TokenRequest.RemamberMe), _model.RemamberMe);
+            //    await BrowserStorageHandler.SetAsync(nameof(TokenRequest.TenantId), _model.TenantId);
+            //    await BrowserStorageHandler.SetAsync(nameof(TokenRequest.Email), _model.Email);
+            //}
         }
 
         public async Task GetCaptcha()

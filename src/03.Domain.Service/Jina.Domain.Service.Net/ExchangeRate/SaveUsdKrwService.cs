@@ -6,6 +6,8 @@ using Jina.Domain.Entity.Net.ExchangeRate;
 using Jina.Domain.Net.ExchangeRate;
 using Mapster;
 using System.Net.Http.Json;
+using Jina.Domain.Service.Infra;
+using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Net.ExchangeRate;
 
@@ -26,14 +28,17 @@ namespace Jina.Domain.Service.Net.ExchangeRate;
 /// <summary>
 /// 두나무 API 환율 조회 서비스, 한국산업은행 API는 정상동작 안함.
 /// </summary>
-public class SaveUsdKrwService : ServiceImplCore<SaveUsdKrwService, bool, bool>, ISaveExchangeRateService
+public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, AppDbContext, bool, bool>, ISaveExchangeRateService
 {
     private readonly string _url = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD";
-    private readonly AppDbContext _dbContext;
     
-    public SaveUsdKrwService(AppDbContext dbContext, IHttpClientFactory factory) : base(factory)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="ctx"></param>
+    public SaveUsdKrwService(ISessionContext ctx) : base(ctx)
     {
-        _dbContext = dbContext;
+        
     }
 
 
@@ -45,7 +50,7 @@ public class SaveUsdKrwService : ServiceImplCore<SaveUsdKrwService, bool, bool>,
     public override async Task OnExecuteAsync()
     {
         var uri = new Uri(_url);
-        var res = await this.HttpClientFactory.CreateClient().GetAsync(uri);
+        var res = await this.SessionContext.HttpClientFactory.CreateClient().GetAsync(uri);
         
         if (res.IsSuccessStatusCode)
         {
