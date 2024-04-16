@@ -26,15 +26,27 @@ namespace Jina.Domain.Service.Account
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="svc"></param>
+        /// <param name="passwordHasher"></param>
         public CreateTenantService(ISessionContext ctx, ServicePipeline svc,
             IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, svc)
         {
             _passwordHasher = passwordHasher;
         }
 
-        public override Task OnExecutingAsync()
+        public override async Task OnExecutingAsync()
         {
-            return Task.CompletedTask;
+            if (this.Request.TenantId.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("TenantId is empty");
+            if (this.Request.Email.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Email is empty");
+            if (this.Request.Name.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Name is empty");
+            if (this.Request.UserName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("User name is empty");
+            if (this.Request.FirstName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("First name is empty");
+            if (this.Request.LastName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Last name is empty");
+            if (this.Request.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Last name is empty");
         }
 
         public override async Task OnExecuteAsync()
@@ -108,7 +120,7 @@ namespace Jina.Domain.Service.Account
                 await this.Db.UserRoles.AddAsync(userRole);
                 await this.Db.SaveChangesAsync();
 
-                foreach (var permission in PermissionConsts.GetRegisteredPermissions())
+                foreach (var permission in Permissions.GetRegisteredPermissions())
                 {
                     var result = await AddPermissionClaim(adminRoleInDb, permission);
                     if (result.Succeeded.xIsFalse())

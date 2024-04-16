@@ -41,11 +41,6 @@ public class User : IdentityUser<string>
     [Comment("수정일")]
     public DateTime? LastModifiedOn { get; set; }
 
-    /// <summary>
-    /// 전화번호 내역
-    /// </summary>
-    public virtual ICollection<Phone> Phones { get; set; }
-
     public static void EntityModelBuild(ModelBuilder modelBuilder)
     {
         //modelBuilder.Entity<IdentityUser>()

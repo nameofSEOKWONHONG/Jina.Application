@@ -1,5 +1,6 @@
 using eXtensionSharp;
 using Jina.Base.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -25,4 +26,10 @@ public abstract class JControllerBase : ControllerBase
     protected JControllerBase()
     {
     }
+}
+
+[Authorize]
+public abstract class SessionController : JControllerBase
+{
+    
 }

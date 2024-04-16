@@ -5,6 +5,7 @@ using Jina.Database.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,11 +29,14 @@ public class TransactionMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         var sessionContext = context.RequestServices.GetRequiredService<ISessionContext>();
-        var actionMethod = context.GetEndpoint()?.Metadata.GetMetadata<MethodInfo>();
-        var transactionAttribute = actionMethod?.GetCustomAttribute<TransactionOptionsAttribute>();
-        if (transactionAttribute.xIsEmpty()) throw new Exception("TransactionOptionsAttribute not declaire");
+        var actionDescriptor = context.GetEndpoint()?.Metadata.GetMetadata<ControllerActionDescriptor>();
+        if (actionDescriptor.xIsEmpty()) throw new Exception("Action not found");
+
+        var transactionAttribute = actionDescriptor.MethodInfo.GetCustomAttribute<TransactionOptionsAttribute>();
+        if (transactionAttribute.xIsEmpty()) throw new Exception("TransactionOptionsAttribute not declared");
 
         var cts = new CancellationTokenSource(transactionAttribute.Timeout);
+
             
         // 트랜잭션 시작
         await using var transaction = await sessionContext.DbContext.Database.BeginTransactionAsync(transactionAttribute.IsolationLevel, cts.Token);

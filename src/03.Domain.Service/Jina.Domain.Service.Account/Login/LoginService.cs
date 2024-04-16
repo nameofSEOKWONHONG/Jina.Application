@@ -26,6 +26,13 @@ namespace Jina.Domain.Service.Account
 		private Jina.Domain.Entity.Account.User _user;
 		private readonly ApplicationConfig _config;
 
+		/// <summary>
+		/// ctor
+		/// </summary>
+		/// <param name="ctx"></param>
+		/// <param name="svc"></param>
+		/// <param name="passwordHasher"></param>
+		/// <param name="options"></param>
 		public LoginService(ISessionContext ctx, ServicePipeline svc,
 			IPasswordHasher<Jina.Domain.Entity.Account.User> passwordHasher,
 			IOptions<ApplicationConfig> options) : base(ctx, svc)
@@ -69,8 +76,10 @@ namespace Jina.Domain.Service.Account
 		public override async Task OnExecuteAsync()
 		{
 			_user.RefreshToken = GenerateRefreshToken();
-			_user.RefreshTokenExpiryTime = DateTime.Now.AddDays(5);
+			_user.RefreshTokenExpiryTime = DateTime.Now.AddDays(1);
+			_user.LockoutEnabled = false;
 			this.Db.Users.Update(_user);
+			
 			await this.Db.SaveChangesAsync();
 
 			var token = await GenerateJwtAsync(_user);

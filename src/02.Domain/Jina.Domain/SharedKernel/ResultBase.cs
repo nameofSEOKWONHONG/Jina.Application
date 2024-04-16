@@ -19,7 +19,7 @@ public class ResultBase : IResultBase
 
     public static IResultBase Fail(string message)
     {
-        return new ResultBase { Succeeded = false, Messages = new List<string> { message } };
+        return new ResultBase { Succeeded = false, Messages = [message] };
     }
 
     public static IResultBase Fail(List<string> messages)
@@ -44,12 +44,12 @@ public class ResultBase : IResultBase
 
     public static IResultBase Success()
     {
-        return new ResultBase { Succeeded = true, Messages = new List<string>() { "Success." } };
+        return new ResultBase { Succeeded = true, Messages = ["Success."] };
     }
 
     public static IResultBase Success(string message)
     {
-        return new ResultBase { Succeeded = true, Messages = new List<string> { "Success.", message } };
+        return new ResultBase { Succeeded = true, Messages = ["Success.", message] };
     }
 
     public static Task<IResultBase> SuccessAsync()
@@ -78,7 +78,7 @@ public class ResultBase<T> : ResultBase, IResultBase<T>
 
     public new static ResultBase<T> Fail(string message)
     {
-        return new ResultBase<T> { Succeeded = false, Messages = new List<string> { message } };
+        return new ResultBase<T> { Succeeded = false, Messages = [message] };
     }
 
     public new static ResultBase<T> Fail(List<string> messages)
@@ -103,22 +103,22 @@ public class ResultBase<T> : ResultBase, IResultBase<T>
 
     public new static ResultBase<T> Success()
     {
-        return new ResultBase<T> { Succeeded = true, Messages = new List<string>() { "Success." } };
+        return new ResultBase<T> { Succeeded = true, Messages = ["Success."] };
     }
 
     public new static ResultBase<T> Success(string message)
     {
-        return new ResultBase<T> { Succeeded = true, Messages = new List<string> { "Success.", message } };
+        return new ResultBase<T> { Succeeded = true, Messages = ["Success.", message] };
     }
 
     public static ResultBase<T> Success(T data)
     {
-        return new ResultBase<T> { Succeeded = true, Data = data, Messages = new List<string>() { "Success." } };
+        return new ResultBase<T> { Succeeded = true, Data = data, Messages = ["Success."] };
     }
 
     public static ResultBase<T> Success(T data, string message)
     {
-        return new ResultBase<T> { Succeeded = true, Data = data, Messages = new List<string> { "Success.", message } };
+        return new ResultBase<T> { Succeeded = true, Data = data, Messages = ["Success.", message] };
     }
 
     public static ResultBase<T> Success(T data, List<string> messages)

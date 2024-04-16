@@ -1,6 +1,7 @@
 using Hangfire;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra.Middleware;
+using Jina.Domain.Service.Net.Notification;
 using Jina.Passion.Api;
 using Jina.Passion.Api.Hubs;
 
@@ -38,17 +39,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles()
-   .UseBlazorFrameworkFiles()
-   .UseHttpsRedirection()
-   .UseAuthorization();
-app.UseCors("AllowedCorsOrigins");
+	.UseBlazorFrameworkFiles()
+	.UseHttpsRedirection();
+app.UseMiddleware<GlobalErrorHandlerMiddleware>();
+app.UseCors("AllowedCorsOrigins"); 
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
+app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 app.UseResponseCompression();
-app.MapHub<ProtocalHub>("/messageHub");
+app.MapHub<MessageHub>("/messageHub");
 app.UseTransactionMiddleware();
 
 await app.RunAsync();

@@ -1,4 +1,6 @@
-﻿using Jina.Session.Abstract;
+﻿using System.Security.Claims;
+using eXtensionSharp;
+using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
 
 namespace Jina.Domain.Service.Infra
@@ -10,6 +12,7 @@ namespace Jina.Domain.Service.Infra
         public string TimeZone { get; private set; }
 
         public string UserId { get; private set; }
+        public string Email { get; private set; }
 
         public string UserName { get; private set; }
 
@@ -19,22 +22,17 @@ namespace Jina.Domain.Service.Infra
 
         public SessionCurrentUser(IHttpContextAccessor accessor)
         {
-#if DEBUG
-            TenantId = "00000";
-            TimeZone = string.Empty;
-            UserId = "test";
-            UserName = "test";
-            RoleName = "test";
-            Claims = null;
-#else
-            var user = accessor.HttpContext.User;
-            TenantId = user.FindFirst(ApplicationClaimTypeConst.TenantId).Value;
-            TimeZone = user.FindFirst(ApplicationClaimTypeConst.TimeZone)?.Value;
-            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            UserName = user.FindFirst(ClaimTypes.Name)?.Value;
-            RoleName = user.FindFirst(ClaimTypes.Role)?.Value;
-            Claims = user.Claims.AsEnumerable().Select(item => new KeyValuePair<string, string>(item.Type, item.Value)).ToList();
-#endif
+            var user = accessor.HttpContext?.User;
+            if (user.Identity.IsAuthenticated)
+            {
+                TenantId = user.FindFirst(ApplicationClaimTypes.TenantId).Value;
+                TimeZone = user.FindFirst(ApplicationClaimTypes.TimeZone)?.Value;
+                UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                Email = user.FindFirst(ClaimTypes.Email)?.Value;
+                UserName = user.FindFirst(ClaimTypes.Name)?.Value;
+                RoleName = user.FindFirst(ClaimTypes.Role)?.Value;
+                Claims = user.Claims.AsEnumerable().Select(item => new KeyValuePair<string, string>(item.Type, item.Value)).ToList();                
+            }
         }
     }
 }

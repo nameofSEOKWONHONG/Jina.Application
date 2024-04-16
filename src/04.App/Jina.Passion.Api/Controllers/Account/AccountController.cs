@@ -1,13 +1,14 @@
 using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Domain.Abstract.Account;
+using Jina.Domain.Account.Request;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Service.Infra;
+using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using IsolationLevel = System.Data.IsolationLevel;
 
 namespace Jina.Passion.Api.Controllers.Account;
 
@@ -28,7 +29,7 @@ public class AccountController : JControllerBase
     /// <param name="service"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [TransactionOptions(IsolationLevel.Snapshot)]
+    [TransactionOptions]
     [HttpPost]
     public async Task<IActionResult> Login(TokenRequest request
         , [FromServices] ILoginService service)
@@ -44,13 +45,32 @@ public class AccountController : JControllerBase
 
         return Ok(result);
     }
+    
+    [Authorize]
+    [TypeFilter(typeof(ActionExecuteFilter))]
+    [TransactionOptions]
+    [HttpPost]
+    public async Task<IActionResult> Logout(LogoutRequest request,
+        [FromServices] ILogoutService service)
+    {
+        IResultBase<bool> result = null;
+        this.Pip.Register(service)
+            .AddFilter(request.xIsNotEmpty)
+            .SetParameter(() => request)
+            .OnExecuted(m => result = m);
+
+        await this.Pip.ExecuteAsync();
+ 
+        return Ok(result);
+    }
 
     /// <summary>
     /// token 갱신
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
-    [TransactionOptions(IsolationLevel.Snapshot)]
+    [Authorize]
+    [TransactionOptions]
     [HttpPost]
     public async Task<IActionResult> Refresh(RefreshTokenRequest model,
         [FromServices] IRefreshTokenService service)
@@ -61,7 +81,7 @@ public class AccountController : JControllerBase
             .AddFilter(model.xIsNotEmpty)
             .SetParameter(() => model)
             .SetValidator(new RefreshTokenRequest.Valdiator(null))
-            .OnError(m =>
+            .OnValidated(m =>
             {
                 result = ResultBase<TokenResult>.Fail(m.Errors.First().ErrorMessage);
             })
@@ -74,45 +94,32 @@ public class AccountController : JControllerBase
         
         return Ok(result);
     }
+    
+    /// <summary>
+    /// 테넌트(ex:회사) 등록
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [AllowAnonymous]
+    [TransactionOptions]
+    [HttpPost]
+    public async Task<IActionResult> RegisterTenant(CreateTenantRequest request, 
+        [FromServices] ICreateTenantService service)
+    {
+        IResultBase<bool> result = null;
+        this.Pip.Register(service)
+            .AddFilter(request.xIsNotEmpty)
+            .SetParameter(() => request)
+            .SetValidator(new CreateTenantRequest.Validator())
+            .OnValidated(m => result = ResultBase<bool>.Fail(m.Errors.xJoin()))
+            .OnExecuted(m => result = m);
 
- //    /// <summary>
- //    /// 사용자 등록
- //    /// </summary>
- //    /// <param name="request"></param>
- //    /// <param name="service"></param>
- //    /// <returns></returns>
- //    [AllowAnonymous]
- //    [HttpPost]
- //    public async Task<IActionResult> Register(RegisterRequest request,
- //        [FromServices] IRegisterUserService service)
- //    {
- //        IResultBase<bool> result = null;
- //        await ServicePipeline<RegisterRequest, IResultBase<bool>>.Create(service)
- //            .AddFilter(request.xIsNotEmpty)
- //            .SetParameter(() => request)
- //            .OnExecutedAsync(m => result = m);
- //
- //        return Ok(result);
- //    }
- //
- //    /// <summary>
- //    /// 관리자 등록
- //    /// </summary>
- //    /// <param name="request"></param>
- //    /// <param name="service"></param>
- //    /// <returns></returns>
- //    [ApiExplorerSettings(IgnoreApi = true)]
- //    [AllowAnonymous]
- //    [HttpPost]
- //    public async Task<IActionResult> AdminInit(CreateTenantRequest request, 
- //        [FromServices] ICreateTenantService service)
- //    {
-	// 	IResultBase<bool> result = null;
-	// 	await ServicePipeline<CreateTenantRequest, IResultBase<bool>>.Create(service)
-	// 		.AddFilter(request.xIsNotEmpty)
-	// 		.SetParameter(() => request)
-	// 		.OnExecutedAsync(m => result = m);
- //
-	// 	return Ok(result);
-	// }
+        await this.Pip.ExecuteAsync();
+ 
+        return Ok(result);
+    }
+
+
 }

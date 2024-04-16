@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="MultiLanguage\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
       <ProjectReference Include="..\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
       <ProjectReference Include="..\Jina.Domain\Jina.Domain.csproj" />

@@ -1,9 +1,9 @@
-﻿using Jina.Base.Service;
-using Jina.Database.Abstract;
+﻿using Jina.Database.Abstract;
 using Jina.Domain.Entity;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.Tls.Crypto;
 
 namespace Jina.Domain.Service.Infra
 {
@@ -25,7 +25,7 @@ namespace Jina.Domain.Service.Infra
 
         public CancellationToken CancellationToken { get; }
 
-        public bool IsDecrypt { get; private set; }
+        public bool IsDecrypt { get; set; }
 
         public SessionContext(
             AppDbContext dbContext
@@ -41,10 +41,11 @@ namespace Jina.Domain.Service.Infra
             this.DbProvider = dbProvider;
             this.CurrentUser = user;
             this.CurrentTime = time;
-            this.IsDecrypt = false;
             this.Localizer = localizer;
             this.HttpContextAccessor = accessor;
             this.HttpClientFactory = factory;
+
+            this.TenantId = this.CurrentUser.TenantId;
         }
     }
 }

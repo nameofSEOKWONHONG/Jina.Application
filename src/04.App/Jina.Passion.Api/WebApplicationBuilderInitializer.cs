@@ -24,6 +24,9 @@ using System.Threading.RateLimiting;
 using Jina.Base.Service;
 using Jina.Database;
 using Jina.Database.Abstract;
+using Jina.Domain.Service.Net.Notification;
+using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace Jina.Passion.Api
 {
@@ -33,7 +36,7 @@ namespace Jina.Passion.Api
         {
             #region [test]
 
-            builder.Services.AddScoped<MyBackgroundJob>();
+            builder.Services.AddScoped<MessageHub>();
 
             #endregion [test]
 
@@ -117,17 +120,11 @@ namespace Jina.Passion.Api
                                         }
                                         else
                                         {
-#if DEBUG
                                             c.NoResult();
                                             c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             c.Response.ContentType = "text/plain";
-                                            return c.Response.WriteAsync(c.Exception.ToString());
-#else
-                                c.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                                c.Response.ContentType = "application/json";
-                                var result = Result.Fail("An unhandled error has occurred.").xToJson();
-                                return c.Response.WriteAsync(result);
-#endif
+                                            var result = ResultBase.Fail("You are not Authorized.").xToJson();
+                                            return c.Response.WriteAsync(result);
                                         }
                                     },
                                     OnChallenge = context =>
@@ -156,7 +153,7 @@ namespace Jina.Passion.Api
             builder.Services.AddAuthorization(options =>
             {
                 // Here I stored necessary permissions/roles in a constant
-                foreach (var prop in typeof(PermissionConsts).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+                foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
                 {
                     var propertyValue = prop.GetValue(null);
                     if (propertyValue is not null)
@@ -271,7 +268,39 @@ namespace Jina.Passion.Api
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                // add a custom operation filter which sets default values
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    // Description =
+                    //     "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",                    
+                    // Name = "Authorization",
+                    // In = ParameterLocation.Header,
+                    // Type = SecuritySchemeType.ApiKey,
+                    // Scheme = "Bearer",
+                    // BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Please enter token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"                    
+                });
+                
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
 
             #endregion [swagger]
 

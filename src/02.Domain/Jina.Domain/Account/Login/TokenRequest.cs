@@ -39,4 +39,9 @@ namespace Jina.Domain.Account.Token
             }
         }
     }
+
+    public class LogoutRequest
+    {
+        public string RefreshToken { get; set; }
+    }
 }
