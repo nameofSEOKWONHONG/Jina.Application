@@ -4,9 +4,9 @@
 //
 // namespace Jina.Domain.Entity.Base;
 //
-// public class NumberEntityBase : EntityBase
+// public class GuidEntityBase : EntityBase
 // {
-//     [Key, Column(Order = 1), Comment("인덱스")]
+//     [Key, Column(Order = 1), Comment("GUID")]
 //     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-//     public long Id { get; set; }
+//     public Guid Guid { get; set; }
 // }

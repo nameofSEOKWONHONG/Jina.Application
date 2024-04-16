@@ -6,8 +6,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jina.Domain.Entity.Example
 {
 	[Table("WeatherForecast", Schema = "example")]
-    public class WeatherForecast : NumberEntityBase
+    public class WeatherForecast : EntityBase
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        
         [MaxLength(100)]
         [Comment("도시명")]
         public string City { get; set; }

@@ -5,8 +5,11 @@ using Jina.Domain.Entity.Base;
 namespace Jina.Domain.Entity.Application;
 
 [Table("MenuGroups", Schema = "application")]
-public class MenuGroup : NumberEntityBase
+public class MenuGroup : EntityBase
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid MenuGroupId { get; set; }
+    
     [Required, MaxLength(4000)]
     public string Name { get; set; }
 

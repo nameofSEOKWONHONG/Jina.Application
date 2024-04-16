@@ -5,17 +5,15 @@ using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Consts;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.DynamicLinq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
-using Jina.Domain.Entity;
 
 namespace Jina.Domain.Service.Infra
 {
-	public static class NumberEntityExtensions
+	public static class EntityExtensions
     {
         public static async Task<T> vFirstAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
-             where T : NumberEntityBase
+             where T : EntityBase
         {
             query = query.Where(m => m.TenantId == ctx.TenantId);
             T result = default;
@@ -38,7 +36,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<T2> vFirstAsync<T1, T2>(this IQueryable<T1> query, ISessionContext ctx, Expression<Func<T1, bool>> predicate, Expression<Func<T1, T2>> expression)
-             where T1 : NumberEntityBase
+             where T1 : EntityBase
             where T2 : DtoBase
         {
             query = query.Where(m => m.TenantId == ctx.TenantId);
@@ -63,7 +61,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static List<T> vToList<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
-            where T : NumberEntityBase
+            where T : EntityBase
         {
             query = query.Where(m => m.TenantId == ctx.TenantId);
             if (predicate.xIsNotEmpty())
@@ -84,15 +82,18 @@ namespace Jina.Domain.Service.Infra
             return list;
         }
 
-        public static async Task<List<T>> vToListAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
-            where T : NumberEntityBase
+        public static async Task<List<T>> vToListAsync<T>(this IQueryable<T> query, ISessionContext ctx, 
+            Expression<Func<T, bool>> predicate = null)
+            where T : EntityBase
         {
             query = query.Where(m => m.TenantId == ctx.TenantId);
             if (predicate.xIsNotEmpty())
             {
                 query = query.Where(predicate);
             }
-            query = query.AsNoTracking().OrderByDescending(m => m.Id);
+            query = query.AsNoTracking().OrderByDescending(m => m.CreatedOn)
+                .ThenByDescending(m => m.LastModifiedOn);
+            
             var list = await query.ToListAsync();
             if (ctx.IsDecrypt.xIsTrue())
             {
@@ -107,7 +108,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<PaginatedResult<T>> vToPaginatedListAsync<T>(this IQueryable<T> query, ISessionContext ctx, int pageNumber, int pageSize)
-            where T : NumberEntityBase
+            where T : EntityBase
         {
             if (query == null) throw new Exception("queriable is empty");
             if (ctx.xIsEmpty()) throw new Exception("context is empty");
@@ -122,7 +123,12 @@ namespace Jina.Domain.Service.Infra
             pageNumber = pageNumber == 0 ? 1 : pageNumber + 1;
             pageSize = pageSize == 0 ? 10 : pageSize;
             int count = await query.CountAsync();
-            List<T> items = await query.OrderByDescending(m => m.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<T> items = await query.AsNoTracking().OrderByDescending(m => m.CreatedOn)
+                .ThenByDescending(m => m.LastModifiedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            
             if (ctx.IsDecrypt.xIsTrue())
             {
                 items.ForEach(item =>
@@ -136,7 +142,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<PaginatedResult<T>> vToPaginatedListAsync<T, TRequest>(this IQueryable<T> query, ISessionContext ctx, TRequest request)
-            where T : NumberEntityBase
+            where T : EntityBase
             where TRequest : PaginatedRequest
         {
             if (query == null) throw new Exception("queriable is empty");
@@ -160,10 +166,21 @@ namespace Jina.Domain.Service.Infra
             List<T> items = null;
 
             if (request.SortName.xIsEmpty())
-                items = await query.OrderByDescending(m => m.Id).Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+            {
+                items = await query.AsNoTracking().OrderByDescending(m => m.CreatedOn)
+                    .ThenByDescending(m => m.LastModifiedOn)
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();                
+            }
             else
+            {
                 items = await query
-                    .OrderBy($"{request.SortName} {request.OrderBy}").Skip((pageNo - 1) * pageSize).Take(pageSize).ToListAsync();
+                    .OrderBy($"{request.SortName} {request.OrderBy}")
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();                
+            }
 
             if (ctx.IsDecrypt.xIsTrue())
             {
@@ -178,7 +195,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<PaginatedResult<T2>> vToPaginatedListAsync<T1, T2, TRequest>(this IQueryable<T1> query, ISessionContext ctx, TRequest request, Expression<Func<T1, T2>> expression)
-            where T1 : NumberEntityBase
+            where T1 : EntityBase
             where T2 : DtoBase
             where TRequest : PaginatedRequest
         {
@@ -203,10 +220,22 @@ namespace Jina.Domain.Service.Infra
             List<T2> items = null;
 
             if (request.SortName.xIsEmpty())
-                items = await query.OrderByDescending(m => m.Id).Skip((pageNo - 1) * pageSize).Take(pageSize).Select(expression).ToListAsync();
+            {
+                items = await query.AsNoTracking().OrderByDescending(m => m.CreatedOn)
+                    .ThenByDescending(m => m.LastModifiedOn)
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(expression)
+                    .ToListAsync();
+            }
             else
+            {
                 items = await query
-                    .OrderBy($"{request.SortName} {request.OrderBy}").Skip((pageNo - 1) * pageSize).Take(pageSize).Select(expression).ToListAsync();
+                    .OrderBy($"{request.SortName} {request.OrderBy}")
+                    .Skip((pageNo - 1) * pageSize)
+                    .Take(pageSize).Select(expression)
+                    .ToListAsync();
+            }
 
             if (ctx.IsDecrypt.xIsTrue())
             {

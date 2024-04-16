@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Account;

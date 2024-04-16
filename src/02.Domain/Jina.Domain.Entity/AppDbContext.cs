@@ -94,7 +94,6 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public DbSet<Code> Codes { get; set; }
     public DbSet<CodeGroup> CodeGroups { get; set; }
-    public DbSet<Phone> Phones { get; set; }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
 }
