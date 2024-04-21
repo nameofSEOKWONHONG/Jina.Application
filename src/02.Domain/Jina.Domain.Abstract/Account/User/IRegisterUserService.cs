@@ -4,7 +4,7 @@ using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Abstract.Account
 {
-    public interface IRegisterUserService : IServiceImplBase<RegisterRequest, IResultBase<bool>>, IScopeService
+    public interface IRegisterUserService : IServiceImplBase<RegisterRequest, IResults<string>>, IScopeService
     {
 
     }

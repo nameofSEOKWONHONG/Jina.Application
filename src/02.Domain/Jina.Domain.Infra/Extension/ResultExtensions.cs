@@ -7,10 +7,10 @@ namespace Jina.Domain.Service.Infra.Extension;
 
 public static class ResultExtensions
 {
-    public static async Task<IResultBase<T>> vToResult<T>(this HttpResponseMessage response)
+    public static async Task<IResults<T>> vToResult<T>(this HttpResponseMessage response)
     {
         var responseAsString = await response.Content.ReadAsStringAsync();
-        var responseObject = JsonSerializer.Deserialize<ResultBase<T>>(responseAsString, new JsonSerializerOptions
+        var responseObject = JsonSerializer.Deserialize<Results<T>>(responseAsString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = ReferenceHandler.Preserve
@@ -21,7 +21,7 @@ public static class ResultExtensions
     public static async Task<IResultBase> vToResult(this HttpResponseMessage response)
     {
         var responseAsString = await response.Content.ReadAsStringAsync();
-        var responseObject = JsonSerializer.Deserialize<ResultBase>(responseAsString, new JsonSerializerOptions
+        var responseObject = JsonSerializer.Deserialize<Results>(responseAsString, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = ReferenceHandler.Preserve

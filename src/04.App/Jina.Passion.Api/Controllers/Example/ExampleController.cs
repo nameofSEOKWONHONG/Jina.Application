@@ -20,7 +20,7 @@ public class ExampleController : SessionController
     public async Task<IActionResult> Get(int id,
         [FromServices] IGetWeatherService service)
     {
-        IResultBase<WeatherForecastDto> result = null;
+        IResults<WeatherForecastDto> result = null;
         this.Pip.Register(service)
             .AddFilter(() => id.xIsNotEmpty())
             .SetParameter(() => id)

@@ -7,7 +7,7 @@ public interface IResultBase
     bool Succeeded { get; set; }
 }
 
-public interface IResultBase<out T> : IResultBase
+public interface IResults<out T> : IResultBase
 {
     T Data { get; }
 }

@@ -5,7 +5,7 @@ using Jina.Domain.Entity.Base;
 namespace Jina.Domain.Entity.Application;
 
 [Table("Menus", Schema = "application")]
-public class Menu : EntityBase
+public class Menu : TenantBase
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid MenuId { get; set; }

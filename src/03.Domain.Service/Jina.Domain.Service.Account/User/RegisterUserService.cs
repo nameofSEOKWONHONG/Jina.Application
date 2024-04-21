@@ -9,20 +9,27 @@ using Jina.Domain.SharedKernel.Abstract;
 using Jina.Domain.SharedKernel.Consts;
 using Microsoft.AspNetCore.Identity;
 using System.Data.Entity;
+using Hangfire;
 using Jina.Base.Service;
+using Jina.Domain.Abstract.Net;
+using Jina.Domain.Net;
+using Jina.Domain.Service.Net;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
 {
-	public class RegisterUserService : ServiceImplBase<RegisterUserService, AppDbContext, RegisterRequest, IResultBase<bool>>, 
+	public sealed class RegisterUserService : ServiceImplBase<RegisterUserService, AppDbContext, RegisterRequest, IResults<string>>, 
         IRegisterUserService        
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
-
+        private readonly IEmailService _emailService;
+        
         public RegisterUserService(ISessionContext ctx, ServicePipeline svc,
-            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, svc)
+            IPasswordHasher<Entity.Account.User> passwordHasher,
+            IEmailService emailService) : base(ctx, svc)
         {
             _passwordHasher = passwordHasher;
+            _emailService = emailService;
         }
 
         public override async Task<bool> OnExecutingAsync()
@@ -33,7 +40,7 @@ namespace Jina.Domain.Service.Account.User
 
             if (user.xIsNotEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync("Email already exist");
+                this.Result = await Results<string>.FailAsync("Email already exist");
                 return false;
             }
 
@@ -43,7 +50,7 @@ namespace Jina.Domain.Service.Account.User
 
             if (phone.xIsNotEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync("Phone already exist");
+                this.Result = await Results<string>.FailAsync("Phone already exist");
                 return false;
             }
 
@@ -58,7 +65,7 @@ namespace Jina.Domain.Service.Account.User
 
             if (userWithSameUserName.xIsNotEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync("Email already taken.");
+                this.Result = await Results<string>.FailAsync("Email already taken.");
                 return;
             }
 
@@ -82,7 +89,7 @@ namespace Jina.Domain.Service.Account.User
 
                 if (userWithSamePhoneNumber.xIsNotEmpty())
                 {
-                    this.Result = await ResultBase<bool>.FailAsync("Phone number already registered.");
+                    this.Result = await Results<string>.FailAsync("Phone number already registered.");
                     return;
                 }
             }
@@ -92,7 +99,7 @@ namespace Jina.Domain.Service.Account.User
                 m.Email == this.Request.Email);
             if (userWithSameEmail.xIsNotEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync($"User Create Failed.");
+                this.Result = await Results<string>.FailAsync($"User Create Failed.");
                 return;
             }
 
@@ -116,22 +123,33 @@ namespace Jina.Domain.Service.Account.User
                 });
                 await this.Db.SaveChangesAsync();
 
-                //if (!this.Request.AutoConfirmEmail)
-                //{
-                //    //TODO : 구현되어야 함.
-                //    //var verificationUri = await SendVerificationEmail(user, origin);
-                //    //var mailRequest = new MailRequest
-                //    //{
-                //    //    From = "mail@codewithmukesh.com",
-                //    //    To = user.Email,
-                //    //    Body = string.Format("Please confirm your account by <a href='{0}'>clicking here</a>.", verificationUri),
-                //    //    Subject = _localizer["Confirm Registration"]
-                //    //};
-                //    //BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
-                //    return await Result<string>.SuccessAsync(user.Id, string.Format("User {0} Registered. Please check your Mailbox to verify!", user.UserName));
-                //}
+                if (!this.Request.AutoConfirmEmail)
+                {
+                    if (this.Request.Email.xIsEmail().xIsFalse()) throw new Exception("Not correct email address");
 
-                this.Result = await ResultBase<bool>
+                    //TODO : 메일 컨펌을 위한 사이트 URL 확인
+                    var verificationUri = "test.com/emailconfirm?request=sadijoijsaiojiosdf";//await SendVerificationEmail(user, origin);
+                    var mailRequest = new EmailRequest
+                    {
+                        FromMailers = new List<MailSender>()
+                        {
+                            new MailSender("admin", "admin@test.com")
+                        },
+                        ToMailers = new List<MailSender>()
+                        {
+                            new MailSender("", "")
+                        },
+                        Body = $"Please confirm your account by <a href='{verificationUri}'>clicking here</a>.",
+                        Subject = "Confirm Registration"
+                    };
+                    BackgroundJob.Enqueue<EmailJob>(m => m.ExecuteAsync(mailRequest));
+                    
+                    this.Result = await Results<string>.SuccessAsync(user.Id,
+                        $"User {user.UserName} Registered. Please check your Mailbox to verify!");
+                    return;
+                }
+
+                this.Result = await Results<string>
                     .SuccessAsync("User Registered.");
             }
         }

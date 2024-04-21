@@ -14,7 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Jina.Domain.Service.Account;
 
 [TransactionOptions()]
-public class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncryptedTokenService, Entity.Account.User, string>, 
+public sealed class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncryptedTokenService, Entity.Account.User, string>, 
     IGenerateEncryptedTokenService
 {
     private readonly IGetClaimsService _getClaimsService;

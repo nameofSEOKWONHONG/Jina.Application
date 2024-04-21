@@ -14,7 +14,7 @@ using MimeKit;
 
 namespace Jina.Domain.Service.Net;
 
-public class EmailService : ServiceImplBase<EmailService, MailRequest, IResultBase<bool>>, IEmailService
+public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults<bool>>, IEmailService
 {
     /// <summary>
     /// white list states
@@ -81,7 +81,7 @@ public class EmailService : ServiceImplBase<EmailService, MailRequest, IResultBa
         await smtp.SendAsync(message);
         await smtp.DisconnectAsync(true);
 
-        this.Result = await ResultBase<bool>.SuccessAsync();
+        this.Result = await Results<bool>.SuccessAsync();
     }
     
     /// <summary>
@@ -89,7 +89,7 @@ public class EmailService : ServiceImplBase<EmailService, MailRequest, IResultBa
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    private MimeMessage CreateMessage(MailRequest request)
+    private MimeMessage CreateMessage(EmailRequest request)
     {
         var message = new MimeMessage();
         request.FromMailers.xForEach(item =>

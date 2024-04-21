@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Jina.Domain.Entity.Base;
 
 [Index(nameof(CodeName), IsUnique = false, Name = "IX_CODE_NAME")]
-public class CodeEntityBase : EntityBase
+public class CodeTenantBase : TenantBase
 {
     [Key, Column(Order = 1), Comment("코드")]
     [MaxLength(10)]

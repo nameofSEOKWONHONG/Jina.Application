@@ -11,7 +11,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, IResultBase<WeatherForecastDto>>, IGetWeatherService, IScopeService
+	public sealed class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, IResults<WeatherForecastDto>>, IGetWeatherService, IScopeService
     {
         public GetWeatherService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {
@@ -21,7 +21,7 @@ namespace Jina.Domain.Service.Example.Weather
         {
             if (this.Request.xIsEmpty())
             {
-                this.Result = await ResultBase<WeatherForecastDto>.FailAsync("request is empty");
+                this.Result = await Results<WeatherForecastDto>.FailAsync("request is empty");
                 return false;
             }
             return true;
@@ -29,7 +29,7 @@ namespace Jina.Domain.Service.Example.Weather
 
         public override async Task OnExecuteAsync()
         {
-            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.SessionContext, m => m.Id == this.Request, m => new WeatherForecastDto()
+            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.Ctx, m => m.Id == this.Request, m => new WeatherForecastDto()
             {
                 Id = m.Id,
                 City = m.City,
@@ -40,11 +40,11 @@ namespace Jina.Domain.Service.Example.Weather
 
             if (exist.xIsEmpty())
             {
-                this.Result = await ResultBase<WeatherForecastDto>.FailAsync("result is empty");
+                this.Result = await Results<WeatherForecastDto>.FailAsync("result is empty");
                 return;
             }
 
-            this.Result = await ResultBase<WeatherForecastDto>.SuccessAsync(exist);
+            this.Result = await Results<WeatherForecastDto>.SuccessAsync(exist);
         }
     }
 }

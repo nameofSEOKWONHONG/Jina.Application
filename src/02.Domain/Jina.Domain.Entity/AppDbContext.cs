@@ -8,21 +8,22 @@ using SmartEnum.EFCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Jina.Database.Abstract;
+using Jina.Domain.Entity.Language;
 
 namespace Jina.Domain.Entity;
 
 public class AppDbContext : AuditableContext, IDbContext
 {
     private readonly ISessionCurrentUser _user;
-    private readonly ISessionDateTime _sessionDate;
+    private readonly ISessionDateTime _date;
 
     public AppDbContext(DbContextOptions<AppDbContext> options
      , ISessionCurrentUser user
-     , ISessionDateTime sessionDate
+     , ISessionDateTime date
     ) : base(options)
     {
         _user = user;
-        _sessionDate = sessionDate;
+        _date = date;
     }
 
     public AppDbContext(string connection) : base(CreateOption(connection))
@@ -96,4 +97,7 @@ public class AppDbContext : AuditableContext, IDbContext
     public DbSet<CodeGroup> CodeGroups { get; set; }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+    
+    public DbSet<MultilingualConfig> MultilingualConfigs { get; set; }
+    public DbSet<MultilingualContent> MultilingualContents { get; set; }
 }

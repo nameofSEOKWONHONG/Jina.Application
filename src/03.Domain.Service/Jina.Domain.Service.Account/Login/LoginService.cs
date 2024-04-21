@@ -20,7 +20,7 @@ using Jina.Base.Service;
 namespace Jina.Domain.Service.Account
 {
 	[TransactionOptions()]
-	public class LoginService : ServiceImplBase<LoginService, AppDbContext, TokenRequest, IResultBase<TokenResult>>, ILoginService
+	public sealed class LoginService : ServiceImplBase<LoginService, AppDbContext, TokenRequest, IResults<TokenResult>>, ILoginService
 	{
 		private readonly IPasswordHasher<Jina.Domain.Entity.Account.User> _passwordHasher;
 		private Jina.Domain.Entity.Account.User _user;
@@ -46,29 +46,29 @@ namespace Jina.Domain.Service.Account
 			_user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == Request.Email);
 			if (_user.xIsEmpty())
 			{
-				this.Result = await ResultBase<TokenResult>.FailAsync("User Not Found.");
+				this.Result = await Results<TokenResult>.FailAsync("User Not Found.");
 				return;
 			}
 			if (!_user.IsActive)
 			{
-				this.Result = await ResultBase<TokenResult>.FailAsync("User Not Active. Please contact the administrator.");
+				this.Result = await Results<TokenResult>.FailAsync("User Not Active. Please contact the administrator.");
 				return;
 			}
 			if (!_user.EmailConfirmed)
 			{
-				this.Result = await ResultBase<TokenResult>.FailAsync("E-Mail not confirmed.");
+				this.Result = await Results<TokenResult>.FailAsync("E-Mail not confirmed.");
 				return;
 			}
 			if (_user.TenantId != Request.TenantId)
 			{
-				this.Result = await ResultBase<TokenResult>.FailAsync("Tenant-Id not Matched.");
+				this.Result = await Results<TokenResult>.FailAsync("Tenant-Id not Matched.");
 				return;
 			}
 
 			var passwordValid = _passwordHasher.VerifyHashedPassword(_user, _user.PasswordHash, Request.Password);
 			if (passwordValid != PasswordVerificationResult.Success)
 			{
-				this.Result = await ResultBase<TokenResult>.FailAsync("Invalid Credentials.");
+				this.Result = await Results<TokenResult>.FailAsync("Invalid Credentials.");
 				return;
 			}
 		}
@@ -87,7 +87,7 @@ namespace Jina.Domain.Service.Account
 				RefreshToken = _user.RefreshToken, 
 				UserImageURL = _user.ProfilePictureDataUrl };
 
-			this.Result = await ResultBase<TokenResult>.SuccessAsync(response);
+			this.Result = await Results<TokenResult>.SuccessAsync(response);
 		}
 
 		#region [private method]

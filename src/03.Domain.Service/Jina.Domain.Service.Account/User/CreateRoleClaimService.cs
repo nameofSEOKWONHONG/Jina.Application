@@ -12,7 +12,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User;
 
-public class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, AppDbContext, CreateRoleClaimRequest, IResultBase<bool>>
+public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, AppDbContext, CreateRoleClaimRequest, IResults<bool>>
     , IScopeService
 {
     /// <summary>
@@ -35,7 +35,7 @@ public class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, Ap
 
         if (exist.xIsNotEmpty())
         {
-            this.Result = await ResultBase<bool>.FailAsync("already exists");
+            this.Result = await Results<bool>.FailAsync("already exists");
             return false;
         }
 
@@ -55,6 +55,6 @@ public class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimService, Ap
         };
         await this.Db.RoleClaims.AddAsync(roleClaim);
         await this.Db.SaveChangesAsync();
-        this.Result = await ResultBase<bool>.SuccessAsync("Role Claim created.");
+        this.Result = await Results<bool>.SuccessAsync("Role Claim created.");
     }
 }

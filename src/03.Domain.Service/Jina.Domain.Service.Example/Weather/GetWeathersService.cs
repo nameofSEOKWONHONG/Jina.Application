@@ -10,7 +10,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public class GetWeathersService
+	public sealed class GetWeathersService
         : ServiceImplBase<GetWeathersService, AppDbContext, PaginatedRequest<WeatherForecastDto>, PaginatedResult<WeatherForecastDto>>
             , IGetWeathersService
             , IScopeService
@@ -49,7 +49,7 @@ namespace Jina.Domain.Service.Example.Weather
                                          m.Date < this.Request.To.Value.xToToDate(false));
             }
 
-            this.Result = await query.vToPaginatedListAsync(this.SessionContext, this.Request, m => new WeatherForecastDto()
+            this.Result = await query.vToPaginatedListAsync(this.Ctx, this.Request, m => new WeatherForecastDto()
             {
                 Id = m.Id,
                 City = m.City,

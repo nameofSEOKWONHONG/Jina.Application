@@ -9,7 +9,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public class SaveWeahterService : ServiceImplBase<SaveWeahterService, WeatherForecastDto, IResultBase<int>>
+	public sealed class SaveWeahterService : ServiceImplBase<SaveWeahterService, WeatherForecastDto, IResults<int>>
     {
         public SaveWeahterService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {
@@ -19,25 +19,25 @@ namespace Jina.Domain.Service.Example.Weather
         {
             if (this.Request.xIsEmpty())
             {
-                this.Result = await ResultBase<int>.FailAsync("request is empty");
+                this.Result = await Results<int>.FailAsync("request is empty");
                 return false;
             }
 
             if (this.Request.City.xIsEmpty())
             {
-                this.Result = await ResultBase<int>.FailAsync("city is empty");
+                this.Result = await Results<int>.FailAsync("city is empty");
                 return false;
             }
 
             if (this.Request.Date.xIsEmpty())
             {
-                this.Result = await ResultBase<int>.FailAsync("date is empty");
+                this.Result = await Results<int>.FailAsync("date is empty");
                 return false;
             }
 
             if (this.Request.TemperatureC.xIsEmpty())
             {
-                this.Result = await ResultBase<int>.FailAsync("temp C. is empty");
+                this.Result = await Results<int>.FailAsync("temp C. is empty");
                 return false;
             }
             return true;

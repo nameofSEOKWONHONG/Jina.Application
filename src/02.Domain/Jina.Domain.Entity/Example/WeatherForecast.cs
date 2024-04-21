@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jina.Domain.Entity.Example
 {
 	[Table("WeatherForecast", Schema = "example")]
-    public class WeatherForecast : EntityBase
+    public class WeatherForecast : TenantBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

@@ -5,7 +5,7 @@ using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Abstract.Account
 {
-    public interface ICreateTenantService : IServiceImplBase<CreateTenantRequest, IResultBase<bool>>, IScopeService
+    public interface ICreateTenantService : IServiceImplBase<CreateTenantRequest, IResults<bool>>, IScopeService
     {
 
     }

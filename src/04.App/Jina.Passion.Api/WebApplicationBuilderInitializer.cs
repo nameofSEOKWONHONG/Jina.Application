@@ -27,6 +27,7 @@ using Jina.Database.Abstract;
 using Jina.Domain.Service.Net.Notification;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Results = Jina.Domain.SharedKernel.Results;
 
 namespace Jina.Passion.Api
 {
@@ -115,7 +116,7 @@ namespace Jina.Passion.Api
                                         {
                                             c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             c.Response.ContentType = "application/json";
-                                            var result = ResultBase.Fail("The Token is expired.").xToJson();
+                                            var result = Results.Fail("The Token is expired.").xToJson();
                                             return c.Response.WriteAsync(result);
                                         }
                                         else
@@ -123,7 +124,7 @@ namespace Jina.Passion.Api
                                             c.NoResult();
                                             c.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             c.Response.ContentType = "text/plain";
-                                            var result = ResultBase.Fail("You are not Authorized.").xToJson();
+                                            var result = Results.Fail("You are not Authorized.").xToJson();
                                             return c.Response.WriteAsync(result);
                                         }
                                     },
@@ -134,7 +135,7 @@ namespace Jina.Passion.Api
                                         {
                                             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                             context.Response.ContentType = "application/json";
-                                            var result = ResultBase.Fail("You are not Authorized.").xToJson();
+                                            var result = Results.Fail("You are not Authorized.").xToJson();
                                             return context.Response.WriteAsync(result);
                                         }
 
@@ -144,7 +145,7 @@ namespace Jina.Passion.Api
                                     {
                                         context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
                                         context.Response.ContentType = "application/json";
-                                        var result = ResultBase.Fail("You are not authorized to access this resource.").xToJson();
+                                        var result = Results.Fail("You are not authorized to access this resource.").xToJson();
                                         return context.Response.WriteAsync(result);
                                     },
                                 };

@@ -3,6 +3,7 @@ using eXtensionSharp;
 using Jina.Domain.SharedKernel;
 using Microsoft.AspNetCore.Http;
 using MySqlX.XDevAPI.Common;
+using Results = Jina.Domain.SharedKernel.Results;
 
 namespace Jina.Domain.Service.Infra.Middleware;
 
@@ -25,7 +26,7 @@ public class GlobalErrorHandlerMiddleware
         {
             var response = context.Response;
             response.ContentType = "application/json";
-            var responseModel = await ResultBase.FailAsync(error.Message);
+            var responseModel = await Results.FailAsync(error.Message);
 
             switch (error)
             {

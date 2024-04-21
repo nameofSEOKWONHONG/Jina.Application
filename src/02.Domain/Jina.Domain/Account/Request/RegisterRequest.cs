@@ -22,6 +22,7 @@ namespace Jina.Domain.Account.Request
         public string Password { get; set; }
 
         public string ConfirmPassword { get; set; }
+        public bool AutoConfirmEmail { get; set; }
 
         public string PhoneNumber { get; set; }
 

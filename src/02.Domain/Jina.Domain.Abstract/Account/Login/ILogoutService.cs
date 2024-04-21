@@ -4,7 +4,7 @@ using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Abstract.Account;
 
-public interface ILogoutService : IServiceImplBase<LogoutRequest, IResultBase<bool>>, IScopeService
+public interface ILogoutService : IServiceImplBase<LogoutRequest, IResults<bool>>, IScopeService
 {
     
 }

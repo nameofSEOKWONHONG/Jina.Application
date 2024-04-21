@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Jina.Domain.Entity.Common;
 
 [Table("CodeGroups", Schema = "common")]
-public class CodeGroup : CodeEntityBase
+public class CodeGroup : CodeTenantBase
 {
     [Key, Column(Order = 2), Comment("코드 그룹")]
     [MaxLength(10)]

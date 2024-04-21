@@ -1,6 +1,6 @@
 ﻿namespace Jina.Domain.Net;
 
-public class MailRequest
+public class EmailRequest
 {
     /// <summary>
     /// 발송자 명
@@ -31,12 +31,12 @@ public class MailRequest
     /// </summary>
     public SmtpInfo SmtpInfo { get; set; }
 
-    public MailRequest()
+    public EmailRequest()
     {
             
     }
         
-    public MailRequest(SmtpInfo smtp)
+    public EmailRequest(SmtpInfo smtp)
     {
         this.SmtpInfo = smtp;
     }

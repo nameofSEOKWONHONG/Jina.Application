@@ -25,7 +25,7 @@ public abstract class EntityCore
     public DateTime? LastModifiedOn { get; set; }
 }
 
-public abstract class EntityBase : EntityCore
+public abstract class TenantBase : EntityCore
 {
     [Key, Column(Order = 0), Comment("테넌트 ID")]
     [Required, MaxLength(5)]
@@ -33,6 +33,4 @@ public abstract class EntityBase : EntityCore
 
     [Comment("활성화 여부")]
     public bool IsActive { get; set; }
-
-
 }

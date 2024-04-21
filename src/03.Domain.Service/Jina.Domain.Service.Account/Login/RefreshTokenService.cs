@@ -19,7 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Jina.Domain.Service.Account;
 
 [TransactionOptions()]
-public class RefreshTokenService : ServiceImplBase<RefreshTokenService, AppDbContext, RefreshTokenRequest, IResultBase<TokenResult>>,
+public sealed class RefreshTokenService : ServiceImplBase<RefreshTokenService, AppDbContext, RefreshTokenRequest, IResults<TokenResult>>,
     IRefreshTokenService
 {
     private readonly ApplicationConfig _config;
@@ -43,18 +43,18 @@ public class RefreshTokenService : ServiceImplBase<RefreshTokenService, AppDbCon
     {
         if (this.Request.xIsEmpty())
         {
-            this.Result =  await ResultBase<TokenResult>.FailAsync("Invalid Client Token.");
+            this.Result =  await Results<TokenResult>.FailAsync("Invalid Client Token.");
         }
         
         var userPrincipal = GetPrincipalFromExpiredToken(this.Request.Token);
         var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
-        _user = await Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.SessionContext.TenantId && m.Email == userEmail);
+        _user = await Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Ctx.TenantId && m.Email == userEmail);
         
         if (_user.xIsEmpty())
-            this.Result = await ResultBase<TokenResult>.FailAsync("User Not Found.");
+            this.Result = await Results<TokenResult>.FailAsync("User Not Found.");
 
         if (_user.RefreshToken != this.Request.RefreshToken || _user.RefreshTokenExpiryTime <= DateTime.Now)
-            this.Result = await ResultBase<TokenResult>.FailAsync("Invalid Client Token.");        
+            this.Result = await Results<TokenResult>.FailAsync("Invalid Client Token.");        
     }
 
     public override async Task OnExecuteAsync()
@@ -70,7 +70,7 @@ public class RefreshTokenService : ServiceImplBase<RefreshTokenService, AppDbCon
         await this.Db.SaveChangesAsync();
 
         var response = new TokenResult { Token = token, RefreshToken = _user.RefreshToken, RefreshTokenExpiryTime = _user.RefreshTokenExpiryTime };
-        this.Result = await ResultBase<TokenResult>.SuccessAsync(response);
+        this.Result = await Results<TokenResult>.SuccessAsync(response);
     }
     
     private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)

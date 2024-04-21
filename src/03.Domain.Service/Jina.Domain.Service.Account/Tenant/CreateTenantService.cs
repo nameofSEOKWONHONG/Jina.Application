@@ -21,7 +21,7 @@ namespace Jina.Domain.Service.Account
     /// create tenant
     /// </summary>
     [TransactionOptions()]
-    public class CreateTenantService : ServiceImplBase<CreateTenantService, AppDbContext, CreateTenantRequest, IResultBase<bool>>,
+    public sealed class CreateTenantService : ServiceImplBase<CreateTenantService, AppDbContext, CreateTenantRequest, IResults<bool>>,
         ICreateTenantService
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
@@ -40,13 +40,13 @@ namespace Jina.Domain.Service.Account
 
         public override async Task OnExecutingAsync()
         {
-            if (this.Request.TenantId.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("TenantId is empty");
-            if (this.Request.Email.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Email is empty");
-            if (this.Request.Name.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Name is empty");
-            if (this.Request.UserName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("User name is empty");
-            if (this.Request.FirstName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("First name is empty");
-            if (this.Request.LastName.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Last name is empty");
-            if (this.Request.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("Last name is empty");
+            if (this.Request.TenantId.xIsEmpty()) this.Result = await Results<bool>.FailAsync("TenantId is empty");
+            if (this.Request.Email.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Email is empty");
+            if (this.Request.Name.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Name is empty");
+            if (this.Request.UserName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("User name is empty");
+            if (this.Request.FirstName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("First name is empty");
+            if (this.Request.LastName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Last name is empty");
+            if (this.Request.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Last name is empty");
         }
 
         public override async Task OnExecuteAsync()
@@ -125,13 +125,13 @@ namespace Jina.Domain.Service.Account
                     var result = await AddPermissionClaim(adminRoleInDb, permission);
                     if (result.Succeeded.xIsFalse())
                     {
-                        Result = await ResultBase<bool>.SuccessAsync(false);
+                        Result = await Results<bool>.SuccessAsync(false);
                         return;
                     }
                 }
             }
 
-            Result = await ResultBase<bool>.SuccessAsync(true);
+            Result = await Results<bool>.SuccessAsync(true);
         }
 
 

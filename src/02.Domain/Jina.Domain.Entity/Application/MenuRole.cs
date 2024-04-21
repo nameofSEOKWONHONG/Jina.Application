@@ -5,7 +5,7 @@ using Jina.Domain.Entity.Base;
 namespace Jina.Domain.Entity.Application;
 
 [Table("MenuRoles", Schema = "application")]
-public class MenuRole : EntityBase
+public class MenuRole : TenantBase
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid MenuRoleId { get; set; }

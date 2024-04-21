@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Service.Account;
 
-public class LogoutService : ServiceImplBase<LogoutService, AppDbContext, LogoutRequest, IResultBase<bool>>, ILogoutService
+public sealed class LogoutService : ServiceImplBase<LogoutService, AppDbContext, LogoutRequest, IResults<bool>>, ILogoutService
 {
     private Entity.Account.User _user;
     /// <summary>
@@ -24,10 +24,10 @@ public class LogoutService : ServiceImplBase<LogoutService, AppDbContext, Logout
 
     public override async Task OnExecutingAsync()
     {
-        _user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.SessionContext.TenantId &&
-                                                             m.Email == this.SessionContext.CurrentUser.Email);
+        _user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Ctx.TenantId &&
+                                                             m.Email == this.Ctx.CurrentUser.Email);
         
-        if (_user.xIsEmpty()) this.Result = await ResultBase<bool>.FailAsync("User not exist");
+        if (_user.xIsEmpty()) this.Result = await Results<bool>.FailAsync("User not exist");
     }
 
     public override async Task OnExecuteAsync()
@@ -36,11 +36,11 @@ public class LogoutService : ServiceImplBase<LogoutService, AppDbContext, Logout
             .ExecuteUpdateAsync(m =>
                 m.SetProperty(mm => mm.RefreshToken, string.Empty)
                     .SetProperty(mm => mm.RefreshTokenExpiryTime, DateTime.MinValue)
-                    .SetProperty(mm => mm.LastModifiedBy, this.SessionContext.CurrentUser.UserId)
-                    .SetProperty(mm => mm.LastModifiedOn, this.SessionContext.CurrentTime.Now)
+                    .SetProperty(mm => mm.LastModifiedBy, this.Ctx.CurrentUser.UserId)
+                    .SetProperty(mm => mm.LastModifiedOn, this.Ctx.CurrentTime.Now)
             );
 
         await this.Db.SaveChangesAsync();
-        this.Result = await ResultBase<bool>.SuccessAsync();
+        this.Result = await Results<bool>.SuccessAsync();
     }
 }

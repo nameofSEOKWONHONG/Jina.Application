@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-    internal class RemoveWeatherService
+    internal sealed class RemoveWeatherService
     {
     }
 }

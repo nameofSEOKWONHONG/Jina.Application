@@ -4,7 +4,7 @@ using Jina.Domain.Entity.Base;
 namespace Jina.Domain.Entity.Common;
 
 [Table("Codes", Schema = "common")]
-public class Code : CodeEntityBase
+public class Code : CodeTenantBase
 {
     
 }

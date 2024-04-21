@@ -8,13 +8,13 @@ namespace Jina.Domain.Service.Infra
 	public abstract class ServiceImplBase<TSelf, TRequest, TResult> : ServiceImplCore<TSelf, TRequest, TResult>
         where TSelf : class
     {
-        protected ISessionContext SessionContext;
+        protected ISessionContext Ctx;
         protected ServicePipeline Svc;
 
         protected ServiceImplBase(ISessionContext context, ServicePipeline svc)
         {
             this.Self = this;
-            this.SessionContext = context;
+            this.Ctx = context;
             this.Svc = svc;
         }
     }
@@ -23,7 +23,7 @@ namespace Jina.Domain.Service.Infra
         where TSelf : class
         where TDbContext : IDbContext
     {
-        protected TDbContext Db => this.SessionContext.DbContext.xAs<TDbContext>();
+        protected TDbContext Db => this.Ctx.DbContext.xAs<TDbContext>();
 
         /// <summary>
         /// 

@@ -12,7 +12,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
 {
-	public class CreateRoleService : ServiceImplBase<CreateRoleService, AppDbContext, CreateRoleRequest, IResultBase<bool>>
+	public sealed class CreateRoleService : ServiceImplBase<CreateRoleService, AppDbContext, CreateRoleRequest, IResults<bool>>
         , IScopeService
     {
         /// <summary>
@@ -32,7 +32,7 @@ namespace Jina.Domain.Service.Account.User
 
             if (id.xIsEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync("already exist");
+                this.Result = await Results<bool>.FailAsync("already exist");
                 return false;
             }
 
@@ -42,7 +42,7 @@ namespace Jina.Domain.Service.Account.User
 
             if (name.xIsNotEmpty())
             {
-                this.Result = await ResultBase<bool>.FailAsync("already exist");
+                this.Result = await Results<bool>.FailAsync("already exist");
                 return false;
             }
 

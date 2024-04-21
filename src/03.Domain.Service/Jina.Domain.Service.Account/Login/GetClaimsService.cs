@@ -16,7 +16,7 @@ public interface IGetClaimsService : IServiceImplBase<Entity.Account.User, IEnum
 }
 
 [TransactionOptions()]
-public class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbContext, Entity.Account.User, IEnumerable<Claim>>,
+public sealed class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbContext, Entity.Account.User, IEnumerable<Claim>>,
     IGetClaimsService
 {
     /// <summary>

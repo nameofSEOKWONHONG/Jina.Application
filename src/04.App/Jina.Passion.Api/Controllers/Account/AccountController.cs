@@ -34,7 +34,7 @@ public class AccountController : JControllerBase
     public async Task<IActionResult> Login(TokenRequest request
         , [FromServices] ILoginService service)
     {
-        IResultBase<TokenResult> result = null;
+        IResults<TokenResult> result = null;
 
         this.Pip.Register(service)
             .AddFilter(request.xIsNotEmpty)
@@ -53,7 +53,7 @@ public class AccountController : JControllerBase
     public async Task<IActionResult> Logout(LogoutRequest request,
         [FromServices] ILogoutService service)
     {
-        IResultBase<bool> result = null;
+        IResults<bool> result = null;
         this.Pip.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
@@ -75,7 +75,7 @@ public class AccountController : JControllerBase
     public async Task<IActionResult> Refresh(RefreshTokenRequest model,
         [FromServices] IRefreshTokenService service)
     {
-        IResultBase<TokenResult> result = null;
+        IResults<TokenResult> result = null;
 
         this.Pip.Register(service)
             .AddFilter(model.xIsNotEmpty)
@@ -83,7 +83,7 @@ public class AccountController : JControllerBase
             .SetValidator(new RefreshTokenRequest.Valdiator(null))
             .OnValidated(m =>
             {
-                result = ResultBase<TokenResult>.Fail(m.Errors.First().ErrorMessage);
+                result = Results<TokenResult>.Fail(m.Errors.First().ErrorMessage);
             })
             .OnExecuted(m =>
             {
@@ -108,12 +108,12 @@ public class AccountController : JControllerBase
     public async Task<IActionResult> RegisterTenant(CreateTenantRequest request, 
         [FromServices] ICreateTenantService service)
     {
-        IResultBase<bool> result = null;
+        IResults<bool> result = null;
         this.Pip.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .SetValidator(new CreateTenantRequest.Validator())
-            .OnValidated(m => result = ResultBase<bool>.Fail(m.Errors.xJoin()))
+            .OnValidated(m => result = Results<bool>.Fail(m.Errors.xJoin()))
             .OnExecuted(m => result = m);
 
         await this.Pip.ExecuteAsync();

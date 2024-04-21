@@ -4,7 +4,7 @@ using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Abstract.Net;
 
-public interface IEmailService : IServiceImplBase<MailRequest, IResultBase<bool>>, IScopeService
+public interface IEmailService : IServiceImplBase<EmailRequest, IResults<bool>>, IScopeService
 {
     
 }

@@ -4,7 +4,7 @@ using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Abstract.Example
 {
-    public interface IGetWeatherService : IServiceImplBase<int, IResultBase<WeatherForecastDto>>
+    public interface IGetWeatherService : IServiceImplBase<int, IResults<WeatherForecastDto>>
     {
     }
 }
