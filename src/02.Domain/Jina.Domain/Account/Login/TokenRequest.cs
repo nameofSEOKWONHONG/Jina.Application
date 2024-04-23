@@ -21,24 +21,24 @@ namespace Jina.Domain.Account.Token
 
         public bool RemamberMe { get; set; }
         public string LoginType { get; set; } = "1";
-
-        public class Validator : Validator<TokenRequest>
-        {
-            public Validator(ILocalizer localizer)
-            {
-                RuleFor(m => m.TenantId)
-                    .NotEmpty()
-                    ;
-                //.WithMessage(localizer[""].xValue(""));
-
-                RuleFor(m => m.Email)
-                    .NotEmpty();
-
-                RuleFor(m => m.Password)
-                    .NotEmpty();
-            }
-        }
     }
+    
+    public class TokenRequestValidator : Validator<TokenRequest>
+    {
+        public TokenRequestValidator(ILocalizer localizer)
+        {
+            RuleFor(m => m.TenantId)
+                .NotEmpty()
+                ;
+            //.WithMessage(localizer[""].xValue(""));
+
+            RuleFor(m => m.Email)
+                .NotEmpty();
+
+            RuleFor(m => m.Password)
+                .NotEmpty();
+        }
+    }    
 
     public class LogoutRequest
     {

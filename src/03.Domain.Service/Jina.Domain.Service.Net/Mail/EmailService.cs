@@ -33,7 +33,7 @@ public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults
             }
         };
     
-    private readonly MailConfigOption _config;
+    private readonly EmailConfig _config;
     
     /// <summary>
     /// ctor
@@ -41,14 +41,42 @@ public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults
     /// <param name="context"></param>
     /// <param name="svc"></param>
     public EmailService(ISessionContext context, ServicePipeline svc,
-        IOptions<MailConfigOption> options) : base(context, svc)
+        IOptions<EmailConfig> options) : base(context, svc)
     {
         _config = options.Value;
     }
 
-    public override Task OnExecutingAsync()
+    public override async Task OnExecutingAsync()
     {
-        return Task.CompletedTask;
+        if (this.Request.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync();
+            return;
+        }
+
+        if (this.Request.FromMailers.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync();
+            return;
+        }
+
+        if (this.Request.ToMailers.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync();
+            return;
+        }
+
+        if (this.Request.Subject.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync();
+            return;
+        }
+
+        if (this.Request.Body.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync();
+            return;
+        }
     }
 
     public override async Task OnExecuteAsync()
@@ -62,7 +90,7 @@ public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults
         using var smtp = new SmtpClient();
         if (this.Request.SmtpInfo.xIsEmpty())
         {
-            await smtp.ConnectAsync(_config.Host, _config.Port, true);
+            await smtp.ConnectAsync(_config.Host, _config.Port, false);
             await smtp.AuthenticateAsync(_config.UserName, _config.Password);
         }
         else

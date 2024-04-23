@@ -21,11 +21,11 @@ public class ExampleController : SessionController
         [FromServices] IGetWeatherService service)
     {
         IResults<WeatherForecastDto> result = null;
-        this.Pip.Register(service)
+        this.Spl.Register(service)
             .AddFilter(() => id.xIsNotEmpty())
             .SetParameter(() => id)
             .OnExecuted(r => result = r);
-        await this.Pip.ExecuteAsync();
+        await this.Spl.ExecuteAsync();
 
         return Ok(result);
     }
@@ -35,11 +35,11 @@ public class ExampleController : SessionController
         [FromServices] IGetWeathersService service)
     {
         PaginatedResult<WeatherForecastDto> result = null;
-        this.Pip.Register(service)
+        this.Spl.Register(service)
             .AddFilter(() => request.xIsNotEmpty())
             .SetParameter(() => request)
             .OnExecuted(r => result = r);
-        await this.Pip.ExecuteAsync();
+        await this.Spl.ExecuteAsync();
         return Ok(result);
     }
 }

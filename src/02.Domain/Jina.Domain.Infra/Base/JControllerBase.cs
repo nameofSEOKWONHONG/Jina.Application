@@ -1,6 +1,7 @@
 using eXtensionSharp;
+using Hangfire;
 using Jina.Base.Service;
-using Microsoft.AspNetCore.Authorization;
+using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -12,24 +13,28 @@ namespace Jina.Domain.Service.Infra;
 public abstract class JControllerBase : ControllerBase
 {
     protected ILogger Logger => Log.Logger;
-    private ServicePipeline _svc;
+    private ServicePipeline _spl;
+    private ISessionContext _ctx;
 
-    protected ServicePipeline Pip
+    protected ServicePipeline Spl
     {
         get
         {
-            if (_svc.xIsEmpty()) _svc = this.HttpContext.RequestServices.GetRequiredService<ServicePipeline>();
-            return _svc;
+            if (_spl.xIsEmpty()) _spl = this.HttpContext.RequestServices.GetRequiredService<ServicePipeline>();
+            return _spl;
+        }
+    }
+
+    protected ISessionContext Ctx
+    {
+        get
+        {
+            if (_ctx.xIsEmpty()) _ctx = this.HttpContext.RequestServices.GetRequiredService<ISessionContext>();
+            return _ctx;
         }
     }
 
     protected JControllerBase()
     {
     }
-}
-
-[Authorize]
-public abstract class SessionController : JControllerBase
-{
-    
 }

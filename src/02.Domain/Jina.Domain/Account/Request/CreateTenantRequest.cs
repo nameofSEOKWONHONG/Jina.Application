@@ -50,17 +50,17 @@ namespace Jina.Domain.Account.Request
 		/// 전화번호
 		/// </summary>
 		public int PhoneNumber { get; set; }
-		
-		public class Validator : Validator<CreateTenantRequest>
+	}
+	
+	public class CreateTenantRequestValidator : Validator<CreateTenantRequest>
+	{
+		public CreateTenantRequestValidator()
 		{
-			public Validator()
-			{
-				NotEmpty(m => m.TenantId);
-				NotEmpty(m => m.Email);
-				NotEmpty(m => m.Name);
-				NotEmpty(m => m.FirstName);
-				NotEmpty(m => m.LastName);
-			}
+			NotEmpty(m => m.TenantId);
+			NotEmpty(m => m.Email);
+			NotEmpty(m => m.Name);
+			NotEmpty(m => m.FirstName);
+			NotEmpty(m => m.LastName);
 		}
 	}
 }

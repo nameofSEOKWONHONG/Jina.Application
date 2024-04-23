@@ -4,11 +4,14 @@ namespace Jina.Domain.SharedKernel;
 
 public class Results : IResultBase
 {
+    public List<string> Messages { get; set; } = new List<string>();
+
+    public Dictionary<string, string> ValidateErrors { get; set; }
+        = new Dictionary<string, string>();
+
     public Results()
     {
     }
-
-    public List<string> Messages { get; set; } = new List<string>();
 
     public bool Succeeded { get; set; }
 
@@ -27,6 +30,11 @@ public class Results : IResultBase
         return new Results { Succeeded = false, Messages = messages };
     }
 
+    public static IResultBase Fail(Dictionary<string, string> errors)
+    {
+        return new Results() { Succeeded = false, ValidateErrors = errors };
+    }
+
     public static Task<IResultBase> FailAsync()
     {
         return Task.FromResult(Fail());
@@ -40,6 +48,11 @@ public class Results : IResultBase
     public static Task<IResultBase> FailAsync(List<string> messages)
     {
         return Task.FromResult(Fail(messages));
+    }
+
+    public static Task<IResultBase> FailAsync(Dictionary<string, string> errors)
+    {
+        return Task.FromResult(Fail(errors));
     }
 
     public static IResultBase Success()
@@ -86,6 +99,11 @@ public class Results<T> : Results, IResults<T>
         return new Results<T> { Succeeded = false, Messages = messages };
     }
 
+    public new static Results<T> Fail(Dictionary<string, string> errors)
+    {
+        return new Results<T>() { Succeeded = false, ValidateErrors = errors };
+    }
+
     public new static Task<Results<T>> FailAsync()
     {
         return Task.FromResult(Fail());
@@ -99,6 +117,11 @@ public class Results<T> : Results, IResults<T>
     public new static Task<Results<T>> FailAsync(List<string> messages)
     {
         return Task.FromResult(Fail(messages));
+    }
+
+    public new static Task<Results<T>> FailAsync(Dictionary<string, string> errors)
+    {
+        return Task.FromResult(Fail(errors));
     }
 
     public new static Results<T> Success()

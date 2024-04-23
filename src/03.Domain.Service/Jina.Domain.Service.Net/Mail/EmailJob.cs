@@ -2,29 +2,33 @@
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Net;
 using Jina.Domain.Net;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.SharedKernel.Abstract;
 
 namespace Jina.Domain.Service.Net;
 
-public class EmailJob
+public class EmailJob : JobBase
 {
-    private readonly ServicePipeline _svc;
     private readonly IEmailService _emailService;
     
-    public EmailJob(ServicePipeline svc, IEmailService emailService)
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="spl"></param>
+    /// <param name="emailService"></param>
+    public EmailJob(ServicePipeline spl, IEmailService emailService) : base(spl)
     {
-        _svc = svc;
         _emailService = emailService;
     }
 
     public async Task ExecuteAsync(EmailRequest request)
     {
         IResults<bool> result;
-        _svc.Register(_emailService)
-            .AddFilter(() => request.xIsNotEmpty())
+        this.Spl.Register(_emailService)
+            .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .OnExecuted(r => result = r);
 
-        await _svc.ExecuteAsync();
+        await this.Spl.ExecuteAsync();
     }
 }

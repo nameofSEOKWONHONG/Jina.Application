@@ -68,6 +68,8 @@ public class PaginatedResult<T> : IPaginatedResult
     public bool HasNextPage => PageNo < TotalPages;
 
     public List<string> Messages { get; set; } = new List<string>();
+    
+    public Dictionary<string, string> ValidateErrors { get; set; }
 
     public bool Succeeded { get; set; }
 }

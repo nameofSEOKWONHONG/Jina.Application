@@ -98,6 +98,6 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
     
-    public DbSet<MultilingualConfig> MultilingualConfigs { get; set; }
-    public DbSet<MultilingualContent> MultilingualContents { get; set; }
+    // public DbSet<MultilingualConfig> MultilingualConfigs { get; set; }
+    // public DbSet<MultilingualContent> MultilingualContents { get; set; }
 }

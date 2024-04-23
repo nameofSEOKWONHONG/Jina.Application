@@ -1,4 +1,6 @@
-﻿using Jina.Database.Abstract;
+﻿using eXtensionSharp;
+using Hangfire;
+using Jina.Database.Abstract;
 using Jina.Domain.Entity;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
@@ -22,6 +24,8 @@ namespace Jina.Domain.Service.Infra
         public IDbProviderBase DbProvider { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public IHttpClientFactory HttpClientFactory { get; }
+        
+        public IBackgroundJobClient JobClient { get; }
 
         public CancellationToken CancellationToken { get; }
 
@@ -34,7 +38,8 @@ namespace Jina.Domain.Service.Infra
             , ISessionDateTime time
             , ILocalizer localizer
             , IHttpClientFactory factory
-            , IHttpContextAccessor accessor)
+            , IHttpContextAccessor accessor
+            , IBackgroundJobClient jobClient)
         {
             this.DbContext = dbContext;
             this.Localizer = localizer;
@@ -44,8 +49,12 @@ namespace Jina.Domain.Service.Infra
             this.Localizer = localizer;
             this.HttpContextAccessor = accessor;
             this.HttpClientFactory = factory;
+            this.JobClient = jobClient;
 
-            this.TenantId = this.CurrentUser.TenantId;
+            if (this.CurrentUser.TenantId.xIsNotEmpty())
+            {
+                this.TenantId = this.CurrentUser.TenantId;    
+            }
         }
     }
 }

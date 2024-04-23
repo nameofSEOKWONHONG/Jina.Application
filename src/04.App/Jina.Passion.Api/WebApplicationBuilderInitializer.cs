@@ -3,13 +3,10 @@ using Hangfire;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.Service.Net.ExchangeRate;
-using Jina.Domain.SharedKernel;
 using Jina.Domain.SharedKernel.Consts;
 using Jina.Injection;
 using Jina.Lang;
 using Jina.Lang.Abstract;
-using Jina.Passion.Api.Controllers.Notification;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -21,20 +18,23 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
+using Jina.Application.Configuration;
 using Jina.Base.Service;
 using Jina.Database;
 using Jina.Database.Abstract;
 using Jina.Domain.Service.Net.Notification;
+using Jina.Validate;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using Results = Jina.Domain.SharedKernel.Results;
 
 namespace Jina.Passion.Api
 {
 	public class WebApplicationBuilderInitializer
     {
+        const string DOMAIN_NAME = "Jina.Domain";
+        
         public static WebApplicationBuilder Initialize(WebApplicationBuilder builder)
-        {
+        {   
             #region [test]
 
             builder.Services.AddScoped<MessageHub>();
@@ -168,7 +168,8 @@ namespace Jina.Passion.Api
 
             #region [service injection]
 
-            builder.Services.AddJinaScan("Jina.Domain");
+            builder.Services.AddJinaScan(DOMAIN_NAME);
+            builder.Services.AddValidator(DOMAIN_NAME);
 
             #endregion [service injection]
 
@@ -332,6 +333,7 @@ namespace Jina.Passion.Api
 
 			#region [configuration]
 			builder.Services.Configure<ApplicationConfig>(builder.Configuration.GetSection(nameof(ApplicationConfig)));
+            builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection(nameof(EmailConfig)));
 			#endregion
 
 			return builder;
