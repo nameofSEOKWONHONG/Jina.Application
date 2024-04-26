@@ -9,6 +9,10 @@ public abstract class JobBase
 {
     protected ServicePipeline Spl;
 
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="spl"></param>
     protected JobBase(ServicePipeline spl)
     {
         this.Spl = spl;

@@ -1,4 +1,4 @@
-﻿namespace Jina.Domain.SharedKernel
+﻿namespace Jina.Domain.Shared
 {
     public abstract class DisplayRow
     {

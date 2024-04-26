@@ -1,5 +1,5 @@
 ﻿using eXtensionSharp;
-using Jina.Domain.SharedKernel.Consts;
+using Jina.Domain.Shared.Consts;
 
 namespace Jina.Domain.Service.Infra
 {

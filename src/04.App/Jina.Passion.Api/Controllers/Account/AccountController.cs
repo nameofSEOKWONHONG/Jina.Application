@@ -1,3 +1,4 @@
+using System.Text;
 using eXtensionSharp;
 using Hangfire;
 using Jina.Base.Attributes;
@@ -8,12 +9,12 @@ using Jina.Domain.Net;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Validate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Results = Jina.Domain.SharedKernel.Results;
+using Results = Jina.Domain.Shared.Results;
 
 namespace Jina.Passion.Api.Controllers.Account;
 
@@ -114,7 +115,6 @@ public class AccountController : JControllerBase
     /// <param name="request"></param>
     /// <param name="service"></param>
     /// <param name="validator"></param>
-    /// <param name="client"></param>
     /// <returns></returns>
     [ApiExplorerSettings(IgnoreApi = true)]
     [AllowAnonymous]
@@ -122,8 +122,7 @@ public class AccountController : JControllerBase
     [HttpPost]
     public async Task<IActionResult> RegisterTenant(CreateTenantRequest request 
         , [FromServices] ICreateTenantService service
-        , [FromServices] CreateTenantRequestValidator validator
-        , [FromServices] IBackgroundJobClient client)
+        , [FromServices] CreateTenantRequestValidator validator)
     {
         IResultBase result = null;
         this.Spl.Register(service)
@@ -141,3 +140,4 @@ public class AccountController : JControllerBase
         return Ok(result);
     }
 }
+

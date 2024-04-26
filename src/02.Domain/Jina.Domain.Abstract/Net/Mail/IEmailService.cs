@@ -1,6 +1,6 @@
 ﻿using Jina.Base.Service.Abstract;
 using Jina.Domain.Net;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Abstract.Net;
 

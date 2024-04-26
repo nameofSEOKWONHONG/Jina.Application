@@ -1,5 +1,4 @@
 using eXtensionSharp;
-using Hangfire;
 using Jina.Base.Service;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Mvc;

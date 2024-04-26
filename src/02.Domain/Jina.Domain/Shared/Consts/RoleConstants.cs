@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jina.Domain.SharedKernel.Consts
+namespace Jina.Domain.Shared.Consts
 {
     public class RoleConstants
     {

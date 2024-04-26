@@ -2,7 +2,7 @@
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Net.OpenApi.Services;
 
-namespace Jina.Domain.Service.Net.OpenApi.Services;
+namespace Jina.Domain.Service.Net.OpenApi;
 
 public class OpenApiClientService
     : ServiceImplCore<OpenApiClientService, string, string>

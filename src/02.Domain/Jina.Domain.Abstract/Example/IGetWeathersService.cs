@@ -1,6 +1,6 @@
 ﻿using Jina.Base.Service.Abstract;
 using Jina.Domain.Example;
-using Jina.Domain.SharedKernel;
+using Jina.Domain.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;

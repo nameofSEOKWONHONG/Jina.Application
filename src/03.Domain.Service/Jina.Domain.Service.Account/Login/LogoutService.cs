@@ -3,8 +3,8 @@ using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,8 +26,12 @@ public sealed class LogoutService : ServiceImplBase<LogoutService, AppDbContext,
     {
         _user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Ctx.TenantId &&
                                                              m.Email == this.Ctx.CurrentUser.Email);
-        
-        if (_user.xIsEmpty()) this.Result = await Results<bool>.FailAsync("User not exist");
+
+        if (_user.xIsEmpty())
+        {
+            this.Result = await Results<bool>.FailAsync("User not exist");
+            return;
+        }
     }
 
     public override async Task OnExecuteAsync()

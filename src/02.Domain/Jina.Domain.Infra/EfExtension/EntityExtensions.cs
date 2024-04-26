@@ -1,8 +1,8 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity.Base;
 using Jina.Domain.Example;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Consts;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Consts;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;

@@ -5,7 +5,7 @@ using Jina.Domain.Abstract.Example;
 using Jina.Domain.Entity;
 using Jina.Domain.Example;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
+using Jina.Domain.Shared;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
@@ -18,21 +18,19 @@ namespace Jina.Domain.Service.Example.Weather
         public GetWeathersService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc) {
         }
 
-        public override async Task<bool> OnExecutingAsync()
+        public override async Task OnExecutingAsync()
         {
             if (this.Request.xIsEmpty())
             {
                 this.Result = await PaginatedResult<WeatherForecastDto>.FailAsync("request is empty");
-                return false;
+                return;
             }
 
             if (this.Result.Data.xIsEmpty())
             {
                 this.Result = await PaginatedResult<WeatherForecastDto>.FailAsync("request data is empty");
-                return false;
+                return;
             }
-
-            return true;
         }
 
         public override async Task OnExecuteAsync()

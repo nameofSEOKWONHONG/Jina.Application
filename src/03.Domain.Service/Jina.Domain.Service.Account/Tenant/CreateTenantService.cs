@@ -5,15 +5,14 @@ using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
-using Jina.Domain.SharedKernel.Consts;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Transactions;
 using Jina.Base.Service;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
+using Jina.Domain.Shared.Consts;
 
 namespace Jina.Domain.Service.Account
 {
@@ -40,13 +39,47 @@ namespace Jina.Domain.Service.Account
 
         public override async Task OnExecutingAsync()
         {
-            if (this.Request.TenantId.xIsEmpty()) this.Result = await Results<bool>.FailAsync("TenantId is empty");
-            if (this.Request.Email.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Email is empty");
-            if (this.Request.Name.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Name is empty");
-            if (this.Request.UserName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("User name is empty");
-            if (this.Request.FirstName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("First name is empty");
-            if (this.Request.LastName.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Last name is empty");
-            if (this.Request.xIsEmpty()) this.Result = await Results<bool>.FailAsync("Last name is empty");
+            if (this.Request.TenantId.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("TenantId is empty");
+                return;
+            }
+
+            if (this.Request.Email.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("Email is empty");
+                return;
+            }
+
+            if (this.Request.Name.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("Name is empty");
+                return;
+            }
+
+            if (this.Request.UserName.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("User name is empty");
+                return;
+            }
+
+            if (this.Request.FirstName.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("First name is empty");
+                return;
+            }
+
+            if (this.Request.LastName.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("Last name is empty");
+                return;
+            }
+
+            if (this.Request.xIsEmpty())
+            {
+                this.Result = await Results<bool>.FailAsync("Last name is empty");
+                return;
+            }
         }
 
         public override async Task OnExecuteAsync()
@@ -173,3 +206,4 @@ namespace Jina.Domain.Service.Account
         #endregion
     }
 }
+

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jina.Domain.Service.Infra;
 
-[TypeFilter(typeof(ActionExecuteFilter))]
 [Authorize]
+[TypeFilter(typeof(ActionExecuteFilter))]
 public abstract class SessionController : JControllerBase
 {
     

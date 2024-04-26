@@ -1,7 +1,6 @@
 ﻿using Hangfire;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Service.Net.Notification;
-using Jina.Passion.Api.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 

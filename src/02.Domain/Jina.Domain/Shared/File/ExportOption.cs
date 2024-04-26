@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jina.Domain.SharedKernel.File
+namespace Jina.Domain.Shared.File
 {
     public class ExportOption
     {

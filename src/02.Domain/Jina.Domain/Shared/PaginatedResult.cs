@@ -1,8 +1,8 @@
-using Jina.Domain.SharedKernel.Abstract;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Jina.Domain.Shared.Abstract;
 
-namespace Jina.Domain.SharedKernel;
+namespace Jina.Domain.Shared;
 
 public class PaginatedResult<T> : IPaginatedResult
 {

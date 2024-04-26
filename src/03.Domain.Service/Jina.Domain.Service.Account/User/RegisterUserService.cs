@@ -4,9 +4,6 @@ using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
-using Jina.Domain.SharedKernel.Consts;
 using Microsoft.AspNetCore.Identity;
 using System.Data.Entity;
 using Hangfire;
@@ -14,6 +11,9 @@ using Jina.Base.Service;
 using Jina.Domain.Abstract.Net;
 using Jina.Domain.Net;
 using Jina.Domain.Service.Net;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
+using Jina.Domain.Shared.Consts;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
@@ -32,7 +32,7 @@ namespace Jina.Domain.Service.Account.User
             _emailService = emailService;
         }
 
-        public override async Task<bool> OnExecutingAsync()
+        public override async Task OnExecutingAsync()
         {
             var user = await this.Db.Users.AnyAsync(m =>
                 m.TenantId == this.Request.TenantId &&
@@ -41,7 +41,7 @@ namespace Jina.Domain.Service.Account.User
             if (user.xIsNotEmpty())
             {
                 this.Result = await Results<string>.FailAsync("Email already exist");
-                return false;
+                return;
             }
 
             var phone = await this.Db.Users.AnyAsync(m =>
@@ -51,10 +51,8 @@ namespace Jina.Domain.Service.Account.User
             if (phone.xIsNotEmpty())
             {
                 this.Result = await Results<string>.FailAsync("Phone already exist");
-                return false;
+                return;
             }
-
-            return true;
         }
 
         public override async Task OnExecuteAsync()

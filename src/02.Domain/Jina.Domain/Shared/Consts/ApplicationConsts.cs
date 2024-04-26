@@ -1,4 +1,4 @@
-﻿namespace Jina.Domain.SharedKernel.Consts
+﻿namespace Jina.Domain.Shared.Consts
 {
 	public class ApplicationConsts
     {

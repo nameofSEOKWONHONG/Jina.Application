@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Service.Infra.Extension;
 

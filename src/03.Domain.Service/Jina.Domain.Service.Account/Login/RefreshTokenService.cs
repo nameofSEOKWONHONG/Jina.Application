@@ -9,8 +9,8 @@ using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -44,17 +44,24 @@ public sealed class RefreshTokenService : ServiceImplBase<RefreshTokenService, A
         if (this.Request.xIsEmpty())
         {
             this.Result =  await Results<TokenResult>.FailAsync("Invalid Client Token.");
+            return;
         }
         
         var userPrincipal = GetPrincipalFromExpiredToken(this.Request.Token);
         var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
         _user = await Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Ctx.TenantId && m.Email == userEmail);
-        
+
         if (_user.xIsEmpty())
+        {
             this.Result = await Results<TokenResult>.FailAsync("User Not Found.");
+            return;
+        }
 
         if (_user.RefreshToken != this.Request.RefreshToken || _user.RefreshTokenExpiryTime <= DateTime.Now)
-            this.Result = await Results<TokenResult>.FailAsync("Invalid Client Token.");        
+        {
+            this.Result = await Results<TokenResult>.FailAsync("Invalid Client Token.");
+            return;
+        } 
     }
 
     public override async Task OnExecuteAsync()

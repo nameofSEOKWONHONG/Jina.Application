@@ -3,7 +3,7 @@ using Jina.Base.Service;
 using Jina.Domain.Abstract.Net;
 using Jina.Domain.Net;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Service.Net;
 

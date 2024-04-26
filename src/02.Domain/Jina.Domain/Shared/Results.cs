@@ -1,6 +1,6 @@
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared.Abstract;
 
-namespace Jina.Domain.SharedKernel;
+namespace Jina.Domain.Shared;
 
 public class Results : IResultBase
 {

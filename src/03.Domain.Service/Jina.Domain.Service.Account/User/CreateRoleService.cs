@@ -4,10 +4,10 @@ using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
 using System.Data.Entity;
 using Jina.Base.Service;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User
@@ -24,7 +24,7 @@ namespace Jina.Domain.Service.Account.User
         {
         }
 
-        public override async Task<bool> OnExecutingAsync()
+        public override async Task OnExecutingAsync()
         {
             var id = await this.Db.Roles
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
@@ -33,7 +33,7 @@ namespace Jina.Domain.Service.Account.User
             if (id.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("already exist");
-                return false;
+                return;
             }
 
             var name = await this.Db.Roles
@@ -43,10 +43,8 @@ namespace Jina.Domain.Service.Account.User
             if (name.xIsNotEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("already exist");
-                return false;
+                return;
             }
-
-            return true;
         }
 
         public override async Task OnExecuteAsync()

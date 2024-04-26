@@ -4,8 +4,6 @@ using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Token;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +14,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Jina.Base.Service;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Service.Account
 {
@@ -44,6 +44,7 @@ namespace Jina.Domain.Service.Account
 		public override async Task OnExecutingAsync()
 		{
 			_user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == Request.Email);
+			
 			if (_user.xIsEmpty())
 			{
 				this.Result = await Results<TokenResult>.FailAsync("User Not Found.");

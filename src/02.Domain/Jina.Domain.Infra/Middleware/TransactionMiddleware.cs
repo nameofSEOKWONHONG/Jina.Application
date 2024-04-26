@@ -14,10 +14,9 @@ namespace Jina.Domain.Service.Infra.Middleware;
 public class TransactionMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IDbContext _dbContext;
-
+    
     /// <summary>
-    /// 
+    /// ctor
     /// </summary>
     /// <param name="next"></param>
     /// <param name="dbContext"></param>
@@ -28,31 +27,44 @@ public class TransactionMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var sessionContext = context.RequestServices.GetRequiredService<ISessionContext>();
+        // var controllerName = context.Request.RouteValues["controller"]?.ToString();
+        // var actionName = context.Request.RouteValues["action"]?.ToString();
+        
         var actionDescriptor = context.GetEndpoint()?.Metadata.GetMetadata<ControllerActionDescriptor>();
-        if (actionDescriptor.xIsEmpty()) throw new Exception("Action not found");
-
-        var transactionAttribute = actionDescriptor.MethodInfo.GetCustomAttribute<TransactionOptionsAttribute>();
-        if (transactionAttribute.xIsEmpty()) throw new Exception("TransactionOptionsAttribute not declared");
-
-        var cts = new CancellationTokenSource(transactionAttribute.Timeout);
-
+        if (actionDescriptor.xIsNotEmpty())
+        {
+            var transactionAttribute = actionDescriptor.MethodInfo.GetCustomAttribute<TransactionOptionsAttribute>();
+            if (transactionAttribute.xIsEmpty())
+            {
+                await _next(context);
+            }
+            else
+            {
+                var sessionContext = context.RequestServices.GetRequiredService<ISessionContext>();
             
-        // 트랜잭션 시작
-        await using var transaction = await sessionContext.DbContext.Database.BeginTransactionAsync(transactionAttribute.IsolationLevel, cts.Token);
-        try
-        {
-            // 다음 미들웨어 호출
-            await _next(context);
+                var cts = new CancellationTokenSource(transactionAttribute.Timeout);
+            
+                // 트랜잭션 시작
+                await using var transaction = await sessionContext.DbContext.Database.BeginTransactionAsync(transactionAttribute.IsolationLevel, cts.Token);
+                try
+                {
+                    // 다음 미들웨어 호출
+                    await _next(context);
 
-            // 모든 작업이 성공적으로 완료되면 커밋
-            await transaction.CommitAsync(cts.Token);
+                    // 모든 작업이 성공적으로 완료되면 커밋
+                    await transaction.CommitAsync(cts.Token);
+                }
+                catch (Exception)
+                {
+                    // 작업 중 오류 발생 시 롤백
+                    await transaction.RollbackAsync(cts.Token);
+                    throw; // 오류를 다시 던져서 처리를 위임
+                }     
+            }            
         }
-        catch (Exception)
+        else
         {
-            // 작업 중 오류 발생 시 롤백
-            await transaction.RollbackAsync(cts.Token);
-            throw; // 오류를 다시 던져서 처리를 위임
+            await _next(context);
         }
     }
 }

@@ -6,8 +6,8 @@ using Jina.Domain.Account.Request;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Account.User;
@@ -24,7 +24,7 @@ public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimServ
     {
     }
 
-    public override async Task<bool> OnExecutingAsync()
+    public override async Task OnExecutingAsync()
     {
         var exist = await this.Db.RoleClaims
             .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
@@ -36,10 +36,8 @@ public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimServ
         if (exist.xIsNotEmpty())
         {
             this.Result = await Results<bool>.FailAsync("already exists");
-            return false;
+            return;
         }
-
-        return true;
     }
 
     public override async Task OnExecuteAsync()

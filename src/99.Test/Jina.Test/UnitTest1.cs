@@ -4,12 +4,10 @@ using Jina.Database.Abstract;
 using Jina.Domain.Abstract.Net.OpenApi.Services;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.Service.Net.OpenApi.Services;
+using Jina.Domain.Service.Net.OpenApi;
 using Jina.Lang;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
-using Jina.Validate.RuleValidate;
-using Jina.Validate.RuleValidate.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

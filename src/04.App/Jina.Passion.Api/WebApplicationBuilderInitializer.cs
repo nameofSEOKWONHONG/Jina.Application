@@ -3,7 +3,7 @@ using Hangfire;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel.Consts;
+using Jina.Domain.Shared.Consts;
 using Jina.Injection;
 using Jina.Lang;
 using Jina.Lang.Abstract;
@@ -22,10 +22,12 @@ using Jina.Application.Configuration;
 using Jina.Base.Service;
 using Jina.Database;
 using Jina.Database.Abstract;
+using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net.Notification;
 using Jina.Validate;
 using Microsoft.OpenApi.Models;
-using Results = Jina.Domain.SharedKernel.Results;
+using Serilog;
+using Results = Jina.Domain.Shared.Results;
 
 namespace Jina.Passion.Api
 {
@@ -34,7 +36,7 @@ namespace Jina.Passion.Api
         const string DOMAIN_NAME = "Jina.Domain";
         
         public static WebApplicationBuilder Initialize(WebApplicationBuilder builder)
-        {   
+        {
             #region [test]
 
             builder.Services.AddScoped<MessageHub>();
@@ -335,6 +337,13 @@ namespace Jina.Passion.Api
 			builder.Services.Configure<ApplicationConfig>(builder.Configuration.GetSection(nameof(ApplicationConfig)));
             builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection(nameof(EmailConfig)));
 			#endregion
+
+            #region [global exception handing]
+
+            builder.Services.AddExceptionHandler<GlobalErrorHandler>();
+            builder.Services.AddProblemDetails();
+            
+            #endregion
 
 			return builder;
         }
