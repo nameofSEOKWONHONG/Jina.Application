@@ -170,8 +170,17 @@ namespace Jina.Passion.Api
 
             #region [service injection]
 
-            builder.Services.AddJinaScan(DOMAIN_NAME);
-            builder.Services.AddValidator(DOMAIN_NAME);
+            builder.Services.AddJinaScan(new []
+            {
+                Jina.Domain.Abstract.PersistenceAssembly.Assembly,
+                Jina.Domain.Service.Account.PersistenceAssembly.Assembly,
+                Jina.Domain.Service.Example.PersistenceAssembly.Assembly,
+                Jina.Domain.Service.Net.PersistenceAssembly.Assembly
+            });
+            builder.Services.AddValidator(new []
+            {
+                Jina.Domain.PersistenceAssembly.Assembly
+            });
 
             #endregion [service injection]
 
