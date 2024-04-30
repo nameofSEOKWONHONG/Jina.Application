@@ -35,7 +35,6 @@
                TItem="MenuTemplate"
                DataSource="selectedMenuTemplate"
                Bordered=@true
-               Loading="Loading"
                Title="Menu Role List"
                Size="TableSize.Small"
                Resizable
@@ -72,7 +71,6 @@
     List<MenuTemplate> selectedMenuTemplate;
     protected override Task OnLoadAsync()
     {
-        Loading = true;
         menuRoleTemplate = new List<MenuRoleTemplate>();
 
         var id = 1;
@@ -114,7 +112,6 @@
         }
 
         selectedMenuTemplate = menuRoleTemplate.First().Menus;
-        Loading = false;
 
         return base.OnLoadAsync();
     }

@@ -12,7 +12,7 @@
 @using KakaoMapBlazor.Models
 @using eXtensionSharp
 
-@inherits FormPageComponent<DlgOptions<WeatherForecastDto>, WeatherForecastDto>
+@inherits FormPageComponent<DlgOptions<WeatherForecastRequest>, WeatherForecastRequest>
 
 <PageContainer>
     <Content>
@@ -80,7 +80,7 @@
 
  @code {
     [Parameter]
-    public WeatherForecastDto SelectedItem { get; set; }
+    public WeatherForecastRequest SelectedItem { get; set; }
 
     [Inject]
     public WeatherViewModel ViewModel { get; set; }
@@ -160,7 +160,7 @@
         {
             // method 1(not recommended): await (FeedbackRef as ConfirmRef<string>)!.OkAsync(value);
             // method 2: await (FeedbackRef as IOkCancelRef<string>)!.OkAsync(value);
-            await (FeedbackRef as IOkCancelRef<WeatherForecastDto>).OkAsync(this.SelectedItem);
+            await (FeedbackRef as IOkCancelRef<WeatherForecastRequest>).OkAsync(this.SelectedItem);
             // await base.OkCancelRefWithResult!.OnOk(this.SelectedItem);
         }
 

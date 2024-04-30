@@ -13,7 +13,12 @@ namespace Jina.Domain.Example
         public string LastModifiedName { get; set; }
     }
 
-    public class WeatherForecastDto : DtoBase
+    public class NumberDtoBase : DtoBase
+    {
+        public int Id { get; set; }
+    }
+
+    public class WeatherForecastRequest : DtoBase
     {
         public long Id { get; set; }
         public string City { get; set; }
@@ -21,20 +26,20 @@ namespace Jina.Domain.Example
         public int? TemperatureC { get; set; }
         public string Summary { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public class WeatherForecastValidator : AbstractValidator<WeatherForecastDto>
-        {
-            public WeatherForecastValidator()
-            {
-                RuleFor(m => m.Date)
-                    .NotEmpty();
-
-                RuleFor(m => m.TemperatureC)
-                    .NotEmpty();
-
-                RuleFor(m => m.Summary)
-                    .NotEmpty();
-            }
-        }
     }
+    
+    public class WeatherForecastRequestValidator : AbstractValidator<WeatherForecastRequest>
+    {
+        public WeatherForecastRequestValidator()
+        {
+            RuleFor(m => m.Date)
+                .NotEmpty();
+
+            RuleFor(m => m.TemperatureC)
+                .NotEmpty();
+
+            RuleFor(m => m.Summary)
+                .NotEmpty();
+        }
+    }    
 }

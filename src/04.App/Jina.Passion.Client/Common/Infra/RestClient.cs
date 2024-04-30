@@ -1,8 +1,8 @@
 ﻿using eXtensionSharp;
-using Jina.Domain.SharedKernel.Abstract;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using System.Net.Http.Json;
 using System.Text;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Passion.Client.Common.Infra
 {
@@ -16,7 +16,6 @@ namespace Jina.Passion.Client.Common.Infra
         }
 
         public async Task<TResult> ExecuteAsync<TRequest, TResult>(HttpMethod method, string url, TRequest body, BrowserRequestCache cache = BrowserRequestCache.Default)
-            where TResult : IResultBase
         {
             var createdUrl = CreateCachedUrl(url);
             var msg = new HttpRequestMessage(method, createdUrl);

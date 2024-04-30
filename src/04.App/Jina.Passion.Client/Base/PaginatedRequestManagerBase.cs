@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using eXtensionSharp;
-using Jina.Domain.SharedKernel;
-using System.ComponentModel;
-using System.Net.Http;
+﻿using System.ComponentModel;
 using System.Net.Http.Json;
 using System.Text;
-using System.Threading.Tasks;
+using eXtensionSharp;
+using Jina.Domain.Shared;
 
 namespace Jina.Passion.Client.Base
 {

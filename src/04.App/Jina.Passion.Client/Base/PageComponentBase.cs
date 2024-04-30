@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using AntDesign;
 using eXtensionSharp;
 using Jina.Passion.Client.Base;
+using Jina.Passion.Client.Base.Abstract;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -196,6 +195,7 @@ namespace Jina.Passion.Client.Client.Base
         protected CurrentRole CurrentRole { get; }
         protected string CurrentUrl;
         protected List<string> BreadcrumbItems;
+        [Obsolete("don't use", true)]
         protected bool Loading = false;
         protected readonly int Interval = 500;
 
@@ -204,12 +204,15 @@ namespace Jina.Passion.Client.Client.Base
         [Inject] protected ModalService ModalService { get; set; }
 
         [Inject] protected IConfirmService ConfirmService { get; set; }
+        [Inject] protected ISpinService SpinService { get; set; }
 
         [Parameter]
         public EventCallback<string> OnTabChange { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            SpinService.Show();
+            
             BreadcrumbItems = new List<string>();
             CurrentUrl = NavigationManager.Uri;
             var myUrl = CurrentUrl.Replace(NavigationManager.BaseUri, "");
@@ -232,6 +235,8 @@ namespace Jina.Passion.Client.Client.Base
             await this.OnRoleAsync();
             await this.OnSetupAsync();
             await this.OnLoadAsync();
+            
+            this.SpinService.Close();
         }
 
         /// <summary>

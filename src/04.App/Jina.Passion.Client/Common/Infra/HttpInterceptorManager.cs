@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
 using AntDesign;
+using Jina.Passion.Client.Base.Abstract;
 using Toolbelt.Blazor;
 using ILogger = Serilog.ILogger;
 
@@ -26,7 +27,11 @@ namespace Jina.Passion.Client.Common.Infra
             _messageService = messageService;
         }
 
-        public void DisposeEvent() => _interceptor.BeforeSendAsync -= InterceptBeforeHttpAsync;
+        public void DisposeEvent()
+        {
+            _interceptor.BeforeSendAsync -= InterceptBeforeHttpAsync;
+            _interceptor.AfterSendAsync -= InterceptAfterHttpAsync;
+        }
 
         public async Task InterceptBeforeHttpAsync(object sender, HttpClientInterceptorEventArgs e)
         {
@@ -53,6 +58,15 @@ namespace Jina.Passion.Client.Common.Infra
             }
         }
 
-        public void RegisterEvent() => _interceptor.BeforeSendAsync += InterceptBeforeHttpAsync;
+        private Task InterceptAfterHttpAsync(object sender, HttpClientInterceptorEventArgs e)
+        {
+            return Task.CompletedTask;
+        }
+
+        public void RegisterEvent()
+        {
+            _interceptor.BeforeSendAsync += InterceptBeforeHttpAsync;
+            _interceptor.AfterSendAsync += InterceptAfterHttpAsync;
+        }
     }
 }

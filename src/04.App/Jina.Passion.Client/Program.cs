@@ -3,7 +3,6 @@ using AntDesign.ProLayout;
 using Blazored.SessionStorage;
 using eXtensionSharp;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.SharedKernel.Consts;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Common.Infra;
@@ -20,8 +19,10 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Globalization;
 using System.Reflection;
+using Jina.Domain.Shared.Consts;
 using Serilog;
 using Serilog.Core;
+using Serilog.Events;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace Jina.Passion.Client
@@ -36,12 +37,23 @@ namespace Jina.Passion.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
+            #region [logging]
+
             var levelSwitch = new LoggingLevelSwitch();
+#if DEBUG
+            levelSwitch.MinimumLevel = LogEventLevel.Debug;
+#else
+            levelSwitch.MinimumLevel = LogEventLevel.Information;
+#endif
+            
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(levelSwitch)
                 .Enrich.WithProperty("InstanceId", Guid.NewGuid().ToString("n"))
                 .WriteTo.BrowserHttp(endpointUrl: $"{builder.HostEnvironment.BaseAddress}ingest", controlLevelSwitch: levelSwitch)
-                .CreateLogger();
+                .CreateLogger();            
+
+            #endregion
+
             
             #region [antblazor 설정]
             builder.Services.AddAntDesign();
@@ -87,10 +99,7 @@ namespace Jina.Passion.Client
             #endregion [http 설정]
 
             #region [인증 설정]
-            builder.Services.AddAuthorizationCore(options =>
-            {
-                RegisterPermissionClaims(options);
-            });
+            builder.Services.AddAuthorizationCore(RegisterPermissionClaims);
             builder.Services.AddSingleton<AuthenticationStateProviderImpl>();
             builder.Services.AddSingleton<AuthenticationStateProvider, AuthenticationStateProviderImpl>();
             #endregion
@@ -122,6 +131,8 @@ namespace Jina.Passion.Client
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
             #endregion
 
+            builder.Services.AddSingleton<ISpinService, SpinService>();
+
             var build = builder.Build();
             var vm = build.Services.GetRequiredService<NotificationViewModel>();
             await vm.InitializeAsync();
@@ -133,7 +144,7 @@ namespace Jina.Passion.Client
 
         private static void RegisterPermissionClaims(AuthorizationOptions options)
         {
-            foreach (var prop in typeof(PermissionConsts).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+            foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
                 var propertyValue = prop.GetValue(null);
                 if (propertyValue is not null)

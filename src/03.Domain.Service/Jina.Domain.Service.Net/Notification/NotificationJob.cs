@@ -1,17 +1,25 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Jina.Base.Service;
+using Jina.Domain.Notification;
+using Jina.Domain.Service.Infra;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Jina.Domain.Service.Net.Notification;
 
-public class NotificationJob
+public class NotificationJob : JobBase<MessageHub, SendMessageRequest>
 {
-    private readonly IHubContext<MessageHub> _hubContext;
-
-    public NotificationJob(IHubContext<MessageHub> hubContext)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="spl"></param>
+    /// <param name="hubContext"></param>
+    public NotificationJob(ServicePipeline spl
+        , IHubContext<MessageHub> hubContext) : base(spl, hubContext)
     {
-        _hubContext = hubContext;
+        
     }
 
-    public void Execute(string user, string message)
+
+    public override async Task ExecuteAsync(SendMessageRequest request)
     {
         //만약, 엑셀 다운로드라면...
 
@@ -22,8 +30,8 @@ public class NotificationJob
         //임시 주소 획득해서
 
         //사용자에게 URL포함한 메세지를 전송한다.
-        _hubContext.Clients.All.SendAsync("ReceiveMessage", user, message)
-            .GetAwaiter()
-            .GetResult();
+        await this.HubContext.Clients
+            .All
+            .SendAsync(request.Method, request.UserId, request.Message);
     }
 }

@@ -1,7 +1,8 @@
-﻿@using System.Security.Claims
+﻿@using Jina.Passion.Client.Base.Abstract
 
 @inherits LayoutComponentBase
 
+@* <Spin Spinning="SpinLayoutService.Loading" size="large"> *@
 <AntDesign.ProLayout.BasicLayout Logo="@("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")"
                                  MenuData="MenuData"
                                  Collapsed="collapsed"
@@ -28,9 +29,12 @@
         <FooterView Copyright="2024 sw.hong" Links="Links"></FooterView>
     </FooterRender>
 </AntDesign.ProLayout.BasicLayout>
+@* </Spin> *@
 @* <SettingDrawer @ref="settingDrawer" /> *@
 
 @inject HttpClient HttpClient;
+@inject ISpinService SpinService;
+
 @inject ReuseTabsService TabService;
  @code
  {

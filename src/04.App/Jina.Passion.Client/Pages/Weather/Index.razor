@@ -1,10 +1,7 @@
 ﻿@page "/weathers/index"
 
 @using Jina.Domain.Example
-@using Jina.Domain.SharedKernel
 @using Jina.Passion.Client.Base
-@using Jina.Passion.Client.Base.Abstract
-@using Jina.Passion.Client.Client.Base
 @using Jina.Passion.Client.Common.Consts
 @using Jina.Passion.Client.Layout.ViewModels
 @using Jina.Passion.Client.Pages.Weather.ViewModels
@@ -55,9 +52,9 @@
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
-    private TablePageComponent<WeatherForecastDto, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastDto>> tablePage;
+    private TablePageComponent<WeatherForecastRequest, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastRequest>> tablePage;
 
-    public record Pane(string Title, string Content, string Key, WeatherForecastDto WeatherForecastDto, bool Closable = true);
+    public record Pane(string Title, string Content, string Key, WeatherForecastRequest WeatherForecastDto, bool Closable = true);
 
     private int newTabIndex;
 

@@ -9,8 +9,11 @@ namespace Jina.Domain.Service.Infra
         {
             get
             {
+                if (_user.TimeZone.xIsEmpty())
+                    throw new Exception("Session not init or Timezone is empty");
+                
                 var utcDateTime = DateTime.UtcNow;
-                var tenantTimeZone = TimeZoneInfo.FindSystemTimeZoneById(_user.TimeZone.xValue("Korea Standard Time"));
+                var tenantTimeZone = TimeZoneInfo.FindSystemTimeZoneById(_user.TimeZone);
                 return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, tenantTimeZone);
             }
         }

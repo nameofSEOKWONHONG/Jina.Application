@@ -8,7 +8,7 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public sealed class SaveWeahterService : ServiceImplBase<SaveWeahterService, WeatherForecastDto, IResults<int>>
+	public sealed class SaveWeahterService : ServiceImplBase<SaveWeahterService, WeatherForecastRequest, IResults<int>>
     {
         public SaveWeahterService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {

@@ -32,7 +32,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
                 .WithUrl(uri)
                 .Build();
 
-            _hubConnection.On<string, string>("ReceiveMessage", async (user, message) =>
+            _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
             {
                 var encodedMsg = $"{user}: {message}";
                 var notiData = new NoticeIconData()
@@ -46,6 +46,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
                 };
                 // message process
                 this.AddFavoriteMenu(notiData);
+                return Task.CompletedTask;
             });
 
             await _hubConnection.StartAsync();

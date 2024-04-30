@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using eXtensionSharp;
 using Jina.Domain.Account.Token;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Common.Consts;
@@ -25,9 +25,9 @@ namespace Jina.Passion.Client.Services.Account
         {
         }
 
-        public async Task<IResultBase<TokenResult>> Login(TokenRequest request)
+        public async Task<IResults<TokenResult>> Login(TokenRequest request)
         {   
-            var result = await this.Client.ExecuteAsync<TokenRequest, IResultBase<TokenResult>>(HttpMethod.Post, 
+            var result = await this.Client.ExecuteAsync<TokenRequest, Results<TokenResult>>(HttpMethod.Post, 
                 "api/account/login", request);
             if (result.Succeeded)
             {
@@ -42,7 +42,7 @@ namespace Jina.Passion.Client.Services.Account
                 return result;
             }
 
-            return await ResultBase<TokenResult>.FailAsync(result.Messages);
+            return await Results<TokenResult>.FailAsync(result.Messages);
         }
         
         public async Task<string> TryRefreshToken()
@@ -76,7 +76,7 @@ namespace Jina.Passion.Client.Services.Account
 
             ((AuthenticationStateProviderImpl)AuthenticationStateProvider).MarkUserAsLoggedOut();
             this.Client.HttpClient.DefaultRequestHeaders.Authorization = null;
-            return await ResultBase.SuccessAsync();
+            return await Results.SuccessAsync();
         }
 
         private async Task<string> RefreshToken()
@@ -89,7 +89,7 @@ namespace Jina.Passion.Client.Services.Account
                 RefreshToken = refreshToken
             };
             
-            var result = await this.Client.ExecuteAsync<RefreshTokenRequest, IResultBase<TokenResult>>(HttpMethod.Post, 
+            var result = await this.Client.ExecuteAsync<RefreshTokenRequest, IResults<TokenResult>>(HttpMethod.Post, 
                 "api/account/refresh", request);
             
             if (!result.Succeeded)

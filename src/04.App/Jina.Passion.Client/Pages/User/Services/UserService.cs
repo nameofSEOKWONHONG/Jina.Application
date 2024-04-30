@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Jina.Domain.Account;
-using Jina.Domain.Example;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+﻿using Jina.Domain.Account;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Common.Infra;
 
@@ -49,9 +44,9 @@ namespace Jina.Passion.Client.Pages.Account.Services
             }, 20, 1, 10);
         }
 
-        public async Task<IResultBase<UserDto>> GetUserAsync(string userId)
+        public async Task<IResults<UserDto>> GetUserAsync(string userId)
         {
-            return await ResultBase<UserDto>.SuccessAsync(new UserDto()
+            return await Results<UserDto>.SuccessAsync(new UserDto()
             {
                 Id = Guid.NewGuid().ToString(),
                 Email = "test@gmail.com",
@@ -64,19 +59,19 @@ namespace Jina.Passion.Client.Pages.Account.Services
             });
         }
 
-        public async Task<IResultBase<string>> SaveAsync(UserDto user)
+        public async Task<IResults<string>> SaveAsync(UserDto user)
         {
-            return await ResultBase<string>.SuccessAsync(data: Guid.NewGuid().ToString("N"));
+            return await Results<string>.SuccessAsync(data: Guid.NewGuid().ToString("N"));
         }
 
-        public async Task<IResultBase<bool>> SaveAsync(IEnumerable<UserDto> users)
+        public async Task<IResults<bool>> SaveAsync(IEnumerable<UserDto> users)
         {
-            return await ResultBase<bool>.SuccessAsync();
+            return await Results<bool>.SuccessAsync();
         }
 
-        public async Task<IResultBase<bool>> RemoveAsync(IEnumerable<UserDto> users)
+        public async Task<IResults<bool>> RemoveAsync(IEnumerable<UserDto> users)
         {
-            return await ResultBase<bool>.SuccessAsync();
+            return await Results<bool>.SuccessAsync();
         }
     }
 }

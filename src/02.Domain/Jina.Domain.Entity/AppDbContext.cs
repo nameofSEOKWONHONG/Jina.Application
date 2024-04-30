@@ -77,7 +77,7 @@ public class AppDbContext : AuditableContext, IDbContext
         }
 
         #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
-
+        
         base.OnModelCreating(modelBuilder);
     }
 

@@ -21,7 +21,9 @@ namespace Jina.Passion.Client.Pages.User
         [Inject] public MessageService Message { get; set; }
 
         [Inject] public AuthenticationStateProviderImpl AuthenticationStateProviderImpl { get; set; }
-        [Inject] public ISessionStorageHandler BrowserStorageHandler { get; set; }        
+        [Inject] public ISessionStorageHandler BrowserStorageHandler { get; set; }   
+        
+        [Inject] public ISpinService SpinService { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -39,6 +41,7 @@ namespace Jina.Passion.Client.Pages.User
 
         public async Task HandleSubmit()
         {
+            this.SpinService.Show();
             var result = await AccountService.Login(_model);
             if (!result.Succeeded)
             {
@@ -46,6 +49,7 @@ namespace Jina.Passion.Client.Pages.User
                 await Message.Error(message);
                 return;
             }
+            this.SpinService.Close();
 
             //if (_model.RemamberMe == true)
             //{

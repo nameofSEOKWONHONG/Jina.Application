@@ -1,15 +1,11 @@
 ﻿@using AntDesign.TableModels
 @using Jina.Domain.Account
 @using Jina.Domain.Account.Request
-@using Jina.Domain.Example
-@using Jina.Domain.SharedKernel
-@using Jina.Domain.SharedKernel.Abstract
+@using Jina.Domain.Shared
+@using Jina.Domain.Shared.Abstract
 @using Jina.Passion.Client.Base
-@using Jina.Passion.Client.Base.Abstract
-@using Jina.Passion.Client.Client.Base
 @using Jina.Passion.Client.Layout.ViewModels
 @using Jina.Passion.Client.Pages.Account.ViewModels
-@using Jina.Passion.Client.Pages.Weather.ViewModels
 
 @inherits TablePageComponent<UserDto, UserListViewModel, DlgOptions<bool>, IEnumerable<UserDto>>
 
@@ -50,7 +46,6 @@
                OnRowClick="OnSelectChanged"
                @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
-               Loading="Loading"
                Title="User List"
                Size="TableSize.Small"
                OnChange="OnTableChange"
@@ -118,7 +113,7 @@
             PageSize = pageSize,
             SortName = sort,
             OrderBy = order,
-            SearchOption = new UserDto()
+            SearchData = new UserDto()
             {
                 Email = searchRequest.Email,
                 Name = searchRequest.Name,
@@ -136,7 +131,7 @@
         }
     }
 
-    public override async Task OnRemove(Func<Task<IResultBase<bool>>> callback)
+    public override async Task OnRemove(Func<Task<IResults<bool>>> callback)
     {
         callback = async () =>
         {
@@ -145,7 +140,7 @@
         await base.OnRemove(callback);
     }
 
-    public override async Task OnRemoveRange(Func<Task<IResultBase<bool>>> callback)
+    public override async Task OnRemoveRange(Func<Task<IResults<bool>>> callback)
     {
         callback = async () =>
         {

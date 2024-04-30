@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AntDesign;
+﻿using AntDesign;
 using AntDesign.TableModels;
 using eXtensionSharp;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared.Abstract;
+using Jina.Passion.Client.Base.Abstract;
 using Jina.Passion.Client.Client.Base;
 using Microsoft.AspNetCore.Components;
 
@@ -24,8 +22,7 @@ namespace Jina.Passion.Client.Base
         where TViewModel : ViewModelBase<TDto>
         where TOption : DlgOptionsBase
     {
-        [Inject]
-        public TViewModel ViewModel { get; set; }
+        [Inject] public TViewModel ViewModel { get; set; }
 
         protected Table<TDto> Table { get; set; }
 
@@ -43,8 +40,8 @@ namespace Jina.Passion.Client.Base
 #endif
             if (callback.xIsEmpty()) return;
 
-            this.
-                Loading = true;
+            //this.Loading = true;
+            this.SpinService.Show();
 
             await Task.Delay(this.Interval);
 
@@ -89,23 +86,27 @@ namespace Jina.Passion.Client.Base
 
             // this.Table.ResetData();
 
-            this.Loading = false;
+            //this.Loading = false;
+            this.SpinService.Close();
         }
 
-        public virtual async Task OnRemove(Func<Task<IResultBase<bool>>> callback)
+        public virtual async Task OnRemove(Func<Task<IResults<bool>>> callback)
         {
-            this.Loading = true;
+            this.SpinService.Show();
+            //this.Loading = true;
             var result = await callback();
             if (result.Succeeded)
             {
                 await this.ShowMessageAsync("삭제 되었습니다.", ENUM_MESSAGE_TYPE.Success);
             }
-            this.Loading = false;
+            //this.Loading = false;
+            this.SpinService.Close();
         }
 
         public virtual async Task OnAddItem(Func<Task<IResultBase>> callback)
         {
-            this.Loading = true;
+            this.SpinService.Show();
+            //this.Loading = true;
 
             var result = await callback();
             if (result.Succeeded)
@@ -113,17 +114,19 @@ namespace Jina.Passion.Client.Base
                 await this.ShowMessageAsync("저장 되었습니다.", ENUM_MESSAGE_TYPE.Success);
             }
 
-            this.Loading = false;
+            //this.Loading = false;
+            this.SpinService.Close();
         }
 
-        public virtual async Task OnRemoveRange(Func<Task<IResultBase<bool>>> callback)
+        public virtual async Task OnRemoveRange(Func<Task<IResults<bool>>> callback)
         {
             if (this.ViewModel.SelectedItems.xIsEmpty())
             {
                 await this.ShowMessageAsync("선택된 내역이 없습니다.", ENUM_MESSAGE_TYPE.Error);
                 return;
             }
-            this.Loading = true;
+            this.SpinService.Show();
+            //this.Loading = true;
 
             var result = await callback();
             if (result.Succeeded)
@@ -133,7 +136,8 @@ namespace Jina.Passion.Client.Base
 
             Table.UnselectAll();
 
-            this.Loading = false;
+            //this.Loading = false;
+            this.SpinService.Close();
         }
 
         public virtual void OnSelectChanged(RowData<TDto> item)

@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Domain.Account;
-using Jina.Domain.SharedKernel;
-using Jina.Domain.SharedKernel.Abstract;
+using Jina.Domain.Shared;
+using Jina.Domain.Shared.Abstract;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Pages.Account.Services;
 
@@ -42,22 +39,22 @@ namespace Jina.Passion.Client.Pages.Account.ViewModels
             return result;
         }
 
-        public async Task<IResultBase<UserDto>> GetUserAsync(string userId)
+        public async Task<IResults<UserDto>> GetUserAsync(string userId)
         {
             return await this._userService.GetUserAsync(userId);
         }
 
-        public async Task<IResultBase<string>> SaveAsync(UserDto user)
+        public async Task<IResults<string>> SaveAsync(UserDto user)
         {
             return await this._userService.SaveAsync(user);
         }
 
-        public async Task<IResultBase<bool>> SaveAsync(IEnumerable<UserDto> users)
+        public async Task<IResults<bool>> SaveAsync(IEnumerable<UserDto> users)
         {
             return await this._userService.SaveAsync(users);
         }
 
-        public async Task<IResultBase<bool>> RemoveAsync(string id)
+        public async Task<IResults<bool>> RemoveAsync(string id)
         {
             var exist = this.Items.First(x => x.Id == id);
             var result = await this._userService.RemoveAsync(new[] { exist });
@@ -68,7 +65,7 @@ namespace Jina.Passion.Client.Pages.Account.ViewModels
             return result;
         }
 
-        public async Task<IResultBase<bool>> RemoveRangeAsync()
+        public async Task<IResults<bool>> RemoveRangeAsync()
         {
             var result = await this._userService.RemoveAsync(this.SelectedItems);
             if (result.Succeeded)

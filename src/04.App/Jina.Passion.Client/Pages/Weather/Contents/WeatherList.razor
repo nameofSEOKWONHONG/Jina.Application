@@ -1,14 +1,10 @@
-﻿@using AntDesign.TableModels
-@using Jina.Domain.Example
-@using Jina.Domain.SharedKernel
-@using Jina.Domain.SharedKernel.Abstract
+﻿@using Jina.Domain.Example
 @using Jina.Passion.Client.Base
-@using Jina.Passion.Client.Base.Abstract
 @using Jina.Passion.Client.Client.Base
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<WeatherForecastDto, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastDto>>
+@inherits TablePageComponent<WeatherForecastRequest, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastRequest>>
 
 <PageContainer>
     <Content>
@@ -111,11 +107,10 @@
             @* </GridRow> *@
         </div>
         <Table @ref="Table"
-               TItem="WeatherForecastDto"
+               TItem="WeatherForecastRequest"
                DataSource="this.ViewModel.Items"
                @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
-               Loading="Loading"
                Title="Weather List"
                Size="TableSize.Small"
                PaginationPosition="@this.Paginateion.DefaultPagingPosition"
@@ -151,7 +146,7 @@
     [Parameter] 
     public EventCallback<string> OnChange { get; set; }
 
-    private WeatherForecastDto searchValue { get; set; } = new();
+    private WeatherForecastRequest searchValue { get; set; } = new();
     private IEnumerable<Control> searchControls = new List<Control>()
         {
             new Control() { Type = "Text", Label="Name", Key="Name", Value = "test"},
@@ -179,9 +174,7 @@
 
     protected override async Task OnLoadAsync()
     {
-        this.Loading = true;
         await ViewModel.GetWeathersAsync(null);
-        this.Loading = false;
     }
 
     private void Search()
@@ -204,7 +197,7 @@
         Console.WriteLine($"selected: ${exist.Value}");
     }
 
-    private void ItemClick(WeatherForecastDto item)
+    private void ItemClick(WeatherForecastRequest item)
     {
         ViewModel.SelectedItem = item;
         if (OnChange.HasDelegate)
@@ -250,9 +243,9 @@
         //             return Task.CompletedTask;
         //         },
         //     };
-        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecastDto>, WeatherForecastDto>(options, new DlgOptions<WeatherForecastDto>()
+        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecastRequest>, WeatherForecastRequest>(options, new DlgOptions<WeatherForecastRequest>()
         {
-            Param = new WeatherForecastDto()
+            Param = new WeatherForecastRequest()
         });
         confirmd.OnOpen = () => Task.CompletedTask;
 

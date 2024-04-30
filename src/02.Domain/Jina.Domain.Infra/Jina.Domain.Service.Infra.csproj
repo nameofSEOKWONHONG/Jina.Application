@@ -7,19 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EntityFramework.DynamicLinq" Version="1.3.10" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="8.3.10" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.10" />
+        <PackageReference Include="EntityFramework.DynamicLinq" Version="1.3.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="8.3.13" />
+        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.13" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
       <ProjectReference Include="..\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
       <ProjectReference Include="..\Jina.Domain\Jina.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Const\" />
     </ItemGroup>
 
 </Project>

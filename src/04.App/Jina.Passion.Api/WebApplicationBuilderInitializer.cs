@@ -26,7 +26,6 @@ using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net.Notification;
 using Jina.Validate;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using Results = Jina.Domain.Shared.Results;
 
 namespace Jina.Passion.Api

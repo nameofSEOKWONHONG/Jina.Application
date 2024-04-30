@@ -20,7 +20,7 @@ public class ExampleController : SessionController
     public async Task<IActionResult> Get(int id,
         [FromServices] IGetWeatherService service)
     {
-        IResults<WeatherForecastDto> result = null;
+        IResults<WeatherForecastRequest> result = null;
         this.Spl.Register(service)
             .AddFilter(() => id.xIsNotEmpty())
             .SetParameter(() => id)
@@ -31,12 +31,12 @@ public class ExampleController : SessionController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Gets([FromBody] PaginatedRequest<WeatherForecastDto> request,
-        [FromServices] IGetWeathersService service)
+    public async Task<IActionResult> GetList(PaginatedRequest<WeatherForecastRequest> request
+        , [FromServices] IGetWeathersService service)
     {
-        PaginatedResult<WeatherForecastDto> result = null;
+        PaginatedResult<WeatherForecastRequest> result = null;
         this.Spl.Register(service)
-            .AddFilter(() => request.xIsNotEmpty())
+            .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .OnExecuted(r => result = r);
         await this.Spl.ExecuteAsync();

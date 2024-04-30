@@ -97,7 +97,7 @@ public class AccountController : JControllerBase
             .SetValidator(() => validator)
             .OnValidated(m =>
             {
-                result = Results<TokenResult>.Fail(m.Errors.vToDictionary());
+                result = Results<TokenResult>.Fail(m.vToKeyValueErrors());
             })
             .OnExecuted(m =>
             {
@@ -131,7 +131,7 @@ public class AccountController : JControllerBase
             .SetValidator(() => validator)
             .OnValidated(m =>
             {
-                result = Results.Fail(m.Errors.vToDictionary());
+                result = Results.Fail(m.vToKeyValueErrors());
             })
             .OnExecuted(m => result = m);
 

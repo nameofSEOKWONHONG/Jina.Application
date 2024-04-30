@@ -34,3 +34,9 @@ public abstract class TenantBase : EntityCore
     [Comment("활성화 여부")]
     public bool IsActive { get; set; }
 }
+
+public abstract class NumberBase : TenantBase
+{
+    [Key, Column(Order = 1), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+}

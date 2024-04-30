@@ -1,15 +1,12 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Domain.Example;
-using Jina.Domain.SharedKernel;
+using Jina.Domain.Shared;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Pages.Weather.Services;
-using Microsoft.AspNetCore.Components;
 
 namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
-    public class WeatherViewModel : ViewModelBase<WeatherForecastDto>
+    public class WeatherViewModel : ViewModelBase<WeatherForecastRequest>
     {
         public WeatherService WeatherService { get; set; }
 
@@ -18,10 +15,10 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.WeatherService = service;
         }
 
-        public async Task<List<WeatherForecastDto>> GetWeathersAsync(PaginatedRequest<WeatherForecastDto> request)
+        public async Task<List<WeatherForecastRequest>> GetWeathersAsync(PaginatedRequest<WeatherForecastRequest> request)
         {
             //1, 10
-            this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastDto>());
+            this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastRequest>());
             return this.Items;
         }
 
@@ -30,7 +27,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.SelectedItem = await this.WeatherService.GetWeatherAsync(id);
         }
 
-        public async Task SaveAsync(WeatherForecastDto item)
+        public async Task SaveAsync(WeatherForecastRequest item)
         {
             if (item.Id <= 0)
             {

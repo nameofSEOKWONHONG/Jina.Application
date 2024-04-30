@@ -5,29 +5,28 @@ using Jina.Domain.Entity;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.Tls.Crypto;
 
 namespace Jina.Domain.Service.Infra
 {
 	public class SessionContext : ISessionContext
     {
-        public string TenantId { get; private set; }
+        public string TenantId { get; init; }
 
-        public ISessionCurrentUser CurrentUser { get; private set; }
+        public ISessionCurrentUser CurrentUser { get; init; }
 
-        public ISessionDateTime CurrentTime { get; private set; }
+        public ISessionDateTime CurrentTime { get; init; }
 
-        public ILocalizer Localizer { get; private set; }
+        public ILocalizer Localizer { get; init; }
         
-        public IDbContext DbContext { get; }
+        public IDbContext DbContext { get; init;}
         
-        public IDbProviderBase DbProvider { get; }
-        public IHttpContextAccessor HttpContextAccessor { get; }
-        public IHttpClientFactory HttpClientFactory { get; }
+        public IDbProviderBase DbProvider { get; init;}
+        public IHttpContextAccessor HttpContextAccessor { get; init;}
+        public IHttpClientFactory HttpClientFactory { get; init;}
         
-        public IBackgroundJobClient JobClient { get; }
+        public IBackgroundJobClient JobClient { get; init;}
 
-        public CancellationToken CancellationToken { get; }
+        public CancellationToken CancellationToken { get; init;}
 
         public bool IsDecrypt { get; set; }
 
@@ -51,9 +50,12 @@ namespace Jina.Domain.Service.Infra
             this.HttpClientFactory = factory;
             this.JobClient = jobClient;
 
-            if (this.CurrentUser.TenantId.xIsNotEmpty())
+            if (this.CurrentUser.xIsNotEmpty())
             {
-                this.TenantId = this.CurrentUser.TenantId;    
+                if (this.CurrentUser.TenantId.xIsNotEmpty())
+                {
+                    this.TenantId = this.CurrentUser.TenantId;    
+                }                
             }
         }
     }

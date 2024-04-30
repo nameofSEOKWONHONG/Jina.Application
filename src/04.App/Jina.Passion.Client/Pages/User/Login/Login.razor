@@ -4,6 +4,7 @@
 @layout UserLayout
 @attribute [AllowAnonymous]
 
+<Spin Spinning="SpinService.Loading">
 <div class="main__b__0">
     <div class="login">
         <Form Model="@_model" OnFinish="HandleSubmit">
@@ -25,7 +26,7 @@
                         </AntDesign.Input>
                     </FormItem>
                 </TabPane>
-@*                 <TabPane Key="2" Tab="Mobile Login">
+                @*                 <TabPane Key="2" Tab="Mobile Login">
                     <FormItem>
                         <AntDesign.Input Placeholder="Phone Number" Size="large" @bind-Value="@context.Mobile">
                             <Prefix><Icon Type="mobile" /></Prefix>
@@ -51,7 +52,7 @@
                 </a>
             </div>
             <Button Type="primary" HtmlType="submit" Class="submit" Size="large" Block>Log in </Button>
-@*             <div class="other">
+            @*             <div class="other">
                 Other Login Methods
                 <Icon Class="icon" Type="alipay-circle" />
                 <Icon Class="icon" Type="taobao-circle" />
@@ -61,3 +62,4 @@
         </Form>
     </div>
 </div>
+</Spin>

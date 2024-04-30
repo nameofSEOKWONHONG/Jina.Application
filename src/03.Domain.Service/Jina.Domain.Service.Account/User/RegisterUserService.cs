@@ -140,7 +140,7 @@ namespace Jina.Domain.Service.Account.User
                         Body = $"Please confirm your account by <a href='{verificationUri}'>clicking here</a>.",
                         Subject = "Confirm Registration"
                     };
-                    BackgroundJob.Enqueue<EmailJob>(m => m.ExecuteAsync(mailRequest));
+                    this.Ctx.JobClient.Enqueue<EmailJob>(m => m.ExecuteAsync(mailRequest));
                     
                     this.Result = await Results<string>.SuccessAsync(user.Id,
                         $"User {user.UserName} Registered. Please check your Mailbox to verify!");

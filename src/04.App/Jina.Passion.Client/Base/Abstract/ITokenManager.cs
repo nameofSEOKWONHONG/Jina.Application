@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using Jina.Domain.Account;
-using Jina.Domain.Account.Token;
-using Jina.Domain.SharedKernel.Abstract;
+﻿using Jina.Domain.Account.Token;
+using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Passion.Client.Base.Abstract
 {

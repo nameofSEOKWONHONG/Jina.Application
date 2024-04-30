@@ -3,11 +3,13 @@ using Jina.Base.Service;
 using Jina.Domain.Abstract.Net;
 using Jina.Domain.Net;
 using Jina.Domain.Service.Infra;
-using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Service.Net;
 
-public class EmailJob : JobBase
+/// <summary>
+/// 
+/// </summary>
+public class EmailJob : JobBase<EmailRequest>
 {
     private readonly IEmailService _emailService;
     
@@ -21,13 +23,12 @@ public class EmailJob : JobBase
         _emailService = emailService;
     }
 
-    public async Task ExecuteAsync(EmailRequest request)
+    public override async Task ExecuteAsync(EmailRequest request)
     {
-        IResults<bool> result;
         this.Spl.Register(_emailService)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
-            .OnExecuted(r => result = r);
+            .OnExecuted(r => _ = r);
 
         await this.Spl.ExecuteAsync();
     }
