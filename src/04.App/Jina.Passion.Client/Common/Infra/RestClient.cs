@@ -42,7 +42,7 @@ namespace Jina.Passion.Client.Common.Infra
         }
 
         public async Task PostFormDataAsync<TResponse>(string url, Action<MultipartFormDataContent> contentSetAction, Action<TResponse> handler)
-            where TResponse : IResultBase
+            where TResponse : IResults
         {
             if (contentSetAction.xIsEmpty())
                 ArgumentException.ThrowIfNullOrEmpty("contentSetAction");

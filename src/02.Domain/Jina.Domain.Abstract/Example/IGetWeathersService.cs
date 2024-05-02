@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Jina.Domain.Abstract.Example
 {
-    public interface IGetWeathersService : IServiceImplBase<PaginatedRequest<WeatherForecastRequest>, PaginatedResult<WeatherForecastRequest>>
+    public interface IGetWeathersService : IServiceImplBase<PaginatedRequest<WeatherForecastRequest>, PaginatedResult<WeatherForecastResult>>
         , IScopeService
     {
     }

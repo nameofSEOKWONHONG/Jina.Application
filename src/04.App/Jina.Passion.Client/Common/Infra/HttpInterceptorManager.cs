@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
 using AntDesign;
+using eXtensionSharp;
 using Jina.Passion.Client.Base.Abstract;
 using Toolbelt.Blazor;
 using ILogger = Serilog.ILogger;
@@ -41,7 +42,7 @@ namespace Jina.Passion.Client.Common.Infra
                 try
                 {
                     var token = await _accountService.TryRefreshToken();
-                    if (!string.IsNullOrEmpty(token))
+                    if (token.xIsNotEmpty())
                     {
                         await _messageService.Success("Refreshed Token.");
                         e.Request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

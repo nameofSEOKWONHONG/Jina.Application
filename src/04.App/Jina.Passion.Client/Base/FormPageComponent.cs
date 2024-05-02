@@ -12,7 +12,7 @@ namespace Jina.Passion.Client.Base
             await OnSearch(null);
         }
 
-        public virtual async Task OnSearch(Func<Task<IResultBase>> callback)
+        public virtual async Task OnSearch(Func<Task<IResults>> callback)
         {
             if (callback.xIsEmpty()) return;
 

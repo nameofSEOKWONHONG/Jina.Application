@@ -1,8 +1,8 @@
-﻿using eXtensionSharp;
+﻿using System.Data;
+using eXtensionSharp;
+using Jina.Base.Attributes;
 using Jina.Base.Service;
-using Jina.Base.Service.Abstract;
 using Jina.Domain.Abstract.Example;
-using Jina.Domain.Entity;
 using Jina.Domain.Example;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
@@ -11,7 +11,9 @@ using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-	public sealed class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, IResults<WeatherForecastRequest>>, IGetWeatherService, IScopeService
+    [TransactionOptions(IsolationLevel.ReadUncommitted)]
+	public sealed class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, IResults<WeatherForecastResult>>
+        , IGetWeatherService
     {
         public GetWeatherService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
         {
@@ -21,29 +23,26 @@ namespace Jina.Domain.Service.Example.Weather
         {
             if (this.Request.xIsEmpty())
             {
-                this.Result = await Results<WeatherForecastRequest>.FailAsync("request is empty");
+                this.Result = await Results<WeatherForecastResult>.FailAsync("request is empty");
                 return;
             }
         }
 
         public override async Task OnExecuteAsync()
         {
-            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.Ctx, m => m.Id == this.Request, m => new WeatherForecastRequest()
-            {
-                Id = m.Id,
-                City = m.City,
-                Date = m.Date,
-                TemperatureC = m.TemperatureC,
-                Summary = m.Summary
-            });
+            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.Ctx
+                , m => m.Id == this.Request
+                , m => new WeatherForecastResult()
+                {
+                    Id = m.Id,
+                    City = m.City,
+                    Date = m.Date,
+                    TemperatureC = m.TemperatureC,
+                    Summary = m.Summary,
+                    CreatedName = m.CreatedName
+                });
 
-            if (exist.xIsEmpty())
-            {
-                this.Result = await Results<WeatherForecastRequest>.FailAsync("result is empty");
-                return;
-            }
-
-            this.Result = await Results<WeatherForecastRequest>.SuccessAsync(exist);
+            this.Result = await Results<WeatherForecastResult>.SuccessAsync(exist);
         }
     }
 }

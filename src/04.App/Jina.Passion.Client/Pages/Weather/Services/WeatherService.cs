@@ -12,7 +12,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
         {
         }
 
-        public async Task<List<WeatherForecastRequest>> GetWeathersAsync(PaginatedRequest<WeatherForecastRequest> request)
+        public async Task<List<WeatherForecastResult>> GetWeathersAsync(PaginatedRequest<WeatherForecastResult> request)
         {
             // Simulate asynchronous loading to demonstrate a loading indicator
             await Task.Delay(500);
@@ -26,7 +26,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
             var startDate = DateTime.Now;
             var cities = new[] { "서울", "춘천", "원주", "인천", "경기" };
             var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-            var result = Enumerable.Range(1, 5).Select(index => new WeatherForecastRequest
+            var result = Enumerable.Range(1, 5).Select(index => new WeatherForecastResult
             {
                 Id = index,
                 City = cities[index - 1],
@@ -38,14 +38,14 @@ namespace Jina.Passion.Client.Pages.Weather.Services
             return result;
         }
 
-        public async Task<WeatherForecastRequest> GetWeatherAsync(int id)
+        public async Task<WeatherForecastResult> GetWeatherAsync(int id)
         {
             var url = $"api/example/get/{id}";
-            var result = await Client.ExecuteAsync<int, IResults<WeatherForecastRequest>>(HttpMethod.Get, url, 0);
+            var result = await Client.ExecuteAsync<int, IResults<WeatherForecastResult>>(HttpMethod.Get, url, 0);
             return result.Data;
         }
 
-        public async Task<IResultBase> SaveAsync(WeatherForecastRequest item)
+        public async Task<IResults> SaveAsync(WeatherForecastResult item)
         {
             //call api
 
@@ -53,7 +53,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
             return result;
         }
 
-        public async Task<IResultBase> RemoveAsync(WeatherForecastRequest item)
+        public async Task<IResults> RemoveAsync(WeatherForecastResult item)
         {
             //call api
 
@@ -61,7 +61,7 @@ namespace Jina.Passion.Client.Pages.Weather.Services
             return result;
         }
 
-        public async Task<IResultBase> RemoveRangeAsync(IEnumerable<WeatherForecastRequest> items)
+        public async Task<IResults> RemoveRangeAsync(IEnumerable<WeatherForecastResult> items)
         {
             //call api
 

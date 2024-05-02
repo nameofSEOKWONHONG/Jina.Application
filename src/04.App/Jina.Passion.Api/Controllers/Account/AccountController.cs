@@ -35,7 +35,6 @@ public class AccountController : JControllerBase
     /// <param name="service"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [TransactionOptions]
     [HttpPost]
     public async Task<IActionResult> Login(TokenRequest request
         , [FromServices] ILoginService service
@@ -116,7 +115,6 @@ public class AccountController : JControllerBase
     /// <param name="service"></param>
     /// <param name="validator"></param>
     /// <returns></returns>
-    [ApiExplorerSettings(IgnoreApi = true)]
     [AllowAnonymous]
     [TransactionOptions]
     [HttpPost]
@@ -124,7 +122,7 @@ public class AccountController : JControllerBase
         , [FromServices] ICreateTenantService service
         , [FromServices] CreateTenantRequestValidator validator)
     {
-        IResultBase result = null;
+        IResults result = null;
         this.Spl.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)

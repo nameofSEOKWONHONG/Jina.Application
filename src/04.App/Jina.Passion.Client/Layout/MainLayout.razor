@@ -1,6 +1,8 @@
 ﻿@using Jina.Passion.Client.Base.Abstract
+@using Jina.Passion.Client.Common.Infra
 
 @inherits LayoutComponentBase
+@implements IDisposable
 
 @* <Spin Spinning="SpinLayoutService.Loading" size="large"> *@
 <AntDesign.ProLayout.BasicLayout Logo="@("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")"
@@ -34,13 +36,18 @@
 
 @inject HttpClient HttpClient;
 @inject ISpinService SpinService;
-
+@inject IHttpInterceptorManager Intercepter;
 @inject ReuseTabsService TabService;
  @code
  {
     @* private SettingDrawer settingDrawer; *@
     bool collapsed;
     private MenuDataItem[] MenuData { get; set; } = { };
+
+    protected override void OnInitialized()
+    {
+        Intercepter.RegisterEvent();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,5 +87,11 @@
     void Reload()
     {
         @* TabService.ReloadPage(); *@
+    }
+    
+    public void Dispose()
+    {
+        HttpClient?.Dispose();
+        Intercepter?.DisposeEvent();
     }
 }

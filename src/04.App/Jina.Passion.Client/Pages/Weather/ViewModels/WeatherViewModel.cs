@@ -6,7 +6,7 @@ using Jina.Passion.Client.Pages.Weather.Services;
 
 namespace Jina.Passion.Client.Pages.Weather.ViewModels
 {
-    public class WeatherViewModel : ViewModelBase<WeatherForecastRequest>
+    public class WeatherViewModel : ViewModelBase<WeatherForecastResult>
     {
         public WeatherService WeatherService { get; set; }
 
@@ -15,10 +15,10 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.WeatherService = service;
         }
 
-        public async Task<List<WeatherForecastRequest>> GetWeathersAsync(PaginatedRequest<WeatherForecastRequest> request)
+        public async Task<List<WeatherForecastResult>> GetWeathersAsync(PaginatedRequest<WeatherForecastResult> request)
         {
             //1, 10
-            this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastRequest>());
+            this.Items = await this.WeatherService.GetWeathersAsync(new PaginatedRequest<WeatherForecastResult>());
             return this.Items;
         }
 
@@ -27,7 +27,7 @@ namespace Jina.Passion.Client.Pages.Weather.ViewModels
             this.SelectedItem = await this.WeatherService.GetWeatherAsync(id);
         }
 
-        public async Task SaveAsync(WeatherForecastRequest item)
+        public async Task SaveAsync(WeatherForecastResult item)
         {
             if (item.Id <= 0)
             {

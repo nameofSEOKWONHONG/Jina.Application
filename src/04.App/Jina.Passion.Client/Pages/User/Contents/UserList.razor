@@ -149,7 +149,7 @@
         await base.OnRemoveRange(callback);
     }
 
-    public override async Task OnAddItem(Func<Task<IResultBase>> callback)
+    public override async Task OnAddItem(Func<Task<IResults>> callback)
     {
         var options = new ModalOptions()
             {

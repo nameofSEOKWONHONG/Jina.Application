@@ -19,11 +19,13 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using System.Globalization;
 using System.Reflection;
+using Blazored.LocalStorage;
 using Jina.Domain.Shared.Consts;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using ISessionStorageService = Jina.Passion.Client.Base.Abstract.ISessionStorageService;
 
 namespace Jina.Passion.Client
 {
@@ -81,8 +83,8 @@ namespace Jina.Passion.Client
 
             #region [http 설정]
 
-            builder.Services.AddTransient<IHttpInterceptorManager, HttpInterceptorManager>();
-            builder.Services.AddTransient<AuthenticationHeaderHandler>();
+            builder.Services.AddScoped<IHttpInterceptorManager, HttpInterceptorManager>();
+            builder.Services.AddScoped<AuthenticationHeaderHandler>();
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>()
                 .CreateClient(ClientName)
                 .EnableIntercept(sp))
@@ -117,7 +119,20 @@ namespace Jina.Passion.Client
 
             #region [저장 장치 설정]
             builder.Services.AddBlazoredSessionStorageAsSingleton();
-            builder.Services.AddSingleton<ISessionStorageHandler, SessionStorageHandler>();
+            builder.Services.AddBlazoredLocalStorageAsSingleton();
+            builder.Services.AddSingleton<ISessionStorageService>(sp => 
+                #if DEBUG
+                    //로컬 개발은 Local storage로 함.
+                new LocalSessionStorageService(sp.GetRequiredService<ILocalStorageService>())
+                #else
+                    //운영은 Session storage로 함.
+                new SessionStorageService(sp.GetRequiredService<ISessionStorageService>())
+                #endif
+            );
+            builder.Services.AddSingleton<IStorageService>(sp =>
+                new LocalSessionStorageService(sp.GetRequiredService<ILocalStorageService>()));
+            
+            builder.Services.AddSingleton<ISessionStorageService, LocalSessionStorageService>();
             #endregion
 
             builder.Services.AddSingleton<WeatherService>();
@@ -156,7 +171,7 @@ namespace Jina.Passion.Client
 
         private static async Task InitializeCultureAsync(WebAssemblyHost host)
         {
-            var handler = host.Services.GetRequiredService<ISessionStorageHandler>();
+            var handler = host.Services.GetRequiredService<ISessionStorageService>();
             var result = await handler.GetAsync(ApplicationConsts.Client.CULTURE_NAME);
 
             CultureInfo initCulture;

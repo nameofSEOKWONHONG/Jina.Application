@@ -7,5 +7,5 @@ public interface IAccountService
 {
     Task<IResults<TokenResult>> Login(TokenRequest request);
     Task<string> TryRefreshToken();
-    Task<IResultBase> Logout();
+    Task<IResults> Logout();
 }

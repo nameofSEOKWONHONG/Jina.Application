@@ -8,11 +8,11 @@ namespace Jina.Passion.Client.Common.Infra
     public class AuthenticationHeaderHandler : DelegatingHandler
     {
         private readonly AuthenticationStateProviderImpl _authenticationStateProviderImpl;
-        private readonly ISessionStorageHandler _sessionStorageHandler;
+        private readonly ISessionStorageService _sessionStorageService;
 
-        public AuthenticationHeaderHandler(ISessionStorageHandler sessionStorageHandler, AuthenticationStateProviderImpl authenticationStateProviderImpl)
+        public AuthenticationHeaderHandler(ISessionStorageService sessionStorageService, AuthenticationStateProviderImpl authenticationStateProviderImpl)
         {
-            this._sessionStorageHandler = sessionStorageHandler;
+            this._sessionStorageService = sessionStorageService;
             this._authenticationStateProviderImpl = authenticationStateProviderImpl;
         }
 
@@ -22,7 +22,7 @@ namespace Jina.Passion.Client.Common.Infra
         {
             if (request.Headers.Authorization?.Scheme != "Bearer")
             {
-                var savedToken = await this._sessionStorageHandler.GetAsync(StorageConsts.Local.AuthToken);
+                var savedToken = await this._sessionStorageService.GetAsync(StorageConsts.Local.AuthToken);
 
                 if (savedToken.xIsNotEmpty())
                 {

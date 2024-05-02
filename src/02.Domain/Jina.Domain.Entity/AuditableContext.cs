@@ -1,4 +1,5 @@
-﻿using Jina.Domain.Account;
+﻿using eXtensionSharp;
+using Jina.Domain.Account;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Entity.Base;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,14 @@ public abstract class AuditableContext : IdentityDbContext<User, Role, string, I
 {
     protected AuditableContext(DbContextOptions options) : base(options)
     {
+    }
+    
+    public virtual async Task<int> SaveChangesAsync(string tenantId, string userId = null, CancellationToken cancellationToken = new())
+    {
+        var auditEntries = OnBeforeSaveChanges(tenantId, userId);
+        var result = await base.SaveChangesAsync(cancellationToken);
+        await OnAfterSaveChanges(auditEntries, cancellationToken);
+        return result;
     }
     
     protected override void OnModelCreating(ModelBuilder builder)
@@ -81,7 +90,7 @@ public abstract class AuditableContext : IdentityDbContext<User, Role, string, I
                 }
             }
         }
-        foreach (var auditEntry in auditEntries.Where(_ => !_.HasTemporaryProperties))
+        foreach (var auditEntry in auditEntries.Where(_ => !_.HasTemporaryProperties && _.AuditType.xIsNotEmpty()))
         {
             AuditTrails.Add(auditEntry.ToAudit());
         }

@@ -2,7 +2,7 @@ using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Shared;
 
-public class Results : IResultBase
+public class Results : IResults
 {
     public List<string> Messages { get; set; } = new List<string>();
 
@@ -15,62 +15,62 @@ public class Results : IResultBase
 
     public bool Succeeded { get; set; }
 
-    public static IResultBase Fail()
+    public static IResults Fail()
     {
         return new Results { Succeeded = false };
     }
 
-    public static IResultBase Fail(string message)
+    public static IResults Fail(string message)
     {
         return new Results { Succeeded = false, Messages = [message] };
     }
 
-    public static IResultBase Fail(List<string> messages)
+    public static IResults Fail(List<string> messages)
     {
         return new Results { Succeeded = false, Messages = messages };
     }
 
-    public static IResultBase Fail(Dictionary<string, string> errors)
+    public static IResults Fail(Dictionary<string, string> errors)
     {
         return new Results() { Succeeded = false, ValidateErrors = errors };
     }
 
-    public static Task<IResultBase> FailAsync()
+    public static Task<IResults> FailAsync()
     {
         return Task.FromResult(Fail());
     }
 
-    public static Task<IResultBase> FailAsync(string message)
+    public static Task<IResults> FailAsync(string message)
     {
         return Task.FromResult(Fail(message));
     }
 
-    public static Task<IResultBase> FailAsync(List<string> messages)
+    public static Task<IResults> FailAsync(List<string> messages)
     {
         return Task.FromResult(Fail(messages));
     }
 
-    public static Task<IResultBase> FailAsync(Dictionary<string, string> errors)
+    public static Task<IResults> FailAsync(Dictionary<string, string> errors)
     {
         return Task.FromResult(Fail(errors));
     }
 
-    public static IResultBase Success()
+    public static IResults Success()
     {
         return new Results { Succeeded = true, Messages = ["Success."] };
     }
 
-    public static IResultBase Success(string message)
+    public static IResults Success(string message)
     {
         return new Results { Succeeded = true, Messages = ["Success.", message] };
     }
 
-    public static Task<IResultBase> SuccessAsync()
+    public static Task<IResults> SuccessAsync()
     {
         return Task.FromResult(Success());
     }
 
-    public static Task<IResultBase> SuccessAsync(string message)
+    public static Task<IResults> SuccessAsync(string message)
     {
         return Task.FromResult(Success(message));
     }

@@ -11,6 +11,14 @@ namespace Jina.Domain.Service.Infra
 {
 	public static class EntityExtensions
     {
+        public static IQueryable<TEntity> vAsNoTrackingQueryable<TEntity>(this DbSet<TEntity> dbSet, ISessionContext ctx)
+            where TEntity : TenantBase
+        {
+            return dbSet
+                .AsNoTracking()
+                .Where(m => m.TenantId == ctx.TenantId);
+        }
+        
         public static async Task<T> vFirstAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
              where T : TenantBase
         {
@@ -51,7 +59,7 @@ namespace Jina.Domain.Service.Infra
             {
                 if (result.xIsNotEmpty())
                 {
-                    result.CreatedName = result.CreatedName.vToAESEncrypt();
+                    result.CreatedName = result.CreatedName.vToAESDecrypt();
                     result.LastModifiedName = result.LastModifiedName.vToAESDecrypt();
                 }
             }

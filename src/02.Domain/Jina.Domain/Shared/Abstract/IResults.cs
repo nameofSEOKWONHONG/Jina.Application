@@ -1,6 +1,6 @@
 namespace Jina.Domain.Shared.Abstract;
 
-public interface IResultBase
+public interface IResults
 {
     List<string> Messages { get; set; }
     
@@ -9,7 +9,7 @@ public interface IResultBase
     bool Succeeded { get; set; }
 }
 
-public interface IResults<out T> : IResultBase
+public interface IResults<out T> : IResults
 {
     T Data { get; }
 }

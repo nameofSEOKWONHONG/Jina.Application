@@ -8,7 +8,7 @@ namespace Jina.Passion.Client.Base
     public abstract class ServiceBase
     {
         protected readonly IRestClient Client;
-        protected readonly ISessionStorageHandler SessionStorageHandler;
+        protected readonly ISessionStorageService SessionStorageService;
         protected readonly AuthenticationStateProvider AuthenticationStateProvider;
         //TODO : localstorage 추가
 
@@ -21,13 +21,13 @@ namespace Jina.Passion.Client.Base
             Client = client;
         }
 
-        protected ServiceBase(IRestClient client, ISessionStorageHandler sessionStorageHandler) : this(client)
+        protected ServiceBase(IRestClient client, ISessionStorageService sessionStorageService) : this(client)
         {
-            SessionStorageHandler = sessionStorageHandler;
+            SessionStorageService = sessionStorageService;
         }
 
-        protected ServiceBase(IRestClient client, ISessionStorageHandler sessionStorageHandler,
-            AuthenticationStateProvider authenticationStateProvider) : this(client, sessionStorageHandler)
+        protected ServiceBase(IRestClient client, ISessionStorageService sessionStorageService,
+            AuthenticationStateProvider authenticationStateProvider) : this(client, sessionStorageService)
         {
             AuthenticationStateProvider = authenticationStateProvider;
         }

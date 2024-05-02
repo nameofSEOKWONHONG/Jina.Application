@@ -1,6 +1,7 @@
 ﻿@page "/example/counter"
 
 @using Jina.Passion.Client.Client.Base
+@using Jina.Passion.Client.Services.Account
 
 @inherits PageComponentBase
 @attribute [ReuseTabsPage(Title = "Counter")]
@@ -28,14 +29,18 @@
 </PageContainer>
 
 @code {
+    [Inject] public IAccountService AccountService { get; set; }
+    
     private int _currentCount = 0;
     protected override void OnInitialized()
     {
         base.OnInitialized();
     }
 
-    private void IncrementCount()
+    private async Task IncrementCount()
     {
         _currentCount++;
+
+        await AccountService.TryRefreshToken();
     }
 }

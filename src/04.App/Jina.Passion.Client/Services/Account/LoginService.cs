@@ -17,11 +17,11 @@ namespace Jina.Passion.Client.Services.Account
         /// 계정 서비스
         /// </summary>
         /// <param name="client"></param>
-        /// <param name="sessionStorageHandler"></param>
+        /// <param name="sessionStorageService"></param>
         /// <param name="authenticationStateProvider"></param>
         public AccountService(IRestClient client, 
-            ISessionStorageHandler sessionStorageHandler, 
-            AuthenticationStateProvider authenticationStateProvider) : base(client, sessionStorageHandler, authenticationStateProvider)
+            ISessionStorageService sessionStorageService, 
+            AuthenticationStateProvider authenticationStateProvider) : base(client, sessionStorageService, authenticationStateProvider)
         {
         }
 
@@ -35,8 +35,8 @@ namespace Jina.Passion.Client.Services.Account
                 var refreshToken = result.Data.RefreshToken;
                 var userImageURL = result.Data.UserImageURL;
 
-                await this.SessionStorageHandler.SetAsync(StorageConsts.Local.AuthToken, token);
-                await this.SessionStorageHandler.SetAsync(StorageConsts.Local.RefreshToken, refreshToken);
+                await this.SessionStorageService.SetAsync(StorageConsts.Local.AuthToken, token);
+                await this.SessionStorageService.SetAsync(StorageConsts.Local.RefreshToken, refreshToken);
                 await ((AuthenticationStateProviderImpl)AuthenticationStateProvider).StateChangedAsync();
 
                 return result;
@@ -48,7 +48,7 @@ namespace Jina.Passion.Client.Services.Account
         public async Task<string> TryRefreshToken()
         {
             //check if token exists
-            var availableToken = await SessionStorageHandler.GetAsync(StorageConsts.Local.RefreshToken);
+            var availableToken = await SessionStorageService.GetAsync(StorageConsts.Local.RefreshToken);
             if (availableToken.xIsEmpty()) return string.Empty;
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -61,7 +61,7 @@ namespace Jina.Passion.Client.Services.Account
             return string.Empty;
         }
 
-        public async Task<IResultBase> Logout()
+        public async Task<IResults> Logout()
         {
             var removeTargets = new[]
             {
@@ -72,7 +72,7 @@ namespace Jina.Passion.Client.Services.Account
                 // StorageConsts.Local.SelectedSubMenu
             };
 
-            await SessionStorageHandler.RemoveAllAsync(removeTargets);
+            await SessionStorageService.RemoveAllAsync(removeTargets);
 
             ((AuthenticationStateProviderImpl)AuthenticationStateProvider).MarkUserAsLoggedOut();
             this.Client.HttpClient.DefaultRequestHeaders.Authorization = null;
@@ -81,15 +81,15 @@ namespace Jina.Passion.Client.Services.Account
 
         private async Task<string> RefreshToken()
         {
-            var token = await SessionStorageHandler.GetAsync(StorageConsts.Local.AuthToken);
-            var refreshToken = await SessionStorageHandler.GetAsync(StorageConsts.Local.RefreshToken);
+            var token = await SessionStorageService.GetAsync(StorageConsts.Local.AuthToken);
+            var refreshToken = await SessionStorageService.GetAsync(StorageConsts.Local.RefreshToken);
             var request = new RefreshTokenRequest()
             {
                 Token = token,
                 RefreshToken = refreshToken
             };
             
-            var result = await this.Client.ExecuteAsync<RefreshTokenRequest, IResults<TokenResult>>(HttpMethod.Post, 
+            var result = await this.Client.ExecuteAsync<RefreshTokenRequest, Results<TokenResult>>(HttpMethod.Post, 
                 "api/account/refresh", request);
             
             if (!result.Succeeded)
@@ -103,8 +103,8 @@ namespace Jina.Passion.Client.Services.Account
                 refreshToken = result.Data.RefreshToken;
                 //var userImageURL = result.Data.UserImageURL;
 
-                await SessionStorageHandler.SetAsync(StorageConsts.Local.AuthToken, token);
-                await SessionStorageHandler.SetAsync(StorageConsts.Local.RefreshToken, refreshToken);
+                await SessionStorageService.SetAsync(StorageConsts.Local.AuthToken, token);
+                await SessionStorageService.SetAsync(StorageConsts.Local.RefreshToken, refreshToken);
                 this.Client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 return token;

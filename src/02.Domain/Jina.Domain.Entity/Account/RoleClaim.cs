@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Jina.Domain.Entity.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Account;
 
-public class RoleClaim : IdentityRoleClaim<string>
+public class RoleClaim : IdentityRoleClaim<string>, IAuditableEntity
 {
     [MaxLength(5)]
     public string TenantId { get; set; }

@@ -103,7 +103,7 @@ namespace Jina.Passion.Client.Base
             this.SpinService.Close();
         }
 
-        public virtual async Task OnAddItem(Func<Task<IResultBase>> callback)
+        public virtual async Task OnAddItem(Func<Task<IResults>> callback)
         {
             this.SpinService.Show();
             //this.Loading = true;

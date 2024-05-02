@@ -21,7 +21,7 @@ namespace Jina.Passion.Client.Pages.User
         [Inject] public MessageService Message { get; set; }
 
         [Inject] public AuthenticationStateProviderImpl AuthenticationStateProviderImpl { get; set; }
-        [Inject] public ISessionStorageHandler BrowserStorageHandler { get; set; }   
+        [Inject] public ISessionStorageService BrowserSessionStorageService { get; set; }   
         
         [Inject] public ISpinService SpinService { get; set; }
 
@@ -33,9 +33,9 @@ namespace Jina.Passion.Client.Pages.User
                 NavigationManager.NavigateTo("/");
             }
 
-            _model.RemamberMe = await BrowserStorageHandler.GetAsync<bool>(nameof(TokenRequest.RemamberMe));
-            _model.TenantId = await BrowserStorageHandler.GetAsync(nameof(TokenRequest.TenantId));
-            _model.Email = await BrowserStorageHandler.GetAsync(nameof(TokenRequest.Email));
+            _model.RemamberMe = await BrowserSessionStorageService.GetAsync<bool>(nameof(TokenRequest.RemamberMe));
+            _model.TenantId = await BrowserSessionStorageService.GetAsync(nameof(TokenRequest.TenantId));
+            _model.Email = await BrowserSessionStorageService.GetAsync(nameof(TokenRequest.Email));
         }
 
 

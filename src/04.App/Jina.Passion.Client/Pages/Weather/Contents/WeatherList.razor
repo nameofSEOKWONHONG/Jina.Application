@@ -4,7 +4,7 @@
 @using Jina.Passion.Client.Pages.Weather.ViewModels
 @using eXtensionSharp
 
-@inherits TablePageComponent<WeatherForecastRequest, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastRequest>>
+@inherits TablePageComponent<WeatherForecastResult, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastResult>>
 
 <PageContainer>
     <Content>
@@ -107,7 +107,7 @@
             @* </GridRow> *@
         </div>
         <Table @ref="Table"
-               TItem="WeatherForecastRequest"
+               TItem="WeatherForecastResult"
                DataSource="this.ViewModel.Items"
                @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
@@ -146,7 +146,7 @@
     [Parameter] 
     public EventCallback<string> OnChange { get; set; }
 
-    private WeatherForecastRequest searchValue { get; set; } = new();
+    private WeatherForecastResult searchValue { get; set; } = new();
     private IEnumerable<Control> searchControls = new List<Control>()
         {
             new Control() { Type = "Text", Label="Name", Key="Name", Value = "test"},
@@ -197,7 +197,7 @@
         Console.WriteLine($"selected: ${exist.Value}");
     }
 
-    private void ItemClick(WeatherForecastRequest item)
+    private void ItemClick(WeatherForecastResult item)
     {
         ViewModel.SelectedItem = item;
         if (OnChange.HasDelegate)
@@ -243,9 +243,9 @@
         //             return Task.CompletedTask;
         //         },
         //     };
-        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecastRequest>, WeatherForecastRequest>(options, new DlgOptions<WeatherForecastRequest>()
+        var confirmd = await this.ModalService.CreateModalAsync<Weather, DlgOptions<WeatherForecastResult>, WeatherForecastResult>(options, new DlgOptions<WeatherForecastResult>()
         {
-            Param = new WeatherForecastRequest()
+            Param = new WeatherForecastResult()
         });
         confirmd.OnOpen = () => Task.CompletedTask;
 

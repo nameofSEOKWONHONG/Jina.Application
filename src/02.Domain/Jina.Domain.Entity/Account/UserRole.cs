@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Jina.Domain.Entity.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Account;
 
-public class UserRole : IdentityUserRole<string>
+public class UserRole : IdentityUserRole<string>, IAuditableEntity
 {
     [MaxLength(5)]
     public string TenantId { get; set; }
@@ -19,7 +20,7 @@ public class UserRole : IdentityUserRole<string>
     public string CreatedBy { get; set; }
 
     [Required, Comment("생성일")]
-    public DateTime? CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     [MaxLength(140), Comment("수정자")]
     public string LastModifiedBy { get; set; }

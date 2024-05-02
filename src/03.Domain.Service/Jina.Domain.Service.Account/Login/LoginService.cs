@@ -132,7 +132,7 @@ namespace Jina.Domain.Service.Account
 			var claims = new List<Claim>
 			{
 				new(ApplicationClaimTypes.TenantId, user.TenantId),
-				//new(ApplicationClaimTypes.TimeZone, tenant.TimeZone),
+				new(ApplicationClaimTypes.TimeZone, tenant.TimeZone),
 				new(ClaimTypes.NameIdentifier, user.Id),
 				new(ClaimTypes.Email, user.Email),
 				new(ClaimTypes.Name, user.UserName),

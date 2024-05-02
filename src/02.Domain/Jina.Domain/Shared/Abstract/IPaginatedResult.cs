@@ -1,6 +1,6 @@
 ﻿namespace Jina.Domain.Shared.Abstract;
 
-public interface IPaginatedResult : IResultBase
+public interface IPaginatedResult : IResults
 {
     int PageNo { get; }
 

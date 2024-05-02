@@ -4,21 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Base;
 
-public abstract class EntityCore
+public abstract class EntityCore : IAuditableEntity
 {
     [Required, MaxLength(140), Comment("생성자")]
     public string CreatedBy { get; set; }
 
-    [MaxLength(30)]
+    [MaxLength(1000)]
     public string CreatedName { get; set; }
 
     [Required, Comment("생성일")]
-    public DateTime? CreatedOn { get; set; }
+    public DateTime CreatedOn { get; set; }
 
     [MaxLength(140), Comment("수정자")]
     public string LastModifiedBy { get; set; }
 
-    [MaxLength(30)]
+    [MaxLength(1000)]
     public string LastModifiedName { get; set; }
 
     [Comment("수정일")]

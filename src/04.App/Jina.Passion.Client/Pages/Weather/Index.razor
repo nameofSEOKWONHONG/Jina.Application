@@ -52,9 +52,9 @@
 
     private Tabs tabs;
     string activeKey { get; set; } = "1";
-    private TablePageComponent<WeatherForecastRequest, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastRequest>> tablePage;
+    private TablePageComponent<WeatherForecastResult, WeatherViewModel, DlgOptions<bool>, IEnumerable<WeatherForecastResult>> tablePage;
 
-    public record Pane(string Title, string Content, string Key, WeatherForecastRequest WeatherForecastDto, bool Closable = true);
+    public record Pane(string Title, string Content, string Key, WeatherForecastResult WeatherForecastDto, bool Closable = true);
 
     private int newTabIndex;
 

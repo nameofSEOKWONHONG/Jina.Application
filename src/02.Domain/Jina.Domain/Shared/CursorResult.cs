@@ -2,7 +2,7 @@
 
 namespace Jina.Domain.Shared;
 
-public interface ICursorResult : IResultBase
+public interface ICursorResult : IResults
 {
     int Cursor { get; }
 

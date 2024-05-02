@@ -13,18 +13,18 @@ namespace Jina.Passion.Client.Common.Infra
         public ClaimsPrincipal AuthenticationStateUser { get; set; }
         public string Token { get; private set; }
 
-        private readonly ISessionStorageHandler _storageHandler;
+        private readonly ISessionStorageService _sessionStorageService;
 
-        public AuthenticationStateProviderImpl(ISessionStorageHandler stateHandler)
+        public AuthenticationStateProviderImpl(ISessionStorageService stateService)
         {
-            _storageHandler = stateHandler;
+            _sessionStorageService = stateService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                Token = await _storageHandler.GetAsync(StorageConsts.Local.AuthToken);
+                Token = await _sessionStorageService.GetAsync(StorageConsts.Local.AuthToken);
                 if (Token.xIsEmpty())
                 {
                     return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));

@@ -5,6 +5,6 @@ namespace Jina.Passion.Client.Base.Abstract
 {
     public interface ITokenManager
     {
-        Task<IResultBase> Login(TokenRequest model);
+        Task<IResults> Login(TokenRequest model);
     }
 }

@@ -1,9 +1,11 @@
 using Hangfire;
 using Jina.Domain.Entity;
+using Jina.Domain.Service.Infra;
 using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net.Notification;
 using Jina.Passion.Api;
 using Jina.Passion.Api.Hubs;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +29,8 @@ if (app.Environment.IsDevelopment())
 			var context = services.GetRequiredService<AppDbContext>();
 
 			// 데이터베이스가 없으면 데이터베이스를 생성
-			context.Database.EnsureCreated();
+			//context.Database.EnsureCreated();
+			//context.Database.Migrate();
 
 			Console.WriteLine("Database created successfully.");
 		}

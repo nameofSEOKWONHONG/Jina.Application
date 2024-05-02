@@ -1,13 +1,15 @@
-﻿using Blazored.SessionStorage;
-using eXtensionSharp;
-using Jina.Passion.Client.Base.Abstract;
+﻿using eXtensionSharp;
+using ISessionStorageService = Jina.Passion.Client.Base.Abstract.ISessionStorageService;
 
 namespace Jina.Passion.Client.Base
 {
-    public class SessionStorageHandler : ISessionStorageHandler
+    /// <summary>
+    /// 세션 저장 서비스
+    /// </summary>
+    public class SessionStorageService : ISessionStorageService
     {
-        private readonly ISessionStorageService _service;
-        public SessionStorageHandler(ISessionStorageService service)
+        private readonly Blazored.SessionStorage.ISessionStorageService _service;
+        public SessionStorageService(Blazored.SessionStorage.ISessionStorageService service)
         {
             _service = service;
         }

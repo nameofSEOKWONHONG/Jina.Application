@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using SmartEnum.EFCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using eXtensionSharp;
 using Jina.Database.Abstract;
-using Jina.Domain.Entity.Language;
+using Jina.Domain.Entity;
+using Jina.Domain.Entity.Base;
 
-namespace Jina.Domain.Entity;
+namespace Jina.Domain.Service.Infra;
 
 public class AppDbContext : AuditableContext, IDbContext
 {
@@ -79,6 +81,55 @@ public class AppDbContext : AuditableContext, IDbContext
         #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
         
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        if (_user.TenantId.xIsEmpty())
+            return await base.SaveChangesAsync(cancellationToken);
+        
+        var audit = ChangeTracker.Entries<IAuditableEntity>().FirstOrDefault();
+        if (audit.xIsNotEmpty())
+        {
+            foreach (var entry in ChangeTracker.Entries<IAuditableEntity>().ToList())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedOn = _date.Now;
+                        entry.Entity.CreatedBy = _user.UserId;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedOn = _date.Now;
+                        entry.Entity.LastModifiedBy = _user.UserId;
+                        break;
+                }
+            }
+        }
+        
+        foreach (var entry in ChangeTracker.Entries<TenantBase>().ToList())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.TenantId = _user.TenantId;
+                    entry.Entity.CreatedBy = _user.UserId;
+                    entry.Entity.CreatedName = _user.UserName.vToAESEncrypt();
+                    entry.Entity.CreatedOn = _date.Now;
+                    entry.Entity.IsActive = true;
+                    break;
+
+                case EntityState.Modified:
+                    entry.Entity.TenantId = _user.TenantId;
+                    entry.Entity.LastModifiedBy = _user.UserId;
+                    entry.Entity.LastModifiedName = _user.UserName.vToAESEncrypt();
+                    entry.Entity.LastModifiedOn = _date.Now;
+                    break;
+            }
+        }
+        
+        return await base.SaveChangesAsync(_user.TenantId, _user.UserId, cancellationToken);
     }
 
     public DbSet<Tenant> Tenants { get; set; }
