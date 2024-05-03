@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,21 +7,43 @@ namespace Jina.Domain.Entity.Account;
 [Table("Tenants", Schema = "dbo")]
 public sealed class Tenant
 {
-    [Key, Column(Order = 0), MaxLength(5), Comment("테넌트 ID")]
     public string TenantId { get; set; }
     
-    [Column(Order = 1), Comment("테넌트 명")]
-    [MaxLength(400)]
     public string Name { get; set; }
     
-    [Column(Order = 2), Comment("이동 주소 URL")]
-    [MaxLength(1000)]
     public string RedirectUrl { get; set; }
     
     /// <summary>
     /// ex: "Korea Standard Time"
     /// </summary>
-    [Column(Order = 3), Comment("시스템 시간")]
-    [MaxLength(60)]
     public string TimeZone { get; set; }
+}
+
+public class TenantModelBuilder : IModelBuilder
+{
+    public void Build(ModelBuilder builder)
+    {
+        builder.Entity<Tenant>()
+            .HasKey(m => m.TenantId);
+        builder.Entity<Tenant>()
+            .Property(m => m.TenantId)
+            .HasMaxLength(5)
+            .HasColumnOrder(0)
+            .HasComment("테넌트ID");
+        builder.Entity<Tenant>()
+            .Property(m => m.Name)
+            .HasMaxLength(400)
+            .HasColumnOrder(1)
+            .HasComment("테넌트명");
+        builder.Entity<Tenant>()
+            .Property(m => m.RedirectUrl)
+            .HasMaxLength(1000)
+            .HasColumnOrder(2)
+            .HasComment("리다이렉트 url");
+        builder.Entity<Tenant>()
+            .Property(m => m.TimeZone)
+            .HasMaxLength(60)
+            .HasColumnOrder(3)
+            .HasComment("시간대");
+    }
 }

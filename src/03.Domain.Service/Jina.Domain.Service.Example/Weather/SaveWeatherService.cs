@@ -50,14 +50,13 @@ namespace Jina.Domain.Service.Example.Weather
 
         public override async Task OnExecuteAsync()
         {
-            var exist = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Ctx)
-                .vFirstAsync(this.Ctx, m => m.Id == this.Request.Id);
+            var exist = await this.Db.WeatherForecasts
+                .FirstOrDefaultAsync(m => m.Id == this.Request.Id);
             
             if (exist.xIsEmpty())
             {
                 var converted= this.Request.Adapt<WeatherForecast>();
-                converted.TenantId = this.Ctx.TenantId;
-                await this.Db.WeatherForecasts.AddAsync(converted);
+                this.Db.WeatherForecasts.Add(converted);
                 await this.Db.SaveChangesAsync();
             }
             else

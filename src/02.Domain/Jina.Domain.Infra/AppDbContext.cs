@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using SmartEnum.EFCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq.Expressions;
+using System.Reflection;
 using eXtensionSharp;
 using Jina.Database.Abstract;
 using Jina.Domain.Entity;
@@ -16,19 +18,17 @@ namespace Jina.Domain.Service.Infra;
 
 public class AppDbContext : AuditableContext, IDbContext
 {
-    private readonly ISessionCurrentUser _user;
-    private readonly ISessionDateTime _date;
-
     public AppDbContext(DbContextOptions<AppDbContext> options
      , ISessionCurrentUser user
      , ISessionDateTime date
-    ) : base(options)
+    ) : base(options, user, date)
     {
-        _user = user;
-        _date = date;
+        
     }
 
-    public AppDbContext(string connection) : base(CreateOption(connection))
+    public AppDbContext(string connection 
+        , ISessionCurrentUser user
+        , ISessionDateTime date) : base(CreateOption(connection), user, date)
     {
     }
 
@@ -39,6 +39,8 @@ public class AppDbContext : AuditableContext, IDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         #region [setting conversion smartenum]
 
         modelBuilder.ConfigureSmartEnum();
@@ -79,13 +81,53 @@ public class AppDbContext : AuditableContext, IDbContext
         }
 
         #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
-        
-        base.OnModelCreating(modelBuilder);
+
+        #region [tenant setting]
+
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            var type = entity.ClrType;
+            if(typeof(ITenantBase).IsAssignableFrom(type))
+            {
+                var método = typeof(AppDbContext)
+                    .GetMethod(nameof(SetFiltroGlobalTenant),
+                        BindingFlags.NonPublic | BindingFlags.Static
+                    )?.MakeGenericMethod(type);
+
+                var filtro = método?.Invoke(null, new object[] { this })!;
+                entity.SetQueryFilter((LambdaExpression)filtro);
+                entity.AddIndex(entity.FindProperty(nameof(ITenantBase.TenantId))!);
+            }
+        }        
+
+        #endregion
+
+        #region [modelbuilder setting]
+
+        var types = Jina.Domain.Entity.PersistenceAssembly.Assembly.GetTypes()
+            .Where(t => typeof(IModelBuilder).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+        foreach (var type in types)
+        {
+            var modelBuilderInstance = (IModelBuilder)Activator.CreateInstance(type);
+            modelBuilderInstance.Build(modelBuilder);
+        }        
+
+        #endregion
+
+    }
+    
+    private static LambdaExpression SetFiltroGlobalTenant<TEntity>(
+        AppDbContext context)
+        where TEntity : class, ITenantBase
+    {
+        Expression<Func<TEntity, bool>> filtro = x => x.TenantId == context.User.TenantId;
+        return filtro;
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        if (_user.TenantId.xIsEmpty())
+        if (User.TenantId.xIsEmpty())
             return await base.SaveChangesAsync(cancellationToken);
         
         var audit = ChangeTracker.Entries<IAuditableEntity>().FirstOrDefault();
@@ -96,13 +138,13 @@ public class AppDbContext : AuditableContext, IDbContext
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        entry.Entity.CreatedOn = _date.Now;
-                        entry.Entity.CreatedBy = _user.UserId;
+                        entry.Entity.CreatedOn = Date.Now;
+                        entry.Entity.CreatedBy = User.UserId;
                         break;
 
                     case EntityState.Modified:
-                        entry.Entity.LastModifiedOn = _date.Now;
-                        entry.Entity.LastModifiedBy = _user.UserId;
+                        entry.Entity.LastModifiedOn = Date.Now;
+                        entry.Entity.LastModifiedBy = User.UserId;
                         break;
                 }
             }
@@ -113,23 +155,22 @@ public class AppDbContext : AuditableContext, IDbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.TenantId = _user.TenantId;
-                    entry.Entity.CreatedBy = _user.UserId;
-                    entry.Entity.CreatedName = _user.UserName.vToAESEncrypt();
-                    entry.Entity.CreatedOn = _date.Now;
+                    entry.Entity.TenantId = User.TenantId;
+                    entry.Entity.CreatedBy = User.UserId;
+                    entry.Entity.CreatedName = User.UserName.vToAESEncrypt();
+                    entry.Entity.CreatedOn = Date.Now;
                     entry.Entity.IsActive = true;
                     break;
 
                 case EntityState.Modified:
-                    entry.Entity.TenantId = _user.TenantId;
-                    entry.Entity.LastModifiedBy = _user.UserId;
-                    entry.Entity.LastModifiedName = _user.UserName.vToAESEncrypt();
-                    entry.Entity.LastModifiedOn = _date.Now;
+                    entry.Entity.LastModifiedBy = User.UserId;
+                    entry.Entity.LastModifiedName = User.UserName.vToAESEncrypt();
+                    entry.Entity.LastModifiedOn = Date.Now;
                     break;
             }
         }
         
-        return await base.SaveChangesAsync(_user.TenantId, _user.UserId, cancellationToken);
+        return await base.SaveChangesAsync(User.TenantId, User.UserId, cancellationToken);
     }
 
     public DbSet<Tenant> Tenants { get; set; }

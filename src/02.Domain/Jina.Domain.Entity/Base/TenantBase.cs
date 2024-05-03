@@ -25,18 +25,23 @@ public abstract class EntityCore : IAuditableEntity
     public DateTime? LastModifiedOn { get; set; }
 }
 
-public abstract class TenantBase : EntityCore
+public interface ITenantBase
 {
-    [Key, Column(Order = 0), Comment("테넌트 ID")]
-    [Required, MaxLength(5)]
+    string TenantId { get; set; }
+}
+
+public class TenantBase : EntityCore, ITenantBase
+{
+    [Column(Order = 0), Comment("테넌트 ID")]
+    [MaxLength(5)]
     public string TenantId { get; set; }
 
     [Comment("활성화 여부")]
     public bool IsActive { get; set; }
 }
 
-public abstract class NumberBase : TenantBase
+public class NumberBase : TenantBase
 {
-    [Key, Column(Order = 1), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column(Order = 1), DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 }

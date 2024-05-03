@@ -22,7 +22,6 @@ namespace Jina.Domain.Service.Infra
         public static async Task<T> vFirstAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
              where T : TenantBase
         {
-            query = query.AsNoTracking().Where(m => m.TenantId == ctx.TenantId);
             T result = default;
 
             if (predicate.xIsNotEmpty())

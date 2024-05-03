@@ -2,6 +2,7 @@
 using Jina.Domain.Account;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Entity.Base;
+using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,13 @@ namespace Jina.Domain.Entity;
 public abstract class AuditableContext : IdentityDbContext<User, Role, string, IdentityUserClaim<string>,
     UserRole, IdentityUserLogin<string>, RoleClaim, IdentityUserToken<string>>
 {
-    protected AuditableContext(DbContextOptions options) : base(options)
+    protected readonly ISessionCurrentUser User;
+    protected readonly ISessionDateTime Date;
+    protected AuditableContext(DbContextOptions options, ISessionCurrentUser user,
+        ISessionDateTime date) : base(options)
     {
+        User = user;
+        Date = date;
     }
     
     public virtual async Task<int> SaveChangesAsync(string tenantId, string userId = null, CancellationToken cancellationToken = new())

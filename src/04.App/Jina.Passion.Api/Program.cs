@@ -19,28 +19,6 @@ var app = WebApplicationBuilderInitializer
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	// 데이터베이스 컨텍스트 서비스 가져오기
-	using (var scope = app.Services.CreateScope())
-	{
-		var services = scope.ServiceProvider;
-		try
-		{
-			// 데이터베이스 컨텍스트 가져오기
-			var context = services.GetRequiredService<AppDbContext>();
-
-			// 데이터베이스가 없으면 데이터베이스를 생성
-			//context.Database.EnsureCreated();
-			//context.Database.Migrate();
-
-			Console.WriteLine("Database created successfully.");
-		}
-		catch (Exception ex)
-		{
-			Console.WriteLine("An error occurred while creating the database.");
-			Console.WriteLine(ex.Message);
-		}
-	}
-
 	app.UseWebAssemblyDebugging();
     app.UseSwagger();
     app.UseSwaggerUI();

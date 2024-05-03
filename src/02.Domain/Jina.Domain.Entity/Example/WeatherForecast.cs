@@ -8,7 +8,6 @@ namespace Jina.Domain.Entity.Example
 	[Table("WeatherForecast", Schema = "example")]
     public class WeatherForecast : TenantBase
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         
         [MaxLength(100)]
@@ -24,5 +23,24 @@ namespace Jina.Domain.Entity.Example
         [MaxLength(300)]
         [Comment("요약")]
         public string Summary { get; set; }
+    }
+
+    public class WeatherForecastBuilder : IModelBuilder
+    {
+        public WeatherForecast Entity { get; set; }
+
+        public void Build(ModelBuilder builder)
+        {
+            builder.Entity<WeatherForecast>(entity =>
+                {
+                    entity.HasKey(m => new { m.TenantId, m.Id }); ;
+                    entity.Property(m => m.Id)
+                        .ValueGeneratedOnAdd();
+                    entity.Property(m => m.City)
+                        .HasMaxLength(100);
+                    entity.Property(m => m.Summary)
+                        .HasMaxLength(300);                    
+                });
+        }
     }
 }
