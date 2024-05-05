@@ -21,6 +21,9 @@ namespace Jina.Domain.Service.Infra.Migrations
                 name: "application");
 
             migrationBuilder.EnsureSchema(
+                name: "language");
+
+            migrationBuilder.EnsureSchema(
                 name: "example");
 
             migrationBuilder.CreateTable(
@@ -28,44 +31,22 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "common",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
-                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "코드"),
-                    GroupCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "코드 그룹"),
-                    Key = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false, comment: "코드 그룹 키"),
-                    Value = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true, comment: "코드 그룹 값"),
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
+                    GroupCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    Desc = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부"),
-                    CodeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "코드명")
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CodeGroups", x => new { x.TenantId, x.Code, x.GroupCode, x.Key });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Codes",
-                schema: "common",
-                columns: table => new
-                {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
-                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false, comment: "코드"),
-                    CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부"),
-                    CodeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "코드명")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Codes", x => new { x.TenantId, x.Code });
+                    table.PrimaryKey("PK_CodeGroups", x => new { x.TenantId, x.GroupCode, x.Key });
                 });
 
             migrationBuilder.CreateTable(
@@ -73,20 +54,43 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "application",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
                     MenuRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부")
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuRoles", x => new { x.TenantId, x.RoleId });
+                    table.PrimaryKey("PK_MenuRoles", x => new { x.TenantId, x.MenuRoleId });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MultilingualTopics",
+                schema: "language",
+                columns: table => new
+                {
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PrimaryCultureType = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "메인 입력 언어 타입"),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false, comment: "번역 주제"),
+                    CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MultilingualTopics", x => new { x.TenantId, x.Id, x.PrimaryCultureType });
                 });
 
             migrationBuilder.CreateTable(
@@ -94,10 +98,10 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "dbo",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
-                    Name = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true, comment: "테넌트 명"),
-                    RedirectUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "이동 주소 URL"),
-                    TimeZone = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true, comment: "시스템 시간")
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트ID"),
+                    Name = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true, comment: "테넌트명"),
+                    RedirectUrl = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "리다이렉트 url"),
+                    TimeZone = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true, comment: "시간대")
                 },
                 constraints: table =>
                 {
@@ -105,11 +109,11 @@ namespace Jina.Domain.Service.Infra.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeatherForecast",
+                name: "WeatherForecasts",
                 schema: "example",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true, comment: "도시명"),
@@ -117,16 +121,16 @@ namespace Jina.Domain.Service.Infra.Migrations
                     TemperatureC = table.Column<int>(type: "int", nullable: true, comment: "섭씨온도"),
                     Summary = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true, comment: "요약"),
                     CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부")
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeatherForecast", x => x.TenantId);
+                    table.PrimaryKey("PK_WeatherForecasts", x => new { x.TenantId, x.Id });
                 });
 
             migrationBuilder.CreateTable(
@@ -134,31 +138,65 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "application",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
                     MenuGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     Icon = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     IsVisible = table.Column<bool>(type: "bit", nullable: false),
-                    MenuRoleTenantId = table.Column<string>(type: "nvarchar(5)", nullable: true),
-                    MenuRoleRoleId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MenuRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SortNo = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부")
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuGroups", x => x.TenantId);
+                    table.PrimaryKey("PK_MenuGroups", x => new { x.TenantId, x.MenuGroupId });
                     table.ForeignKey(
-                        name: "FK_MenuGroups_MenuRoles_MenuRoleTenantId_MenuRoleRoleId",
-                        columns: x => new { x.MenuRoleTenantId, x.MenuRoleRoleId },
+                        name: "FK_MenuGroups_MenuRoles_TenantId_MenuRoleId",
+                        columns: x => new { x.TenantId, x.MenuRoleId },
                         principalSchema: "application",
                         principalTable: "MenuRoles",
-                        principalColumns: new[] { "TenantId", "RoleId" });
+                        principalColumns: new[] { "TenantId", "MenuRoleId" },
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MultilingualContents",
+                schema: "language",
+                columns: table => new
+                {
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CultureType = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Input = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    MultilingualTopicTenantId = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    MultilingualTopicId = table.Column<int>(type: "int", nullable: false),
+                    MultilingualTopicPrimaryCultureType = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
+                    LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MultilingualContents", x => new { x.TenantId, x.Id, x.CultureType });
+                    table.ForeignKey(
+                        name: "FK_MultilingualContents_MultilingualTopics_MultilingualTopicTenantId_MultilingualTopicId_MultilingualTopicPrimaryCultureType",
+                        columns: x => new { x.MultilingualTopicTenantId, x.MultilingualTopicId, x.MultilingualTopicPrimaryCultureType },
+                        principalSchema: "language",
+                        principalTable: "MultilingualTopics",
+                        principalColumns: new[] { "TenantId", "Id", "PrimaryCultureType" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -263,40 +301,41 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "application",
                 columns: table => new
                 {
-                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트 ID"),
+                    TenantId = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false, comment: "테넌트"),
                     MenuId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    Icon = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false),
                     IsVisible = table.Column<bool>(type: "bit", nullable: false),
                     SortNo = table.Column<int>(type: "int", nullable: false),
-                    MenuGroupTenantId = table.Column<string>(type: "nvarchar(5)", nullable: true),
+                    MenuGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParentMenuId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ParentMenuTenantId = table.Column<string>(type: "nvarchar(5)", nullable: true),
                     CreatedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: false, comment: "생성자"),
-                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false, comment: "생성자명"),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, comment: "생성일"),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정자"),
-                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(140)", maxLength: 140, nullable: true, comment: "수정일"),
+                    LastModifiedName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true, comment: "수정자명"),
                     LastModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true, comment: "수정일"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, comment: "활성화 여부")
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Menus", x => x.TenantId);
+                    table.PrimaryKey("PK_Menus", x => new { x.TenantId, x.MenuId });
                     table.ForeignKey(
-                        name: "FK_Menus_MenuGroups_MenuGroupTenantId",
-                        column: x => x.MenuGroupTenantId,
+                        name: "FK_Menus_MenuGroups_TenantId_MenuGroupId",
+                        columns: x => new { x.TenantId, x.MenuGroupId },
                         principalSchema: "application",
                         principalTable: "MenuGroups",
-                        principalColumn: "TenantId");
+                        principalColumns: new[] { "TenantId", "MenuGroupId" },
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Menus_Menus_ParentMenuTenantId",
-                        column: x => x.ParentMenuTenantId,
+                        name: "FK_Menus_Menus_TenantId_ParentMenuId",
+                        columns: x => new { x.TenantId, x.ParentMenuId },
                         principalSchema: "application",
                         principalTable: "Menus",
-                        principalColumn: "TenantId");
+                        principalColumns: new[] { "TenantId", "MenuId" },
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -507,34 +546,70 @@ namespace Jina.Domain.Service.Infra.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CODE_NAME",
+                name: "IX_CodeGroups_TenantId",
                 schema: "common",
                 table: "CodeGroups",
-                column: "CodeName");
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CODE_NAME",
-                schema: "common",
-                table: "Codes",
-                column: "CodeName");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MenuGroups_MenuRoleTenantId_MenuRoleRoleId",
+                name: "IX_MenuGroups_TenantId",
                 schema: "application",
                 table: "MenuGroups",
-                columns: new[] { "MenuRoleTenantId", "MenuRoleRoleId" });
+                column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Menus_MenuGroupTenantId",
+                name: "IX_MenuGroups_TenantId_MenuRoleId",
                 schema: "application",
-                table: "Menus",
-                column: "MenuGroupTenantId");
+                table: "MenuGroups",
+                columns: new[] { "TenantId", "MenuRoleId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Menus_ParentMenuTenantId",
+                name: "IX_MenuRoles_TenantId",
+                schema: "application",
+                table: "MenuRoles",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_TenantId",
                 schema: "application",
                 table: "Menus",
-                column: "ParentMenuTenantId");
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_TenantId_MenuGroupId",
+                schema: "application",
+                table: "Menus",
+                columns: new[] { "TenantId", "MenuGroupId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_TenantId_ParentMenuId",
+                schema: "application",
+                table: "Menus",
+                columns: new[] { "TenantId", "ParentMenuId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MultilingualContents_MultilingualTopicTenantId_MultilingualTopicId_MultilingualTopicPrimaryCultureType",
+                schema: "language",
+                table: "MultilingualContents",
+                columns: new[] { "MultilingualTopicTenantId", "MultilingualTopicId", "MultilingualTopicPrimaryCultureType" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MultilingualContents_TenantId",
+                schema: "language",
+                table: "MultilingualContents",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MultilingualTopics_TenantId",
+                schema: "language",
+                table: "MultilingualTopics",
+                column: "TenantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WeatherForecasts_TenantId",
+                schema: "example",
+                table: "WeatherForecasts",
+                column: "TenantId");
         }
 
         /// <inheritdoc />
@@ -564,15 +639,15 @@ namespace Jina.Domain.Service.Infra.Migrations
                 schema: "common");
 
             migrationBuilder.DropTable(
-                name: "Codes",
-                schema: "common");
-
-            migrationBuilder.DropTable(
                 name: "Menus",
                 schema: "application");
 
             migrationBuilder.DropTable(
-                name: "WeatherForecast",
+                name: "MultilingualContents",
+                schema: "language");
+
+            migrationBuilder.DropTable(
+                name: "WeatherForecasts",
                 schema: "example");
 
             migrationBuilder.DropTable(
@@ -584,6 +659,10 @@ namespace Jina.Domain.Service.Infra.Migrations
             migrationBuilder.DropTable(
                 name: "MenuGroups",
                 schema: "application");
+
+            migrationBuilder.DropTable(
+                name: "MultilingualTopics",
+                schema: "language");
 
             migrationBuilder.DropTable(
                 name: "Tenants",

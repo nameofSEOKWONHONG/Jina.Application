@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Jina.Domain.Entity.Example
 {
 	[Table("WeatherForecast", Schema = "example")]
-    public class WeatherForecast : TenantBase
+    public class WeatherForecast : TenantEntity
     {
         public int Id { get; set; }
         
@@ -32,15 +32,21 @@ namespace Jina.Domain.Entity.Example
         public void Build(ModelBuilder builder)
         {
             builder.Entity<WeatherForecast>(entity =>
-                {
-                    entity.HasKey(m => new { m.TenantId, m.Id }); ;
-                    entity.Property(m => m.Id)
-                        .ValueGeneratedOnAdd();
-                    entity.Property(m => m.City)
-                        .HasMaxLength(100);
-                    entity.Property(m => m.Summary)
-                        .HasMaxLength(300);                    
-                });
+            {
+                entity.ToTable($"{nameof(WeatherForecast)}s", "example");
+                entity.HasKey(m => new { m.TenantId, m.Id });
+                entity.Property(m => m.Id)
+                    .ValueGeneratedOnAdd();
+                
+                entity.Property(m => m.TenantId)
+                    .HasMaxLength(5);
+                entity.Property(m => m.Id)
+                    .ValueGeneratedOnAdd();
+                entity.Property(m => m.City)
+                    .HasMaxLength(100);
+                entity.Property(m => m.Summary)
+                    .HasMaxLength(300);                    
+            });
         }
     }
 }

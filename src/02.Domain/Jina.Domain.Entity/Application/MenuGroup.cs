@@ -1,19 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Jina.Domain.Entity.Base;
+﻿using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Application;
 
-[Table("MenuGroups", Schema = "application")]
-public class MenuGroup : TenantBase
+public class MenuGroup : TenantEntity
 {
     public Guid MenuGroupId { get; set; }
     
-    [Required, MaxLength(4000)]
     public string Name { get; set; }
 
-    [Required, MaxLength(4000)]
     public string Icon { get; set; }
     
     public bool IsVisible { get; set; } = true;
@@ -23,7 +18,6 @@ public class MenuGroup : TenantBase
     
     public virtual ICollection<Menu> Menus { get; set; }
 
-    [Required]
     public int SortNo { get; set; }
 }
 
@@ -32,7 +26,9 @@ public class MenuGroupModelBuilder : IModelBuilder
     public void Build(ModelBuilder builder)
     {
         builder.Entity<MenuGroup>(entity =>
-        {   
+        {
+            entity.ToTable($"{nameof(MenuGroup)}s", "application");
+            
             entity.HasKey(e => new {e.TenantId, e.MenuGroupId}); // 기본 키 설정
             
             entity.Property(e => e.MenuGroupId)

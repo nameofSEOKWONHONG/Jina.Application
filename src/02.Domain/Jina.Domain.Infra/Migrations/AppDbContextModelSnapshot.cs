@@ -382,8 +382,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("TenantId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
+                        .HasComment("테넌트");
 
                     b.Property<Guid>("MenuId")
                         .ValueGeneratedOnAdd()
@@ -396,8 +395,10 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("생성자");
 
                     b.Property<string>("CreatedName")
+                        .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -409,8 +410,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasColumnType("nvarchar(4000)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
@@ -418,11 +418,12 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(140)
                         .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
+                        .HasComment("수정일");
 
                     b.Property<string>("LastModifiedName")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2")
@@ -466,8 +467,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("TenantId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
+                        .HasComment("테넌트");
 
                     b.Property<Guid>("MenuGroupId")
                         .ValueGeneratedOnAdd()
@@ -480,8 +480,10 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("생성자");
 
                     b.Property<string>("CreatedName")
+                        .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -493,8 +495,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasColumnType("nvarchar(4000)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsVisible")
                         .HasColumnType("bit");
@@ -502,11 +503,12 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(140)
                         .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
+                        .HasComment("수정일");
 
                     b.Property<string>("LastModifiedName")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2")
@@ -537,8 +539,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("TenantId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
+                        .HasComment("테넌트");
 
                     b.Property<Guid>("MenuRoleId")
                         .ValueGeneratedOnAdd()
@@ -551,25 +552,27 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("생성자");
 
                     b.Property<string>("CreatedName")
+                        .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
                         .HasComment("생성일");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(140)
                         .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
+                        .HasComment("수정일");
 
                     b.Property<string>("LastModifiedName")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2")
@@ -578,8 +581,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("RoleId")
                         .IsRequired()
                         .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(2);
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("TenantId", "MenuRoleId");
 
@@ -588,89 +590,23 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.ToTable("MenuRoles", "application");
                 });
 
-            modelBuilder.Entity("Jina.Domain.Entity.Common.Code", b =>
+            modelBuilder.Entity("Jina.Domain.Entity.Common.CodeGroup", b =>
                 {
-                    b.Property<string>("Code")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnOrder(1)
-                        .HasComment("코드");
-
-                    b.Property<string>("CodeName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("코드명");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(140)
-                        .HasColumnType("nvarchar(140)")
-                        .HasComment("생성자");
-
-                    b.Property<string>("CreatedName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
-                        .HasComment("생성일");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(140)
-                        .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
-
-                    b.Property<string>("LastModifiedName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2")
-                        .HasComment("수정일");
-
                     b.Property<string>("TenantId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
                         .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
-
-                    b.HasKey("Code");
-
-                    b.HasIndex("TenantId");
-
-                    b.HasIndex(new[] { "CodeName" }, "IX_CODE_NAME");
-
-                    b.ToTable("Codes", "common");
-                });
-
-            modelBuilder.Entity("Jina.Domain.Entity.Common.CodeGroup", b =>
-                {
-                    b.Property<string>("Code")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
-                        .HasColumnOrder(1)
-                        .HasComment("코드");
+                        .HasComment("테넌트");
 
                     b.Property<string>("GroupCode")
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)")
-                        .HasColumnOrder(2)
-                        .HasComment("코드 그룹");
+                        .HasColumnOrder(1);
 
                     b.Property<string>("Key")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
-                        .HasColumnOrder(3)
-                        .HasComment("코드 그룹 키");
-
-                    b.Property<string>("CodeName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
-                        .HasComment("코드명");
+                        .HasColumnOrder(2);
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -679,47 +615,45 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("생성자");
 
                     b.Property<string>("CreatedName")
+                        .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
                         .HasComment("생성일");
 
+                    b.Property<string>("Desc")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)")
+                        .HasColumnOrder(4);
+
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(140)
                         .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
+                        .HasComment("수정일");
 
                     b.Property<string>("LastModifiedName")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2")
                         .HasComment("수정일");
 
-                    b.Property<string>("TenantId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
-
                     b.Property<string>("Value")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)")
-                        .HasColumnOrder(4)
-                        .HasComment("코드 그룹 값");
+                        .HasColumnOrder(3);
 
-                    b.HasKey("Code", "GroupCode", "Key");
+                    b.HasKey("TenantId", "GroupCode", "Key");
 
                     b.HasIndex("TenantId");
-
-                    b.HasIndex(new[] { "CodeName" }, "IX_CODE_NAME");
 
                     b.ToTable("CodeGroups", "common");
                 });
@@ -729,8 +663,7 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Property<string>("TenantId")
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)")
-                        .HasColumnOrder(0)
-                        .HasComment("테넌트 ID");
+                        .HasComment("테넌트");
 
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -750,8 +683,10 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("생성자");
 
                     b.Property<string>("CreatedName")
+                        .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2")
@@ -762,17 +697,17 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasComment("날짜");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit")
-                        .HasComment("활성화 여부");
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastModifiedBy")
                         .HasMaxLength(140)
                         .HasColumnType("nvarchar(140)")
-                        .HasComment("수정자");
+                        .HasComment("수정일");
 
                     b.Property<string>("LastModifiedName")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
 
                     b.Property<DateTime?>("LastModifiedOn")
                         .HasColumnType("datetime2")
@@ -791,7 +726,147 @@ namespace Jina.Domain.Service.Infra.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("WeatherForecast", "example");
+                    b.ToTable("WeatherForecasts", "example");
+                });
+
+            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContent", b =>
+                {
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasComment("테넌트");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CultureType")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)")
+                        .HasComment("생성자");
+
+                    b.Property<string>("CreatedName")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("생성일");
+
+                    b.Property<string>("Input")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)")
+                        .HasComment("수정일");
+
+                    b.Property<string>("LastModifiedName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("수정일");
+
+                    b.Property<int>("MultilingualTopicId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MultilingualTopicPrimaryCultureType")
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<string>("MultilingualTopicTenantId")
+                        .HasColumnType("nvarchar(5)");
+
+                    b.HasKey("TenantId", "Id", "CultureType");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("MultilingualTopicTenantId", "MultilingualTopicId", "MultilingualTopicPrimaryCultureType");
+
+                    b.ToTable("MultilingualContents", "language");
+                });
+
+            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualTopic", b =>
+                {
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasComment("테넌트");
+
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PrimaryCultureType")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)")
+                        .HasComment("메인 입력 언어 타입");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)")
+                        .HasComment("생성자");
+
+                    b.Property<string>("CreatedName")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("생성자명");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("생성일");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(140)
+                        .HasColumnType("nvarchar(140)")
+                        .HasComment("수정일");
+
+                    b.Property<string>("LastModifiedName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)")
+                        .HasComment("수정자명");
+
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .HasColumnType("datetime2")
+                        .HasComment("수정일");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasComment("번역 주제");
+
+                    b.HasKey("TenantId", "Id", "PrimaryCultureType");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("MultilingualTopics", "language");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -958,6 +1033,16 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Navigation("MenuRole");
                 });
 
+            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContent", b =>
+                {
+                    b.HasOne("Jina.Domain.Entity.Language.MultilingualTopic", "MultilingualTopic")
+                        .WithMany("MultilingualContents")
+                        .HasForeignKey("MultilingualTopicTenantId", "MultilingualTopicId", "MultilingualTopicPrimaryCultureType")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("MultilingualTopic");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Jina.Domain.Entity.Account.User", null)
@@ -1003,6 +1088,11 @@ namespace Jina.Domain.Service.Infra.Migrations
             modelBuilder.Entity("Jina.Domain.Entity.Application.MenuRole", b =>
                 {
                     b.Navigation("MenuGroups");
+                });
+
+            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualTopic", b =>
+                {
+                    b.Navigation("MultilingualContents");
                 });
 #pragma warning restore 612, 618
         }

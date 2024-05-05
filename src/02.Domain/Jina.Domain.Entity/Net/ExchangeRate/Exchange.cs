@@ -8,7 +8,7 @@ namespace Jina.Domain.Entity.Net.ExchangeRate;
 /// <see href="link">https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD"</see>
 /// 환율
 /// </summary>
-public class Exchange : EntityCore
+public class Exchange : Base.Entity
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

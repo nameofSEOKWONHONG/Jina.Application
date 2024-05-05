@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Application;
 
-[Table("Menus", Schema = "application")]
-public class Menu : TenantBase
+public class Menu : TenantEntity
 {
     public Guid MenuId { get; set; }
     
@@ -42,6 +41,8 @@ public class MenuModelBuilder : IModelBuilder
     {
         builder.Entity<Menu>(entity =>
         {
+            entity.ToTable($"{nameof(Menu)}s", "application");
+            
             entity.HasKey(e => new {e.TenantId, e.MenuId}); // 기본 키 설정
 
             entity.Property(e => e.MenuId)

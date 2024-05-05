@@ -1,22 +1,42 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Jina.Domain.Entity.Base;
+﻿using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Common;
 
-[Table("CodeGroups", Schema = "common")]
-public class CodeGroup : CodeTenantBase
+public class CodeGroup : TenantEntity
 {
-    [Key, Column(Order = 2), Comment("코드 그룹")]
-    [MaxLength(10)]
     public string GroupCode { get; set; }
     
-    [Key, Column(Order = 3), Comment("코드 그룹 키")]
-    [MaxLength(20)]
     public string Key { get; set; }
     
-    [Column(Order = 4), Comment("코드 그룹 값")]
-    [MaxLength(4000)]
     public string Value { get; set; }
+    
+    public string Desc { get; set; }
+}
+
+public class CodeGroupModelBuilder : IModelBuilder
+{
+    public void Build(ModelBuilder builder)
+    {
+        builder.Entity<CodeGroup>(entity =>
+        {
+            entity.ToTable($"{nameof(CodeGroup)}s", "common");
+            entity.HasKey(m => new { m.TenantId, m.GroupCode, m.Key });
+            entity.Property(m => m.TenantId)
+                .HasMaxLength(5)
+                .HasColumnOrder(0);
+            entity.Property(m => m.GroupCode)
+                .HasMaxLength(10)
+                .HasColumnOrder(1);
+            entity.Property(m => m.Key)
+                .HasMaxLength(20)
+                .HasColumnOrder(2);
+            entity.Property(m => m.Value)
+                .HasMaxLength(4000)
+                .HasColumnOrder(3);
+            entity.Property(m => m.Desc)
+                .HasMaxLength(4000)
+                .HasColumnOrder(4);
+        });
+    }
 }

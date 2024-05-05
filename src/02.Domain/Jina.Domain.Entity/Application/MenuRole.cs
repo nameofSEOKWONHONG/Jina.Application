@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Jina.Domain.Entity.Base;
+﻿using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Application;
 
-[Table("MenuRoles", Schema = "application")]
-public class MenuRole : TenantBase
+public class MenuRole : TenantEntity
 {
     public Guid MenuRoleId { get; set; }
     
-    [Column(Order = 2), MaxLength(450)]
     public string RoleId { get; set; }
 
     public virtual ICollection<MenuGroup> MenuGroups { get; set; }
@@ -21,7 +17,9 @@ public class MenuRoleModelBuilder : IModelBuilder
     public void Build(ModelBuilder builder)
     {
         builder.Entity<MenuRole>(entity =>
-        {   
+        {
+            entity.ToTable($"{nameof(MenuRole)}s", "application");
+            
             entity.HasKey(e => new {e.TenantId, e.MenuRoleId}); // 기본 키 설정
             
             entity.Property(e => e.MenuRoleId)

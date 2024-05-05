@@ -1,4 +1,5 @@
-﻿using eXtensionSharp;
+﻿using System.Data;
+using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Request;
@@ -19,7 +20,7 @@ namespace Jina.Domain.Service.Account
     /// <summary>
     /// create tenant
     /// </summary>
-    [TransactionOptions()]
+    [TransactionOptions(IsolationLevel.ReadCommitted)]
     public sealed class CreateTenantService : ServiceImplBase<CreateTenantService, AppDbContext, CreateTenantRequest, IResults<bool>>,
         ICreateTenantService
     {

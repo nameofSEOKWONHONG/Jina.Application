@@ -5,14 +5,13 @@ using Jina.Domain.Entity.Example;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 using SmartEnum.EFCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
 using eXtensionSharp;
 using Jina.Database.Abstract;
 using Jina.Domain.Entity;
 using Jina.Domain.Entity.Base;
+using Jina.Domain.Entity.Language;
 
 namespace Jina.Domain.Service.Infra;
 
@@ -58,50 +57,103 @@ public class AppDbContext : AuditableContext, IDbContext
 
         #endregion [setting decimal default]
 
-        #region [get all composite keys (entity decorated by more than 1 [Key] attribute]
-
-        foreach (var entity in modelBuilder.Model.GetEntityTypes()
-                     .Where(t =>
-                         t.ClrType.GetProperties()
-                             .Count(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute))) > 1))
-        {
-            // get the keys in the appropriate order
-            var orderedKeys = entity.ClrType
-                .GetProperties()
-                .Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)))
-                .OrderBy(p =>
-                    p.CustomAttributes.Single(x => x.AttributeType == typeof(ColumnAttribute))?
-                        .NamedArguments?.Single(y => y.MemberName == nameof(ColumnAttribute.Order))
-                        .TypedValue.Value ?? 0)
-                .Select(x => x.Name)
-                .ToArray();
-
-            // apply the keys to the model builder
-            modelBuilder.Entity(entity.ClrType).HasKey(orderedKeys);
-        }
-
-        #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
+        // #region [get all composite keys (entity decorated by more than 1 [Key] attribute]
+        //
+        // foreach (var entity in modelBuilder.Model.GetEntityTypes()
+        //              .Where(t =>
+        //                  t.ClrType.GetProperties()
+        //                      .Count(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute))) > 1))
+        // {
+        //     // get the keys in the appropriate order
+        //     var orderedKeys = entity.ClrType
+        //         .GetProperties()
+        //         .Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(KeyAttribute)))
+        //         .OrderBy(p =>
+        //             p.CustomAttributes.Single(x => x.AttributeType == typeof(ColumnAttribute))?
+        //                 .NamedArguments?.Single(y => y.MemberName == nameof(ColumnAttribute.Order))
+        //                 .TypedValue.Value ?? 0)
+        //         .Select(x => x.Name)
+        //         .ToArray();
+        //
+        //     // apply the keys to the model builder
+        //     modelBuilder.Entity(entity.ClrType).HasKey(orderedKeys);
+        // }
+        //
+        // #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
 
         #region [tenant setting]
 
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
             var type = entity.ClrType;
-            if(typeof(ITenantBase).IsAssignableFrom(type))
+            if(typeof(ITenantEntity).IsAssignableFrom(type))
             {
                 var método = typeof(AppDbContext)
-                    .GetMethod(nameof(SetFiltroGlobalTenant),
+                    .GetMethod(nameof(SetFilterGlobalTenant),
                         BindingFlags.NonPublic | BindingFlags.Static
                     )?.MakeGenericMethod(type);
 
                 var filtro = método?.Invoke(null, new object[] { this })!;
                 entity.SetQueryFilter((LambdaExpression)filtro);
-                entity.AddIndex(entity.FindProperty(nameof(ITenantBase.TenantId))!);
+                entity.AddIndex(entity.FindProperty(nameof(ITenantEntity.TenantId))!);
             }
         }        
 
         #endregion
 
+        #region [entity setting]
+
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            var type = entity.ClrType;
+            // modelBuilder.Entity(entity.ClrType).ToTable($"{entity.Name}s");
+            
+            if (typeof(Jina.Domain.Entity.Base.TenantEntity).IsAssignableFrom(type))
+            {
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.TenantEntity.TenantId))
+                    .IsRequired()
+                    .HasMaxLength(5)
+                    .HasComment("테넌트");
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.CreatedBy))
+                    .IsRequired()
+                    .HasMaxLength(140)
+                    .HasComment("생성자");
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.CreatedName))
+                    .IsRequired()
+                    .HasMaxLength(1000)
+                    .HasComment("생성자명");
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.CreatedOn))
+                    .IsRequired()
+                    .HasComment("생성일");
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.LastModifiedBy))
+                    .HasMaxLength(140)
+                    .HasComment("수정일")
+                    .IsNullableType();
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.LastModifiedName))
+                    .HasMaxLength(1000)
+                    .HasComment("수정자명")
+                    .IsNullableType();
+                
+                modelBuilder.Entity(entity.ClrType)
+                    .Property(nameof(Entity.Base.Entity.LastModifiedOn))
+                    .HasComment("수정일")
+                    .IsNullableType();                
+            }
+        }        
+
+        #endregion
+        
         #region [modelbuilder setting]
 
         var types = Jina.Domain.Entity.PersistenceAssembly.Assembly.GetTypes()
@@ -114,12 +166,11 @@ public class AppDbContext : AuditableContext, IDbContext
         }        
 
         #endregion
-
     }
     
-    private static LambdaExpression SetFiltroGlobalTenant<TEntity>(
+    private static LambdaExpression SetFilterGlobalTenant<TEntity>(
         AppDbContext context)
-        where TEntity : class, ITenantBase
+        where TEntity : class, ITenantEntity
     {
         Expression<Func<TEntity, bool>> filtro = x => x.TenantId == context.User.TenantId;
         return filtro;
@@ -127,6 +178,8 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        if(User.xIsEmpty())
+            return await base.SaveChangesAsync(cancellationToken);
         if (User.TenantId.xIsEmpty())
             return await base.SaveChangesAsync(cancellationToken);
         
@@ -150,7 +203,7 @@ public class AppDbContext : AuditableContext, IDbContext
             }
         }
         
-        foreach (var entry in ChangeTracker.Entries<TenantBase>().ToList())
+        foreach (var entry in ChangeTracker.Entries<TenantEntity>().ToList())
         {
             switch (entry.State)
             {
@@ -185,11 +238,10 @@ public class AppDbContext : AuditableContext, IDbContext
     public DbSet<MenuGroup> MenuGroups { get; set; }
     public DbSet<Menu> Menus { get; set; }
 
-    public DbSet<Code> Codes { get; set; }
     public DbSet<CodeGroup> CodeGroups { get; set; }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
     
-    // public DbSet<MultilingualConfig> MultilingualConfigs { get; set; }
-    // public DbSet<MultilingualContent> MultilingualContents { get; set; }
+    public DbSet<MultilingualTopic> MultilingualTopics { get; set; }
+    public DbSet<MultilingualContent> MultilingualContents { get; set; }
 }

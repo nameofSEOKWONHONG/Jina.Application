@@ -12,7 +12,7 @@ namespace Jina.Domain.Service.Infra
 	public static class EntityExtensions
     {
         public static IQueryable<TEntity> vAsNoTrackingQueryable<TEntity>(this DbSet<TEntity> dbSet, ISessionContext ctx)
-            where TEntity : TenantBase
+            where TEntity : TenantEntity
         {
             return dbSet
                 .AsNoTracking()
@@ -20,7 +20,7 @@ namespace Jina.Domain.Service.Infra
         }
         
         public static async Task<T> vFirstAsync<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
-             where T : TenantBase
+             where T : TenantEntity
         {
             T result = default;
 
@@ -42,7 +42,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<T2> vFirstAsync<T1, T2>(this IQueryable<T1> query, ISessionContext ctx, Expression<Func<T1, bool>> predicate, Expression<Func<T1, T2>> expression)
-             where T1 : TenantBase
+             where T1 : TenantEntity
             where T2 : DtoBase
         {
             query = query.AsNoTracking().Where(m => m.TenantId == ctx.TenantId);
@@ -67,7 +67,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static List<T> vToList<T>(this IQueryable<T> query, ISessionContext ctx, Expression<Func<T, bool>> predicate = null)
-            where T : TenantBase
+            where T : TenantEntity
         {
             if (predicate.xIsNotEmpty())
             {
@@ -94,7 +94,7 @@ namespace Jina.Domain.Service.Infra
 
         public static async Task<List<T>> vToListAsync<T>(this IQueryable<T> query, ISessionContext ctx, 
             Expression<Func<T, bool>> predicate = null)
-            where T : TenantBase
+            where T : TenantEntity
         {
             if (predicate.xIsNotEmpty())
             {
@@ -124,7 +124,7 @@ namespace Jina.Domain.Service.Infra
 
         public static async Task<PaginatedResult<T>> vToPaginatedListAsync<T>(this IQueryable<T> query
             , ISessionContext ctx, int pageNumber, int pageSize)
-            where T : TenantBase
+            where T : TenantEntity
         {
             if (query.xIsEmpty()) throw new Exception("queriable is empty");
             if (ctx.xIsEmpty()) throw new Exception("context is empty");
@@ -154,7 +154,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<PaginatedResult<T>> vToPaginatedListAsync<T, TRequest>(this IQueryable<T> query, ISessionContext ctx, TRequest request)
-            where T : TenantBase
+            where T : TenantEntity
             where TRequest : PaginatedRequest
         {
             if (query == null) throw new Exception("queriable is empty");
@@ -203,7 +203,7 @@ namespace Jina.Domain.Service.Infra
         }
 
         public static async Task<PaginatedResult<T2>> vToPaginatedListAsync<T1, T2, TRequest>(this IQueryable<T1> query, ISessionContext ctx, TRequest request, Expression<Func<T1, T2>> expression)
-            where T1 : TenantBase
+            where T1 : TenantEntity
             where T2 : DtoBase
             where TRequest : PaginatedRequest
         {
@@ -260,7 +260,7 @@ namespace Jina.Domain.Service.Infra
 
         public static async Task<CursorResult<T>> vToPaginatedCursorListAsync<T, TRequest>(
             this IQueryable<T> query, ISessionContext ctx, TRequest request)
-            where T : NumberBase
+            where T : NumberEntity
             where TRequest : CursorRequest
         {
             if (query.xIsEmpty()) throw new Exception("query is empty");
@@ -308,7 +308,7 @@ namespace Jina.Domain.Service.Infra
         }
         
         public static async Task<CursorResult<T2>> vToPaginatedCursorListAsync<T1, T2, TRequest>(this IQueryable<T1> query, ISessionContext ctx, TRequest request, Expression<Func<T1, T2>> expression)
-            where T1 : NumberBase
+            where T1 : NumberEntity
             where T2 : NumberDtoBase
             where TRequest : CursorRequest
         {
