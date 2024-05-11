@@ -1,6 +1,6 @@
 ﻿namespace Jina.Domain;
 
-public class NumberDtoBase : DtoBase
+public class NumberRequestBase : RequestBase
 {
     public int Id { get; set; }
 }

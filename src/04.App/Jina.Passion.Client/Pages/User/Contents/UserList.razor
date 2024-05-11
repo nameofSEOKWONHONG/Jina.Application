@@ -9,44 +9,50 @@
 
 @inherits TablePageComponent<UserDto, UserListViewModel, DlgOptions<bool>, IEnumerable<UserDto>>
 
-<PageHeader Class="site-page-header" Title="User List" Subtitle="user list" />
-
-<PageContainer>
+<PageContainer>  
     <Content>
-        <div>
+    </Content>
+    <ChildContent>
+        <Card>
             <Form Model="searchRequest" Name="search" Class="ant-advanced-search-form">
                 <GridRow>
                     <GridCol Span="6" @key="nameof(context.Name)">
                         <FormItem Label="@nameof(context.Name)">
-                            <Input @bind-Value="@(context.Name)" Style="width: 80%;" Size="@InputSize.Small" />
+                            <Input @bind-Value="@(context.Name)" Style="width: 80%;" Size="@InputSize.Small"/>
                         </FormItem>
                     </GridCol>
                     <GridCol Span="6" @key="nameof(context.Email)">
                         <FormItem Label="@nameof(context.Email)">
-                            <Input @bind-Value="@(context.Email)" Style="width: 80%;" Size="@InputSize.Small" />
+                            <Input @bind-Value="@(context.Email)" Style="width: 80%;" Size="@InputSize.Small"/>
                         </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.Test1)">
+                        <FormItem Label="@nameof(context.Test1)">
+                            <Input @bind-Value="@(context.Test1)" Style="width: 80%;" Size="@InputSize.Small"/>
+                        </FormItem>
+                    </GridCol>
+                    <GridCol Span="6" @key="nameof(context.Test2)">
+                        <FormItem Label="@nameof(context.Test2)">
+                            <Input @bind-Value="@(context.Test2)" Style="width: 80%;" Size="@InputSize.Small"/>
+                        </FormItem>
+                    </GridCol>                    
+                    <GridCol Span="24" Style="text-align:right;">
+                        <Button Type="primary" @onclick="() => OnSearch(null, null)" Size="@ButtonSize.Small">Search</Button>
+                        <Button @onclick="() => AddNotification()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Notification</Button>
+                        <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Add</Button>
+                        <Button Danger @onclick="() => OnRemoveRange(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Remove</Button>
                     </GridCol>
                 </GridRow>
             </Form>
-        </div>
-        <Divider />
-        <div>
-            <GridRow>
-                <GridCol Span="24" Style="text-align:right;">
-                    <Button Type="primary" @onclick="()=> OnSearch(null, null)" Size="@ButtonSize.Small">Search</Button>
-                    <Button @onclick="() => AddNotification()" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Notification</Button>
-                    <Button @onclick="() => OnAddItem(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Add</Button>
-                    <Button Danger @onclick="() => OnRemoveRange(null)" Type="primary" Size="@ButtonSize.Small" Style="margin-bottom:16px">Remove</Button>
-                </GridCol>
-            </GridRow>
-        </div>
+        </Card>
+        <br/>
+
         <Table @ref="Table"
                TItem="UserDto"
                DataSource="this.ViewModel.Items"
                OnRowClick="OnSelectChanged"
                @bind-SelectedRows="this.ViewModel.SelectedItems"
                Bordered=@true
-               Title="User List"
                Size="TableSize.Small"
                OnChange="OnTableChange"
                @bind-PageIndex="this.Paginateion.PageIndex"
@@ -54,38 +60,35 @@
                @bind-Total="this.Paginateion.Total"
                PaginationPosition="@this.Paginateion.DefaultPagingPosition"
                Resizable
-               RowKey="m=>m.Id">
-             <ChildContent>
-                 <Selection Key="@(context.Id)" />
-                 <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
-                     @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
-                 </PropertyColumn>
-                 <PropertyColumn Property="m => m.Email" />
-                 <PropertyColumn Property="m => m.Phone" />
-                 <PropertyColumn Property="m => m.RoleName" />
-                 <ActionColumn Title="Action">
-                     <Popconfirm Title="Sure to delete?"
-                                 OnConfirm="()=> OnRemove(null)"
-                                 OkText="Yes"
-                                 CancelText="No">
-                         <a>Delete</a>
-                     </Popconfirm>
-                 </ActionColumn>
-             </ChildContent>
-             <PaginationTemplate>
-                 <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
-                             Total="context.Total"
-                             PageSize="context.PageSize"
-                             Current="context.PageIndex"
-                             ShowSizeChanger
-                             OnChange="context.HandlePageChange" />
-             </PaginationTemplate>
-         </Table>
-     </Content>
-
-     <ChildContent>
-     </ChildContent>
- </PageContainer>
+               RowKey="m => m.Id">
+            <ChildContent>
+                <Selection Key="@(context.Id)"/>
+                <PropertyColumn Property="m => m.Name" Sortable DefaultSortOrder="SortDirection.Ascending">
+                    @* <a @onclick='() => OnSelectChanged(context)'>@context.Name</a> *@
+                </PropertyColumn>
+                <PropertyColumn Property="m => m.Email"/>
+                <PropertyColumn Property="m => m.Phone"/>
+                <PropertyColumn Property="m => m.RoleName"/>
+                <ActionColumn Title="Action">
+                    <Popconfirm Title="Sure to delete?"
+                                OnConfirm="() => OnRemove(null)"
+                                OkText="Yes"
+                                CancelText="No">
+                        <a>Delete</a>
+                    </Popconfirm>
+                </ActionColumn>
+            </ChildContent>
+            <PaginationTemplate>
+                <Pagination Class="@(context.PaginationClass + " my-custom-pagination")"
+                            Total="context.Total"
+                            PageSize="context.PageSize"
+                            Current="context.PageIndex"
+                            ShowSizeChanger
+                            OnChange="context.HandlePageChange"/>
+            </PaginationTemplate>
+        </Table>
+    </ChildContent>
+</PageContainer>
 
  @code {
     [Parameter]
@@ -94,16 +97,6 @@
     private UserSearchRequest searchRequest { get; set; } = new();
 
     [Inject] public NotificationViewModel RightContentViewModel { get; set; }
-
-    protected override Task OnSetupAsync()
-    {
-        return base.OnSetupAsync();
-    }
-
-    protected override Task OnDlgParameterSetupAsync()
-    {
-        return base.OnDlgParameterSetupAsync();
-    }
 
     public override async Task OnSearch(QueryModel query, Func<int, int, string, string, Task<IPaginatedResult>> callback)
     {

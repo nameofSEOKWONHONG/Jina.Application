@@ -51,7 +51,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MenuData = await HttpClient.GetFromJsonAsync<MenuDataItem[]>("https://localhost:7007/data/menu.json");        
+        MenuData = await HttpClient.GetFromJsonAsync<MenuDataItem[]>("http://localhost:5005/data/menu.json");        
     }
 
     public LinkItem[] Links { get; set; } =

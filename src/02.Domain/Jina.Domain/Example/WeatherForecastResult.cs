@@ -5,7 +5,7 @@ using Jina.Validate.RuleValidate.Impl;
 
 namespace Jina.Domain.Example
 {
-    public class WeatherForecastResult : DtoBase
+    public class WeatherForecastResult : RequestBase
     {
         public long Id { get; set; }
         public string City { get; set; }
@@ -13,6 +13,7 @@ namespace Jina.Domain.Example
         public string Summary { get; set; }
         public int? TemperatureC { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public string CreatedName { get; set; }
     }
     
     public class WeatherForecastResultValidator : Validator<WeatherForecastResult>

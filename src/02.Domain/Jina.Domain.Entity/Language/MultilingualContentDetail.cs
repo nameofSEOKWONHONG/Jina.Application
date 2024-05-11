@@ -4,23 +4,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Language;
 
-/// <summary>
-/// 다국어 번역 저장
-/// </summary>
-public class MultilingualContent : GuidEntity
+public class MultilingualContentDetail : GuidEntity
 {
     public string CultureType { get; set; }
+    
+    /// <summary>
+    /// 번역 TEXT
+    /// </summary>
     public string Input { get; set; }
-    public virtual ICollection<MultilingualContentDetail> Details { get; set; }
+    
+    /// <summary>
+    /// ai 질의 기록
+    /// </summary>
+    public string Comment { get; set; }
+    
+    public virtual MultilingualContent Master { get; set; }
+    public string MasterTenantId { get; set; }
+    public Guid MasterGuid { get; set; }
 }
 
-public class MultilingualContentModelBuilder : IModelBuilder
+public class MultilingualContentDetailModelBuilder : IModelBuilder
 {
     public void Build(ModelBuilder builder)
     {
-        builder.Entity<MultilingualContent>(e =>
+        builder.Entity<MultilingualContentDetail>(e =>
         {
-            e.ToTable($"{nameof(MultilingualContent)}s", "language");
+            e.ToTable($"{nameof(MultilingualContentDetail)}s", "language");
             e.HasKey(m => new { m.TenantId, m.Guid});
             e.Property(m => m.Guid)
                 .ValueGeneratedOnAdd();
@@ -30,13 +39,14 @@ public class MultilingualContentModelBuilder : IModelBuilder
             e.Property(m => m.Input)
                 .HasMaxLength(4000)
                 .IsNullableType();
-            e.HasMany(m => m.Details)
-                .WithOne(m => m.Master)
+            e.Property(m => m.Comment)
+                .HasMaxLength(4000)
+                .IsNullableType();
+            e.HasOne(m => m.Master)
+                .WithMany(m => m.Details)
                 .HasForeignKey(m => new
                     { m.MasterTenantId, m.MasterGuid })
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
-
-

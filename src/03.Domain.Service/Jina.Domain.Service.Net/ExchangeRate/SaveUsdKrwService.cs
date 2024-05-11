@@ -30,6 +30,8 @@ namespace Jina.Domain.Service.Net.ExchangeRate;
 /// </summary>
 public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, AppDbContext, bool, bool>, ISaveExchangeRateService
 {
+    //이건 개인 제작, 1분당 캐시, 금액은 다소 정확함.
+    //https://api.manana.kr/exchange/rate.json
     private readonly string _url = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD";
     
     /// <summary>

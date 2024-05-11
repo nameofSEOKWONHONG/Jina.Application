@@ -1,0 +1,51 @@
+﻿<h3>Translate</h3>
+
+<Tabs>
+    <TabPane Tab="ko-kr">
+        <Table DataSource="korean" TItem="TranslateModel">
+            
+        </Table>
+    </TabPane>
+    <TabPane Tab="en-us">
+        <Table DataSource="english" TItem="TranslateModel">
+            
+        </Table>
+    </TabPane>    
+</Tabs>
+
+@code {
+    List<TranslateModel> korean = new();
+    List<TranslateModel> english = new();
+
+    protected override void OnInitialized()
+    {
+        korean.Add(new TranslateModel(1, true, "test"));
+        korean.Add(new TranslateModel(2, false, "test"));
+        korean.Add(new TranslateModel(3, false, "test"));
+        base.OnInitialized();
+    }
+
+    public class TranslateModel
+    {
+        public int Id { get; set; }
+        public bool IsPrimary { get; set; }
+        public string Text { get; set; }
+        
+        public List<TranslateModel> TranslateModels { get; set; }
+
+        public TranslateModel(int id, bool isPrimary, string text)
+        {
+            this.Id = id;
+            this.IsPrimary = isPrimary;
+            this.Text = text;
+        }
+        
+        public TranslateModel(int id, bool isPrimary, string text, List<TranslateModel> models)
+        {
+            this.Id = id;
+            this.IsPrimary = isPrimary;
+            this.Text = text;
+            this.TranslateModels = models;
+        }
+    }
+}

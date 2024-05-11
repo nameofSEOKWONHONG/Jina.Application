@@ -44,6 +44,6 @@ public class ChartService : IChartService
 
     private async Task<ChartData> GetChartDataAsync()
     {
-        return await this._client.GetFromJsonAsync<ChartData>("https://localhost:7007/data/fake_chart_data.json");
+        return await this._client.GetFromJsonAsync<ChartData>("http://localhost:5005/data/fake_chart_data.json");
     }
 }

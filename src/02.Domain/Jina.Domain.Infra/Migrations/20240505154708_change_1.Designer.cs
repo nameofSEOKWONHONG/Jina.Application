@@ -4,6 +4,7 @@ using Jina.Domain.Service.Infra;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jina.Domain.Service.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240505154708_change_1")]
+    partial class change_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -736,69 +739,15 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasColumnType("nvarchar(5)")
                         .HasComment("테넌트");
 
-                    b.Property<Guid>("Guid")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(140)
-                        .HasColumnType("nvarchar(140)")
-                        .HasComment("생성자");
-
-                    b.Property<string>("CreatedName")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .HasComment("생성자명");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2")
-                        .HasComment("생성일");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CultureType")
-                        .IsRequired()
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("Input")
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(140)
-                        .HasColumnType("nvarchar(140)")
-                        .HasComment("수정일");
-
-                    b.Property<string>("LastModifiedName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)")
-                        .HasComment("수정자명");
-
-                    b.Property<DateTime?>("LastModifiedOn")
-                        .HasColumnType("datetime2")
-                        .HasComment("수정일");
-
-                    b.HasKey("TenantId", "Guid");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("MultilingualContents", "language");
-                });
-
-            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContentDetail", b =>
-                {
-                    b.Property<string>("TenantId")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)")
-                        .HasComment("테넌트");
-
-                    b.Property<Guid>("Guid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(4000)
@@ -820,11 +769,6 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("생성일");
 
-                    b.Property<string>("CultureType")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
                     b.Property<string>("Input")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
@@ -846,19 +790,22 @@ namespace Jina.Domain.Service.Infra.Migrations
                         .HasColumnType("datetime2")
                         .HasComment("수정일");
 
-                    b.Property<Guid>("MasterGuid")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("MultilingualTopicId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("MasterTenantId")
+                    b.Property<string>("MultilingualTopicPrimaryCultureType")
                         .HasColumnType("nvarchar(5)");
 
-                    b.HasKey("TenantId", "Guid");
+                    b.Property<string>("MultilingualTopicTenantId")
+                        .HasColumnType("nvarchar(5)");
+
+                    b.HasKey("TenantId", "Id", "CultureType");
 
                     b.HasIndex("TenantId");
 
-                    b.HasIndex("MasterTenantId", "MasterGuid");
+                    b.HasIndex("MultilingualTopicTenantId", "MultilingualTopicId", "MultilingualTopicPrimaryCultureType");
 
-                    b.ToTable("MultilingualContentDetails", "language");
+                    b.ToTable("MultilingualContents", "language");
                 });
 
             modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualTopic", b =>
@@ -1160,14 +1107,13 @@ namespace Jina.Domain.Service.Infra.Migrations
                     b.Navigation("MenuRole");
                 });
 
-            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContentDetail", b =>
+            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContent", b =>
                 {
-                    b.HasOne("Jina.Domain.Entity.Language.MultilingualContent", "Master")
-                        .WithMany("Details")
-                        .HasForeignKey("MasterTenantId", "MasterGuid")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Jina.Domain.Entity.Language.MultilingualTopic", "MultilingualTopic")
+                        .WithMany()
+                        .HasForeignKey("MultilingualTopicTenantId", "MultilingualTopicId", "MultilingualTopicPrimaryCultureType");
 
-                    b.Navigation("Master");
+                    b.Navigation("MultilingualTopic");
                 });
 
             modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualTopicConfig", b =>
@@ -1225,11 +1171,6 @@ namespace Jina.Domain.Service.Infra.Migrations
             modelBuilder.Entity("Jina.Domain.Entity.Application.MenuRole", b =>
                 {
                     b.Navigation("MenuGroups");
-                });
-
-            modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualContent", b =>
-                {
-                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("Jina.Domain.Entity.Language.MultilingualTopic", b =>

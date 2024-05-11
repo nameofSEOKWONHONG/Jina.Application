@@ -3,7 +3,7 @@ using Jina.Validate;
 
 namespace Jina.Domain.Account
 {
-    public class UserDto : DtoBase
+    public class UserDto : RequestBase
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -15,6 +15,8 @@ namespace Jina.Domain.Account
         public string GroupName { get; set; }
         public string RoleId { get; set; }
         public string RoleName { get; set; }
+        public string CreatedName { get; set; }
+        public string LastModifiedName { get; set; }
 
         public class Validator : Validator<UserDto>
         {

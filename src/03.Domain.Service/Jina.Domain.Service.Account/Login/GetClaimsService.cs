@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Transactions;
+using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Base.Service;
 using Jina.Base.Service.Abstract;
@@ -40,7 +41,7 @@ public sealed class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbCo
         var roles = await this.Db.Roles.Where(m => m.TenantId == this.Request.TenantId && m.Id == userRole.RoleId).ToListAsync();
         var roleClaims = new List<Claim>();
         var permissionClaims = new List<Claim>();
-        foreach (var role in roles)
+        await roles.xForEachAsync(async role =>
         {
             roleClaims.Add(new Claim(ClaimTypes.Role, role.Name));
             var results = await this.Db.RoleClaims.Where(m => m.TenantId == this.Request.TenantId && m.RoleId == role.Id)
@@ -51,7 +52,7 @@ public sealed class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbCo
                 allPermissionsForThisRoles.Add(new Claim(item.ClaimType, item.ClaimValue));
             });
             permissionClaims.AddRange(allPermissionsForThisRoles);
-        }
+        });
 
         var claims = new List<Claim>
             {

@@ -26,7 +26,9 @@ using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net.Notification;
 using Jina.Validate;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using Results = Jina.Domain.Shared.Results;
+using Role = Jina.Domain.Entity.Account.Role;
 
 namespace Jina.Passion.Api
 {
@@ -321,9 +323,19 @@ namespace Jina.Passion.Api
             #endregion
 
             #region [distribute cache]
-            //아래 3개 중에 택일, MemoryCache, Redis-Cache, SqlServer-Cache
-            //memory
-            builder.Services.AddDistributedMemoryCache();
+            //기본 redis 설정, 만약 연결 문제 있을 경우 memorycache로 연결
+            try
+            {
+                IConnectionMultiplexer connectionMultiplexer =
+                    ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("redisConnectionString"));
+                builder.Services.AddSingleton(connectionMultiplexer);
+                builder.Services.AddStackExchangeRedisCache(options =>
+                    options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer)); 
+            }
+            catch
+            {
+                builder.Services.AddDistributedMemoryCache();    
+            }
 
 			//redis
 			//builder.Services.AddStackExchangeRedisCache(options =>

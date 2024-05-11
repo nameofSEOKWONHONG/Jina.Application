@@ -93,7 +93,7 @@ namespace Jina.Domain.Service.Account
                     TenantId = Request.TenantId,
                     Name = Request.Name,
                     RedirectUrl = Request.RedirectUrl,
-                    TimeZone = Request.TimeZone.xValue("Korea Standard Time"),
+                    TimeZone = Request.TimeZone.xValue<string>("Korea Standard Time"),
                 };
 
                 await this.Db.Tenants.AddAsync(rootTenant);

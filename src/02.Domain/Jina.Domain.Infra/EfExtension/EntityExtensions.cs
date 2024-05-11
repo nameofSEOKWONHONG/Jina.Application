@@ -1,6 +1,5 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Entity.Base;
-using Jina.Domain.Example;
 using Jina.Domain.Shared;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +42,7 @@ namespace Jina.Domain.Service.Infra
 
         public static async Task<T2> vFirstAsync<T1, T2>(this IQueryable<T1> query, ISessionContext ctx, Expression<Func<T1, bool>> predicate, Expression<Func<T1, T2>> expression)
              where T1 : TenantEntity
-            where T2 : DtoBase
+            where T2 : RequestBase
         {
             query = query.AsNoTracking().Where(m => m.TenantId == ctx.TenantId);
 
@@ -204,7 +203,7 @@ namespace Jina.Domain.Service.Infra
 
         public static async Task<PaginatedResult<T2>> vToPaginatedListAsync<T1, T2, TRequest>(this IQueryable<T1> query, ISessionContext ctx, TRequest request, Expression<Func<T1, T2>> expression)
             where T1 : TenantEntity
-            where T2 : DtoBase
+            where T2 : RequestBase
             where TRequest : PaginatedRequest
         {
             if (query.xIsEmpty()) throw new Exception("queriable is empty");
@@ -309,7 +308,7 @@ namespace Jina.Domain.Service.Infra
         
         public static async Task<CursorResult<T2>> vToPaginatedCursorListAsync<T1, T2, TRequest>(this IQueryable<T1> query, ISessionContext ctx, TRequest request, Expression<Func<T1, T2>> expression)
             where T1 : NumberEntity
-            where T2 : NumberDtoBase
+            where T2 : NumberRequestBase
             where TRequest : CursorRequest
         {
             if (query == null) throw new Exception("queriable is empty");

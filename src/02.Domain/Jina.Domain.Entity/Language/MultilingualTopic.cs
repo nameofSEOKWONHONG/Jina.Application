@@ -1,6 +1,5 @@
 ﻿using Jina.Domain.Entity.Base;
 using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI;
 
 namespace Jina.Domain.Entity.Language;
 
@@ -15,8 +14,10 @@ public class MultilingualTopic : NumberEntity
     /// </summary>
     public string PrimaryCultureType { get; set; }
     
-    public virtual ICollection<MultilingualContent> MultilingualContents { get; set; }
+    public virtual ICollection<MultilingualTopicConfig> MultilingualTopicConfigs { get; set; }
 }
+
+
 
 public class MultilingualTopicModelBuilder : IModelBuilder
 {
@@ -36,11 +37,11 @@ public class MultilingualTopicModelBuilder : IModelBuilder
                 .HasMaxLength(5)
                 .IsRequired()
                 .HasComment("메인 입력 언어 타입");
-            e.HasMany(e => e.MultilingualContents)
-                .WithOne(e => e.MultilingualTopic)
-                .HasForeignKey(e => new
-                    { e.MultilingualTopicTenantId, e.MultilingualTopicId, e.MultilingualTopicPrimaryCultureType })
-                .OnDelete(DeleteBehavior.Restrict);
+            e.HasMany(m => m.MultilingualTopicConfigs)
+                .WithOne(m => m.MultilingualTopic)
+                .HasForeignKey(m => new
+                    { m.MultilingualTopicTenantId, m.MultilingualTopicId, m.MultilingualTopicPrimaryCultureType })
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

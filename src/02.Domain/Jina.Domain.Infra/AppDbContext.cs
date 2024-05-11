@@ -242,6 +242,16 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
     
+    /// <summary>
+    /// 메인 토픽
+    /// </summary>
     public DbSet<MultilingualTopic> MultilingualTopics { get; set; }
+    /// <summary>
+    /// 서브 언어권 설정
+    /// </summary>
+    public DbSet<MultilingualTopicConfig> MultilingualTopicConfigs { get; set; }
+    /// <summary>
+    /// 번역 언어
+    /// </summary>
     public DbSet<MultilingualContent> MultilingualContents { get; set; }
 }

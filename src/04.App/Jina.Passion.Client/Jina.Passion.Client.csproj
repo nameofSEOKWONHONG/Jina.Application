@@ -16,10 +16,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.18.3" />
+    <PackageReference Include="AntDesign" Version="0.19.0" />
     <PackageReference Include="AntDesign.Charts" Version="0.5.1" />
     <PackageReference Include="AntDesign.Components.Authentication" Version="0.15.5" />
-    <PackageReference Include="AntDesign.ProLayout" Version="0.18.2" />
+    <PackageReference Include="AntDesign.ProLayout" Version="0.19.0" />
     <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />

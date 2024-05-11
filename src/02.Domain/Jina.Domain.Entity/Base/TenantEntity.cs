@@ -31,3 +31,8 @@ public abstract class NumberEntity : TenantEntity
 {
     public int Id { get; set; }
 }
+
+public abstract class GuidEntity : TenantEntity
+{
+    public Guid Guid { get; set; }
+}
