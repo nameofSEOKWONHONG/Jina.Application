@@ -1,29 +1,33 @@
 ﻿using eXtensionSharp;
 using Jina.Base.Service;
+using Jina.Base.Service.Abstract;
 using Jina.Database.Abstract;
 using Jina.Session.Abstract;
 
 namespace Jina.Domain.Service.Infra
 {
-	public abstract class ServiceImplBase<TSelf, TRequest, TResult> : ServiceImplCore<TSelf, TRequest, TResult>
+	public abstract class ServiceImplBase<TSelf, TRequest, TResult> 
+        : ServiceImplCore<TSelf, TRequest, TResult>
+            , IServiceImplBase<TRequest, TResult>
         where TSelf : class
     {
-        protected ISessionContext Ctx;
-        protected ServicePipeline Svc;
+        public ISessionContext Context { get; }
+        protected readonly ServicePipeline Pipe;
 
-        protected ServiceImplBase(ISessionContext context, ServicePipeline svc)
+        protected ServiceImplBase(ISessionContext context, ServicePipeline pipe)
         {
             this.Self = this;
-            this.Ctx = context;
-            this.Svc = svc;
+            this.Context = context;
+            this.Pipe = pipe;
         }
     }
 
-    public abstract class ServiceImplBase<TSelf, TDbContext, TRequest, TResult> : ServiceImplBase<TSelf, TRequest, TResult>
+    public abstract class ServiceImplBase<TSelf, TDbContext, TRequest, TResult> 
+        : ServiceImplBase<TSelf, TRequest, TResult>
         where TSelf : class
         where TDbContext : IDbContext
     {
-        protected TDbContext Db => this.Ctx.DbContext.xAs<TDbContext>();
+        protected TDbContext Db => this.Context.DbContext.xAs<TDbContext>();
 
         /// <summary>
         /// 
@@ -38,8 +42,8 @@ namespace Jina.Domain.Service.Infra
         /// 
         /// </summary>
         /// <param name="context"></param>
-        /// <param name="svc"></param>
-        protected ServiceImplBase(ISessionContext context, ServicePipeline svc) : base(context, svc)
+        /// <param name="pipe"></param>
+        protected ServiceImplBase(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
         {
         }
     }

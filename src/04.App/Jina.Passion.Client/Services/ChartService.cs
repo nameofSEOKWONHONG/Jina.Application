@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Jina.Passion.Client.Base;
 using Jina.Passion.Client.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace Jina.Passion.Client.Services;
 
@@ -16,10 +17,10 @@ public interface IChartService
 
 public class ChartService : IChartService
 {
-    private readonly HttpClient _client;
-    public ChartService(HttpClient client)
+    private NavigationManager NavigationManager;
+    public ChartService(NavigationManager navigationManager)
     {
-        _client = client;
+        this.NavigationManager = navigationManager;
     }
 
     public async Task<ChartDataItem[]> GetVisitDataAsync()
@@ -44,6 +45,8 @@ public class ChartService : IChartService
 
     private async Task<ChartData> GetChartDataAsync()
     {
-        return await this._client.GetFromJsonAsync<ChartData>("http://localhost:5005/data/fake_chart_data.json");
+        using var client = new HttpClient();
+        client.BaseAddress = new Uri(this.NavigationManager.BaseUri);
+        return await client.GetFromJsonAsync<ChartData>("/data/fake_chart_data.json");
     }
 }

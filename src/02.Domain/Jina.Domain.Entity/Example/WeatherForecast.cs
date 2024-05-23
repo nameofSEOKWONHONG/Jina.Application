@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Jina.Domain.Entity.Example
 {
-	[Table("WeatherForecast", Schema = "example")]
+	[Table("example.WeatherForecasts")]
     public class WeatherForecast : TenantEntity
     {
         public int Id { get; set; }

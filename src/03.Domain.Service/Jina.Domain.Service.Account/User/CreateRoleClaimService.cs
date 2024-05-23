@@ -19,12 +19,12 @@ public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimServ
     /// 
     /// </summary>
     /// <param name="ctx"></param>
-    /// <param name="svc"></param>
-    public CreateRoleClaimService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
+    /// <param name="pipe"></param>
+    public CreateRoleClaimService(ISessionContext ctx, ServicePipeline pipe) : base(ctx, pipe)
     {
     }
 
-    public override async Task OnExecutingAsync()
+    public override async Task<bool> OnExecutingAsync()
     {
         var exist = await this.Db.RoleClaims
             .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
@@ -36,8 +36,10 @@ public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimServ
         if (exist.xIsNotEmpty())
         {
             this.Result = await Results<bool>.FailAsync("already exists");
-            return;
+            return false;
         }
+
+        return true;
     }
 
     public override async Task OnExecuteAsync()

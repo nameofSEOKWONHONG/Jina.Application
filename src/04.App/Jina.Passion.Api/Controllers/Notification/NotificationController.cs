@@ -10,9 +10,9 @@ using Results = Jina.Domain.Shared.Results;
 
 namespace Jina.Passion.Api.Controllers.Notification;
 
-public class NotificationController : JControllerBase
+public class NotificationController : ActionController
 {
-    private readonly IHubContext<MessageHub> _hubContext;
+    private IHubContext<MessageHub> _messageHub;
     private readonly IBackgroundJobClient _client;
 
     /// <summary>
@@ -20,10 +20,10 @@ public class NotificationController : JControllerBase
     /// </summary>
     /// <param name="hubContext"></param>
     /// <param name="client"></param>
-    public NotificationController(IHubContext<MessageHub> hubContext,
+    public NotificationController(IHubContext<MessageHub> messageHub,
         IBackgroundJobClient client)
     {
-        _hubContext = hubContext;
+        _messageHub = messageHub;
         _client = client;
     }
 
@@ -36,7 +36,7 @@ public class NotificationController : JControllerBase
         {
             return Ok(await Results.FailAsync(valid.vToKeyValueErrors()));
         }
-        await _hubContext.Clients.All.SendAsync(request.Method, request.UserId, request.Message);
+        await _messageHub.Clients.All.SendAsync("SendUserMessage", request.UserId, request.Message);
         return Ok(await Results.SuccessAsync());
     }
 

@@ -30,57 +30,59 @@ namespace Jina.Domain.Service.Account
         /// 
         /// </summary>
         /// <param name="ctx"></param>
-        /// <param name="svc"></param>
+        /// <param name="pipe"></param>
         /// <param name="passwordHasher"></param>
-        public CreateTenantService(ISessionContext ctx, ServicePipeline svc,
-            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, svc)
+        public CreateTenantService(ISessionContext ctx, ServicePipeline pipe,
+            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, pipe)
         {
             _passwordHasher = passwordHasher;
         }
 
-        public override async Task OnExecutingAsync()
+        public override async Task<bool> OnExecutingAsync()
         {
             if (this.Request.TenantId.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("TenantId is empty");
-                return;
+                return false;
             }
 
             if (this.Request.Email.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("Email is empty");
-                return;
+                return false;
             }
 
             if (this.Request.Name.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("Name is empty");
-                return;
+                return false;
             }
 
             if (this.Request.UserName.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("User name is empty");
-                return;
+                return false;
             }
 
             if (this.Request.FirstName.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("First name is empty");
-                return;
+                return false;
             }
 
             if (this.Request.LastName.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("Last name is empty");
-                return;
+                return false;
             }
 
             if (this.Request.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("Last name is empty");
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public override async Task OnExecuteAsync()

@@ -52,7 +52,7 @@ public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, AppDbContext
     public override async Task OnExecuteAsync()
     {
         var uri = new Uri(_url);
-        var res = await this.Ctx.HttpClientFactory.CreateClient().GetAsync(uri);
+        var res = await this.Context.HttpClientFactory.CreateClient().GetAsync(uri);
         
         if (res.IsSuccessStatusCode)
         {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jina.Passion.Api.Controllers.Example;
 
-public class SseController : JControllerBase
+public class SseController : ActionController
 {
     [HttpGet]
     public async Task Get(CancellationToken cancellationToken)

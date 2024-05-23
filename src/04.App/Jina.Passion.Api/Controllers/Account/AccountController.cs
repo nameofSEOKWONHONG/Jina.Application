@@ -1,4 +1,3 @@
-using System.Text;
 using eXtensionSharp;
 using Hangfire;
 using Jina.Base.Attributes;
@@ -21,7 +20,7 @@ namespace Jina.Passion.Api.Controllers.Account;
 /// <summary>
 /// 계정 컨트롤러
 /// </summary>
-public class AccountController : JControllerBase
+public class AccountController : ActionController
 {
     public AccountController()
     {
@@ -42,16 +41,16 @@ public class AccountController : JControllerBase
     {
         IResults<TokenResult> result = null;
 
-        this.Spl.Register(service)
+        this.Pipe.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .SetValidator(() => validator)
             .OnValidated(vResult => result = Results<TokenResult>.Fail(vResult.Errors.xJoin()))
             .OnExecuted(r => result = r);
         
-        await this.Spl.ExecuteAsync();
+        await this.Pipe.ExecuteAsync();
 
-        this.Ctx.JobClient.Enqueue<EmailJob>(m => m.ExecuteAsync(new EmailRequest()));
+        this.Context.JobClient.Enqueue<EmailJob>(m => m.ExecuteAsync(new EmailRequest()));
 
         return Ok(result);
     }
@@ -64,12 +63,12 @@ public class AccountController : JControllerBase
         [FromServices] ILogoutService service)
     {
         IResults<bool> result = null;
-        this.Spl.Register(service)
+        this.Pipe.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .OnExecuted(m => result = m);
 
-        await this.Spl.ExecuteAsync();
+        await this.Pipe.ExecuteAsync();
  
         return Ok(result);
     }
@@ -82,6 +81,7 @@ public class AccountController : JControllerBase
     /// <param name="validator"></param>
     /// <returns></returns>
     [Authorize]
+    [TypeFilter(typeof(ActionExecuteFilter))]
     [TransactionOptions]
     [HttpPost]
     public async Task<IActionResult> Refresh(RefreshTokenRequest model,
@@ -90,7 +90,7 @@ public class AccountController : JControllerBase
     {
         IResults<TokenResult> result = null;
 
-        this.Spl.Register(service)
+        this.Pipe.Register(service)
             .AddFilter(model.xIsNotEmpty)
             .SetParameter(() => model)
             .SetValidator(() => validator)
@@ -103,7 +103,7 @@ public class AccountController : JControllerBase
                 result = m;
             });
         
-        await this.Spl.ExecuteAsync();
+        await this.Pipe.ExecuteAsync();
         
         return Ok(result);
     }
@@ -115,7 +115,8 @@ public class AccountController : JControllerBase
     /// <param name="service"></param>
     /// <param name="validator"></param>
     /// <returns></returns>
-    [AllowAnonymous]
+    [Authorize]
+    [TypeFilter(typeof(ActionExecuteFilter))]
     [TransactionOptions]
     [HttpPost]
     public async Task<IActionResult> RegisterTenant(CreateTenantRequest request 
@@ -123,7 +124,7 @@ public class AccountController : JControllerBase
         , [FromServices] CreateTenantRequestValidator validator)
     {
         IResults result = null;
-        this.Spl.Register(service)
+        this.Pipe.Register(service)
             .AddFilter(request.xIsNotEmpty)
             .SetParameter(() => request)
             .SetValidator(() => validator)
@@ -133,7 +134,7 @@ public class AccountController : JControllerBase
             })
             .OnExecuted(m => result = m);
 
-        await this.Spl.ExecuteAsync();
+        await this.Pipe.ExecuteAsync();
  
         return Ok(result);
     }

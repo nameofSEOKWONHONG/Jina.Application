@@ -8,28 +8,27 @@ using Serilog;
 namespace Jina.Domain.Service.Infra;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
 public abstract class JControllerBase : ControllerBase
 {
     protected ILogger Logger => Log.Logger;
-    private ServicePipeline _spl;
-    private ISessionContext _ctx;
+    private ServicePipeline _pipe;
+    private ISessionContext _context;
 
-    protected ServicePipeline Spl
+    protected ServicePipeline Pipe
     {
         get
         {
-            if (_spl.xIsEmpty()) _spl = this.HttpContext.RequestServices.GetRequiredService<ServicePipeline>();
-            return _spl;
+            if (_pipe.xIsEmpty()) _pipe = this.HttpContext.RequestServices.GetRequiredService<ServicePipeline>();
+            return _pipe;
         }
     }
 
-    protected ISessionContext Ctx
+    protected ISessionContext Context
     {
         get
         {
-            if (_ctx.xIsEmpty()) _ctx = this.HttpContext.RequestServices.GetRequiredService<ISessionContext>();
-            return _ctx;
+            if (_context.xIsEmpty()) _context = this.HttpContext.RequestServices.GetRequiredService<ISessionContext>();
+            return _context;
         }
     }
 

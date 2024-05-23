@@ -22,7 +22,6 @@ public class AppDbContext : AuditableContext, IDbContext
      , ISessionDateTime date
     ) : base(options, user, date)
     {
-        
     }
 
     public AppDbContext(string connection 
@@ -178,7 +177,7 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        if(User.xIsEmpty())
+        if (User.xIsEmpty())
             return await base.SaveChangesAsync(cancellationToken);
         if (User.TenantId.xIsEmpty())
             return await base.SaveChangesAsync(cancellationToken);
@@ -186,7 +185,7 @@ public class AppDbContext : AuditableContext, IDbContext
         var audit = ChangeTracker.Entries<IAuditableEntity>().FirstOrDefault();
         if (audit.xIsNotEmpty())
         {
-            foreach (var entry in ChangeTracker.Entries<IAuditableEntity>().ToList())
+            ChangeTracker.Entries<IAuditableEntity>().ToList().xForEachSpan(entry =>
             {
                 switch (entry.State)
                 {
@@ -200,10 +199,10 @@ public class AppDbContext : AuditableContext, IDbContext
                         entry.Entity.LastModifiedBy = User.UserId;
                         break;
                 }
-            }
+            });
         }
         
-        foreach (var entry in ChangeTracker.Entries<TenantEntity>().ToList())
+        ChangeTracker.Entries<TenantEntity>().ToList().xForEachSpan((i, entry) =>
         {
             switch (entry.State)
             {
@@ -221,7 +220,12 @@ public class AppDbContext : AuditableContext, IDbContext
                     entry.Entity.LastModifiedOn = Date.Now;
                     break;
             }
-        }
+        });
+        
+        ChangeTracker.Entries<GuidEntity>().ToList().xForEachSpan((i, entry) =>
+        {
+            entry.Entity.SortNo = (i + 1);
+        });
         
         return await base.SaveChangesAsync(User.TenantId, User.UserId, cancellationToken);
     }
@@ -254,4 +258,6 @@ public class AppDbContext : AuditableContext, IDbContext
     /// 번역 언어
     /// </summary>
     public DbSet<MultilingualContent> MultilingualContents { get; set; }
+    
+    public DbSet<Sequence> Sequences { get; set; }
 }

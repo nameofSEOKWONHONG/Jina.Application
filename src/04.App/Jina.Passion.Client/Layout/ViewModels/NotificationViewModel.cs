@@ -32,7 +32,7 @@ namespace Jina.Passion.Client.Layout.ViewModels
                 .WithUrl(uri)
                 .Build();
 
-            _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+            _hubConnection.On<string, string>("SendUserMessage", (user, message) =>
             {
                 var encodedMsg = $"{user}: {message}";
                 var notiData = new NoticeIconData()

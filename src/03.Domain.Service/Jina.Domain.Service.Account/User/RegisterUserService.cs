@@ -24,15 +24,15 @@ namespace Jina.Domain.Service.Account.User
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
         private readonly IEmailService _emailService;
         
-        public RegisterUserService(ISessionContext ctx, ServicePipeline svc,
+        public RegisterUserService(ISessionContext ctx, ServicePipeline pipe,
             IPasswordHasher<Entity.Account.User> passwordHasher,
-            IEmailService emailService) : base(ctx, svc)
+            IEmailService emailService) : base(ctx, pipe)
         {
             _passwordHasher = passwordHasher;
             _emailService = emailService;
         }
 
-        public override async Task OnExecutingAsync()
+        public override async Task<bool> OnExecutingAsync()
         {
             var user = await this.Db.Users.AnyAsync(m =>
                 m.TenantId == this.Request.TenantId &&
@@ -41,7 +41,7 @@ namespace Jina.Domain.Service.Account.User
             if (user.xIsNotEmpty())
             {
                 this.Result = await Results<string>.FailAsync("Email already exist");
-                return;
+                return false;
             }
 
             var phone = await this.Db.Users.AnyAsync(m =>
@@ -51,8 +51,10 @@ namespace Jina.Domain.Service.Account.User
             if (phone.xIsNotEmpty())
             {
                 this.Result = await Results<string>.FailAsync("Phone already exist");
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public override async Task OnExecuteAsync()
@@ -140,7 +142,7 @@ namespace Jina.Domain.Service.Account.User
                         Body = $"Please confirm your account by <a href='{verificationUri}'>clicking here</a>.",
                         Subject = "Confirm Registration"
                     };
-                    this.Ctx.JobClient.Enqueue<EmailJob>(m => m.ExecuteAsync(mailRequest));
+                    this.Context.JobClient.Enqueue<EmailJob>(m => m.ExecuteAsync(mailRequest));
                     
                     this.Result = await Results<string>.SuccessAsync(user.Id,
                         $"User {user.UserName} Registered. Please check your Mailbox to verify!");

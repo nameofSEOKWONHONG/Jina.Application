@@ -1,10 +1,7 @@
-﻿using EntityFramework.DynamicLinq;
-using eXtensionSharp;
-using Jina.Domain.Entity;
+﻿using eXtensionSharp;
 using Jina.Session.Abstract;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Service.Infra.Middleware;
@@ -23,16 +20,46 @@ public class ActionExecuteFilter: IAsyncActionFilter
     }
     
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
-    {
+    {   
         //before
-        _ctx.IsDecrypt = string.Equals(context.HttpContext.Request.Method, "get", StringComparison.InvariantCultureIgnoreCase);
+        _ctx.IsDecrypt = context.HttpContext.Request.Method.xEquals("get");
+        
+        await next();
+        
+        //after
+    }
+}
+
+public class SessionExecuteFilter : IAsyncActionFilter
+{
+    private readonly ISessionContext _ctx;
+    public SessionExecuteFilter(ISessionContext ctx)
+    {
+        _ctx = ctx;
+    }
+    
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        if (_ctx.TenantId.xIsEmpty()) throw new ArgumentNullException(nameof(_ctx.TenantId), "TenantId is empty");
+        if (_ctx.CurrentUser.UserId.xIsEmpty()) throw new ArgumentNullException(nameof(_ctx.CurrentUser.UserId), "UserId is empty");
+        
+        //before
         var user = await _ctx.DbContext.xAs<AppDbContext>().Users
-            .FirstAsync(m => m.TenantId == _ctx.TenantId && m.Email == _ctx.CurrentUser.Email);
-        if (user.RefreshToken.xIsEmpty() && user.RefreshTokenExpiryTime == DateTime.MinValue)
+            .FirstOrDefaultAsync(m => m.Email == _ctx.CurrentUser.Email);
+        
+        if(user.xIsEmpty()) 
         {
-            throw new Exception("Retry authorize");
+            context.Result = new UnauthorizedResult();
+            return;
         }
         
+        if (user.RefreshToken.xIsEmpty() && 
+            user.RefreshTokenExpiryTime == DateTime.MinValue)
+        {
+            context.Result = new UnauthorizedResult();
+            return;
+        }
+
         await next();
         
         //after

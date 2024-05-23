@@ -34,10 +34,10 @@
 @* </Spin> *@
 @* <SettingDrawer @ref="settingDrawer" /> *@
 
-@inject HttpClient HttpClient;
 @inject ISpinService SpinService;
 @inject IHttpInterceptorManager Intercepter;
 @inject ReuseTabsService TabService;
+@inject NavigationManager NavigationManager
  @code
  {
     @* private SettingDrawer settingDrawer; *@
@@ -51,7 +51,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MenuData = await HttpClient.GetFromJsonAsync<MenuDataItem[]>("http://localhost:5005/data/menu.json");        
+        using var client = new HttpClient();
+        client.BaseAddress = new Uri(NavigationManager.BaseUri);
+        MenuData = await client.GetFromJsonAsync<MenuDataItem[]>("/data/menu.json");        
     }
 
     public LinkItem[] Links { get; set; } =
@@ -91,7 +93,6 @@
     
     public void Dispose()
     {
-        HttpClient?.Dispose();
         Intercepter?.DisposeEvent();
     }
 }

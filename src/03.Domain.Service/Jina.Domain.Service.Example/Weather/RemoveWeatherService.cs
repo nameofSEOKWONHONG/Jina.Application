@@ -21,26 +21,28 @@ namespace Jina.Domain.Service.Example.Weather
     public sealed class RemoveWeatherService : ServiceImplBase<RemoveWeatherService, AppDbContext, int, IResults>, IRemoveWeatherService
     {
         private WeatherForecast _weatherForecast;
-        public RemoveWeatherService(ISessionContext context, ServicePipeline svc) : base(context, svc)
+        public RemoveWeatherService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
         {
         }
 
-        public override async Task OnExecutingAsync()
+        public override async Task<bool> OnExecutingAsync()
         {
             if (this.Request.xIsEmpty())
             {
                 this.Result = await Results.FailAsync("Id is empty.");
-                return;
+                return false;
             }
             
-            _weatherForecast = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Ctx)
-                .vFirstAsync(this.Ctx, m => m.Id == this.Request);
+            _weatherForecast = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Context)
+                .vFirstAsync(this.Context, m => m.Id == this.Request);
 
             if (this._weatherForecast.xIsEmpty())
             {
                 this.Result = await Results.FailAsync("item is empty.");
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public override async Task OnExecuteAsync()

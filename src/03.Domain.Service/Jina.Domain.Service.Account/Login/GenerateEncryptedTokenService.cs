@@ -25,26 +25,26 @@ public sealed class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncr
     /// </summary>
     /// <param name="db"></param>
     /// <param name="context"></param>
-    public GenerateEncryptedTokenService(ISessionContext ctx, ServicePipeline svc,
-        IOptions<ApplicationConfig> options, IGetClaimsService getClaimsService) : base(ctx, svc)
+    public GenerateEncryptedTokenService(ISessionContext ctx, ServicePipeline pipe,
+        IOptions<ApplicationConfig> options, IGetClaimsService getClaimsService) : base(ctx, pipe)
     {
         _config = options.Value;
         _getClaimsService = getClaimsService;
     }
 
-    public override Task OnExecutingAsync()
+    public override Task<bool> OnExecutingAsync()
     {
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public override async Task OnExecuteAsync()
     {
         IEnumerable<Claim> claims = null;
-        this.Svc.Register(_getClaimsService)
+        this.Pipe.Register(_getClaimsService)
             .SetParameter(() => this.Request)
             .OnExecuted(r => claims = r);
 
-        await this.Svc.ExecuteAsync();
+        await this.Pipe.ExecuteAsync();
         
         var secret = Encoding.UTF8.GetBytes(_config.Secret);
         var credentials = new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);

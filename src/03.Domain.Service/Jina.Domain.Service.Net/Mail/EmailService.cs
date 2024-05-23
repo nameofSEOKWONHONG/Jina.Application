@@ -39,44 +39,46 @@ public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults
     /// ctor
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="svc"></param>
-    public EmailService(ISessionContext context, ServicePipeline svc,
-        IOptions<EmailConfig> options) : base(context, svc)
+    /// <param name="pipe"></param>
+    public EmailService(ISessionContext context, ServicePipeline pipe,
+        IOptions<EmailConfig> options) : base(context, pipe)
     {
         _config = options.Value;
     }
 
-    public override async Task OnExecutingAsync()
+    public override async Task<bool> OnExecutingAsync()
     {
         if (this.Request.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync();
-            return;
+            return false;
         }
 
         if (this.Request.FromMailers.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync();
-            return;
+            return false;
         }
 
         if (this.Request.ToMailers.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync();
-            return;
+            return false;
         }
 
         if (this.Request.Subject.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync();
-            return;
+            return false;
         }
 
         if (this.Request.Body.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync();
-            return;
+            return false;
         }
+
+        return true;
     }
 
     public override async Task OnExecuteAsync()

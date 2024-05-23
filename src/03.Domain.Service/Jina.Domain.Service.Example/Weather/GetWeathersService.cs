@@ -16,24 +16,27 @@ namespace Jina.Domain.Service.Example.Weather
             , IGetWeathersService
     {
         private readonly WeatherForecastResultValidator _validator;
-        public GetWeathersService(ISessionContext ctx, ServicePipeline svc
-        , WeatherForecastResultValidator validator) : base(ctx, svc)
+        public GetWeathersService(ISessionContext ctx, ServicePipeline pipe
+        , WeatherForecastResultValidator validator) : base(ctx, pipe)
         {
             _validator = validator;
         }
 
-        public override async Task OnExecutingAsync()
+        public override async Task<bool> OnExecutingAsync()
         {
             if (this.Request.SearchData.From.xIsEmpty() ||
                 this.Request.SearchData.To.xIsEmpty())
             {                           
                 this.Result = await PaginatedResult<WeatherForecastResult>.FailAsync("Search date required");
+                return false;
             }
+
+            return true;
         }
 
         public override async Task OnExecuteAsync()
         {
-            var query = this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Ctx);
+            var query = this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Context);
 
             if (this.Request.SearchData.City.xIsNotEmpty())
             {
@@ -47,7 +50,7 @@ namespace Jina.Domain.Service.Example.Weather
                                          m.Date < this.Request.SearchData.To.Value.xToToDate(false));                
             }
 
-            this.Result = await query.vToPaginatedListAsync(this.Ctx, this.Request, m => new WeatherForecastResult()
+            this.Result = await query.vToPaginatedListAsync(this.Context, this.Request, m => new WeatherForecastResult()
             {
                 Id = m.Id,
                 City = m.City,

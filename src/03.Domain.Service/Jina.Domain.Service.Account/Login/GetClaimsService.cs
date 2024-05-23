@@ -24,13 +24,13 @@ public sealed class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbCo
     /// 
     /// </summary>
     /// <param name="context"></param>
-    public GetClaimsService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
+    public GetClaimsService(ISessionContext ctx, ServicePipeline pipe) : base(ctx, pipe)
     {
     }
 
-    public override Task OnExecutingAsync()
+    public override Task<bool> OnExecutingAsync()
     {
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public override async Task OnExecuteAsync()

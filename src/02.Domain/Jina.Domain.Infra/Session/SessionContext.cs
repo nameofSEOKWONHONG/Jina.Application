@@ -2,9 +2,11 @@
 using Hangfire;
 using Jina.Database.Abstract;
 using Jina.Domain.Entity;
+using Jina.Domain.Service.Infra.Services;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Jina.Domain.Service.Infra
 {
@@ -25,8 +27,7 @@ namespace Jina.Domain.Service.Infra
         public IHttpClientFactory HttpClientFactory { get; init;}
         
         public IBackgroundJobClient JobClient { get; init;}
-
-        public CancellationToken CancellationToken { get; init;}
+        public IDistributedCache DistributedCache { get; init; }
 
         public bool IsDecrypt { get; set; }
 
@@ -38,7 +39,8 @@ namespace Jina.Domain.Service.Infra
             , ILocalizer localizer
             , IHttpClientFactory factory
             , IHttpContextAccessor accessor
-            , IBackgroundJobClient jobClient)
+            , IBackgroundJobClient jobClient
+            , IDistributedCache cache)
         {
             this.DbContext = dbContext;
             this.Localizer = localizer;
@@ -49,6 +51,7 @@ namespace Jina.Domain.Service.Infra
             this.HttpContextAccessor = accessor;
             this.HttpClientFactory = factory;
             this.JobClient = jobClient;
+            this.DistributedCache = cache;
 
             if (this.CurrentUser.xIsNotEmpty())
             {

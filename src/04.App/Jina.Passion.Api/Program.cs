@@ -1,11 +1,7 @@
 using Hangfire;
-using Jina.Domain.Entity;
-using Jina.Domain.Service.Infra;
 using Jina.Domain.Service.Infra.Middleware;
 using Jina.Domain.Service.Net.Notification;
 using Jina.Passion.Api;
-using Jina.Passion.Api.Hubs;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +29,13 @@ app.UseCors("AllowedCorsOrigins");
 app.MapControllers();
 app.UseHangfireDashboard("/hangfire");
 app.UseRouting();
+
+#region [cache header]
+
+//app.UseHttpCacheHeaders();
+
+#endregion
+
 
 app.UseMiddleware<RequestLogContextMiddleware>();
 app.UseSerilogRequestLogging();

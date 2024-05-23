@@ -36,7 +36,6 @@ namespace Jina.Domain.Service.Infra
                     Claims = user.Claims.AsEnumerable().Select(item => new KeyValuePair<string, string>(item.Type, item.Value)).ToList();                
                 }    
             }
-            
         }
     }
 }

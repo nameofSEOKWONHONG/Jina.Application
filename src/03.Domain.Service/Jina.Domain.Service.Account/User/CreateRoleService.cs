@@ -19,12 +19,12 @@ namespace Jina.Domain.Service.Account.User
         /// 
         /// </summary>
         /// <param name="ctx"></param>
-        /// <param name="svc"></param>
-        public CreateRoleService(ISessionContext ctx, ServicePipeline svc) : base(ctx, svc)
+        /// <param name="pipe"></param>
+        public CreateRoleService(ISessionContext ctx, ServicePipeline pipe) : base(ctx, pipe)
         {
         }
 
-        public override async Task OnExecutingAsync()
+        public override async Task<bool> OnExecutingAsync()
         {
             var id = await this.Db.Roles
                 .FirstOrDefaultAsync(m => m.TenantId == this.Request.TenantId &&
@@ -33,7 +33,7 @@ namespace Jina.Domain.Service.Account.User
             if (id.xIsEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("already exist");
-                return;
+                return false;
             }
 
             var name = await this.Db.Roles
@@ -43,8 +43,10 @@ namespace Jina.Domain.Service.Account.User
             if (name.xIsNotEmpty())
             {
                 this.Result = await Results<bool>.FailAsync("already exist");
-                return;
+                return false;
             }
+
+            return true;
         }
 
         public override async Task OnExecuteAsync()

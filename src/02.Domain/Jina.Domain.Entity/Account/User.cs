@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Jina.Domain.Entity.Base;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Domain.Entity.Account;
 
+[Table("dbo.AspNetUsers")]
 public class User : IdentityUser<string>, IAuditableEntity
 {
     [MaxLength(5)]

@@ -19,7 +19,7 @@ using Jina.Domain.Shared.Abstract;
 
 namespace Jina.Domain.Service.Account
 {
-	[TransactionOptions()]
+	[TransactionOptions]
 	public sealed class LoginService : ServiceImplBase<LoginService, AppDbContext, TokenRequest, IResults<TokenResult>>, ILoginService
 	{
 		private readonly IPasswordHasher<Jina.Domain.Entity.Account.User> _passwordHasher;
@@ -30,48 +30,69 @@ namespace Jina.Domain.Service.Account
 		/// ctor
 		/// </summary>
 		/// <param name="ctx"></param>
-		/// <param name="svc"></param>
+		/// <param name="pipe"></param>
 		/// <param name="passwordHasher"></param>
 		/// <param name="options"></param>
-		public LoginService(ISessionContext ctx, ServicePipeline svc,
+		public LoginService(ISessionContext ctx, ServicePipeline pipe,
 			IPasswordHasher<Jina.Domain.Entity.Account.User> passwordHasher,
-			IOptions<ApplicationConfig> options) : base(ctx, svc)
+			IGenerateEncryptedTokenService generateEncryptedTokenService,
+			IOptions<ApplicationConfig> options) : base(ctx, pipe)
 		{
 			_passwordHasher = passwordHasher;
 			_config = options.Value;
 		}
 
-		public override async Task OnExecutingAsync()
+		public override async Task<bool> OnExecutingAsync()
 		{
+			if (this.Request.TenantId.xIsEmpty())
+			{
+				this.Result = await Results<TokenResult>.FailAsync("Tenant is empty");
+				return false;
+			}
+
+			if (this.Request.Email.xIsEmpty())
+			{
+				this.Result = await Results<TokenResult>.FailAsync("Email is empty");
+				return false;
+			}
+			
+			if (this.Request.Password.xIsEmpty())
+			{
+				this.Result = await Results<TokenResult>.FailAsync("Password is empty");
+				return false;
+			}
+			
 			_user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == Request.TenantId && m.Email == Request.Email);
 			
 			if (_user.xIsEmpty())
 			{
 				this.Result = await Results<TokenResult>.FailAsync("User Not Found.");
-				return;
+				return false;
 			}
 			if (!_user.IsActive)
 			{
 				this.Result = await Results<TokenResult>.FailAsync("User Not Active. Please contact the administrator.");
-				return;
+				return false;
 			}
 			if (!_user.EmailConfirmed)
 			{
 				this.Result = await Results<TokenResult>.FailAsync("E-Mail not confirmed.");
-				return;
+				return false;
 			}
 			if (_user.TenantId != Request.TenantId)
 			{
 				this.Result = await Results<TokenResult>.FailAsync("Tenant-Id not Matched.");
-				return;
+				return false;
 			}
 
 			var passwordValid = _passwordHasher.VerifyHashedPassword(_user, _user.PasswordHash, Request.Password);
 			if (passwordValid != PasswordVerificationResult.Success)
 			{
 				this.Result = await Results<TokenResult>.FailAsync("Invalid Credentials.");
-				return;
+				return false;
 			}
+
+			return true;
 		}
 
 		public override async Task OnExecuteAsync()

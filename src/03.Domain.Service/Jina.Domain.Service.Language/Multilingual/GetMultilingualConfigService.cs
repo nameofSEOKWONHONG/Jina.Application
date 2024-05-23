@@ -20,14 +20,14 @@ public class GetMultilingualTopicService : ServiceImplBase<GetMultilingualTopicS
     /// ctor
     /// </summary>
     /// <param name="context"></param>
-    /// <param name="svc"></param>
-    public GetMultilingualTopicService(ISessionContext context, ServicePipeline svc) : base(context, svc)
+    /// <param name="pipe"></param>
+    public GetMultilingualTopicService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
     {
     }
 
-    public override Task OnExecutingAsync()
+    public override Task<bool> OnExecutingAsync()
     {
-        return Task.CompletedTask;
+        return Task.FromResult(true);
     }
 
     public override async Task OnExecuteAsync()
