@@ -4,27 +4,26 @@ using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Base.Service;
 using Jina.Base.Service.Abstract;
+using Jina.Domain.Abstract.Account;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account;
 
-public interface IGetClaimsService : IServiceImplBase<Entity.Account.User, IEnumerable<Claim>>, IScopeService
-{
-    
-}
-
-[TransactionOptions()]
+[TransactionOptions]
 public sealed class GetClaimsService : ServiceImplBase<GetClaimsService, AppDbContext, Entity.Account.User, IEnumerable<Claim>>,
     IGetClaimsService
 {
     /// <summary>
     /// 
     /// </summary>
+    /// <param name="logger"></param>
     /// <param name="context"></param>
-    public GetClaimsService(ISessionContext ctx, ServicePipeline pipe) : base(ctx, pipe)
+    /// <param name="pipe"></param>
+    public GetClaimsService(ILogger<GetClaimsService> logger, ISessionContext context, ServicePipeline pipe) : base(logger, context, pipe)
     {
     }
 

@@ -14,14 +14,14 @@ using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Example.Weather
 {
     [TransactionOptions(IsolationLevel.ReadCommitted)]
     public sealed class RemoveWeatherService : ServiceImplBase<RemoveWeatherService, AppDbContext, int, IResults>, IRemoveWeatherService
     {
-        private WeatherForecast _weatherForecast;
-        public RemoveWeatherService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
+        public RemoveWeatherService(ILogger<RemoveWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
         {
         }
 
@@ -33,10 +33,10 @@ namespace Jina.Domain.Service.Example.Weather
                 return false;
             }
             
-            _weatherForecast = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Context)
+            var exist = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Context)
                 .vFirstAsync(this.Context, m => m.Id == this.Request);
 
-            if (this._weatherForecast.xIsEmpty())
+            if (exist.xIsEmpty())
             {
                 this.Result = await Results.FailAsync("item is empty.");
                 return false;
@@ -47,7 +47,9 @@ namespace Jina.Domain.Service.Example.Weather
 
         public override async Task OnExecuteAsync()
         {
-            this.Db.WeatherForecasts.Remove(_weatherForecast);
+            var exist = await this.Db.WeatherForecasts.vAsNoTrackingQueryable(this.Context)
+                .vFirstAsync(this.Context, m => m.Id == this.Request);
+            this.Db.WeatherForecasts.Remove(exist);
             await this.Db.SaveChangesAsync();
             this.Result = await Results.SuccessAsync();
         }

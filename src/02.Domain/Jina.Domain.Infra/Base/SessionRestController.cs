@@ -5,30 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Jina.Domain.Service.Infra;
 
 /// <summary>
-/// rest api using session
-/// </summary>
-[Authorize]
-[TypeFilter(typeof(ActionExecuteFilter))]
-[Route("api/[controller]")]
-public abstract class SessionRestController : JControllerBase
-{
-    
-}
-
-/// <summary>
-/// action api using session
-/// </summary>
-[Authorize]
-[TypeFilter(typeof(ActionExecuteFilter))]
-[Route("api/[controller]/[action]")]
-public abstract class SessionActionController : JControllerBase
-{
-    
-}
-
-/// <summary>
 /// action api not use session
 /// </summary>
+[TypeFilter<ActionExecuteFilter>]
 [Route("api/[controller]/[action]")]
 public abstract class ActionController : JControllerBase
 {
@@ -38,8 +17,31 @@ public abstract class ActionController : JControllerBase
 /// <summary>
 /// rest api controller, not use session
 /// </summary>
+[TypeFilter<ActionExecuteFilter>]
 [Route("api/[controller]")]
 public abstract class RestController : JControllerBase
+{
+    
+}
+
+/// <summary>
+/// rest api using session
+/// </summary>
+[Authorize]
+[TypeFilter<SessionExecuteFilter>]
+[Route("api/[controller]")]
+public abstract class SessionRestController : RestController
+{
+    
+}
+
+/// <summary>
+/// action api using session
+/// </summary>
+[Authorize]
+[TypeFilter<SessionExecuteFilter>]
+[Route("api/[controller]/[action]")]
+public abstract class SessionActionController : ActionController
 {
     
 }

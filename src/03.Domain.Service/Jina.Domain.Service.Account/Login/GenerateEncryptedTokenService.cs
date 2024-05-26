@@ -8,6 +8,7 @@ using Jina.Domain.Abstract.Account;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,17 +20,23 @@ public sealed class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncr
 {
     private readonly IGetClaimsService _getClaimsService;
     private readonly ApplicationConfig _config;
-    
+
     /// <summary>
     /// JWT 토큰 생성 서비스
     /// </summary>
-    /// <param name="db"></param>
+    /// <param name="logger"></param>
     /// <param name="context"></param>
-    public GenerateEncryptedTokenService(ISessionContext ctx, ServicePipeline pipe,
-        IOptions<ApplicationConfig> options, IGetClaimsService getClaimsService) : base(ctx, pipe)
+    /// <param name="pipe"></param>
+    /// <param name="getClaimsService"></param>
+    /// <param name="options"></param>
+    public GenerateEncryptedTokenService(ILogger<GenerateEncryptedTokenService> logger
+        , ISessionContext context
+        , ServicePipeline pipe
+        , IGetClaimsService getClaimsService
+        , IOptions<ApplicationConfig> options) : base(logger, context, pipe)
     {
         _config = options.Value;
-        _getClaimsService = getClaimsService;
+        _getClaimsService = getClaimsService;        
     }
 
     public override Task<bool> OnExecutingAsync()
@@ -41,8 +48,8 @@ public sealed class GenerateEncryptedTokenService : ServiceImplBase<GenerateEncr
     {
         IEnumerable<Claim> claims = null;
         this.Pipe.Register(_getClaimsService)
-            .SetParameter(() => this.Request)
-            .OnExecuted(r => claims = r);
+            .WithParameter(() => this.Request)
+            .Then(r => claims = r);
 
         await this.Pipe.ExecuteAsync();
         

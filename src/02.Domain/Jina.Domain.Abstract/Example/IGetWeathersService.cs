@@ -13,4 +13,9 @@ namespace Jina.Domain.Abstract.Example
         , IScopeService
     {
     }
+    
+    public interface IGetFreeWeathersService : IServiceImplBase<PaginatedRequest<WeatherForecastRequest>, PaginatedResult<WeatherForecastResult>>
+        , IScopeService
+    {
+    }
 }

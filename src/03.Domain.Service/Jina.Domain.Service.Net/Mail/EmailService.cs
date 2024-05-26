@@ -9,6 +9,7 @@ using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using MailKit.Net.Smtp;
 using MailKit.Security;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -34,14 +35,9 @@ public class EmailService : ServiceImplBase<EmailService, EmailRequest, IResults
         };
     
     private readonly EmailConfig _config;
-    
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="pipe"></param>
-    public EmailService(ISessionContext context, ServicePipeline pipe,
-        IOptions<EmailConfig> options) : base(context, pipe)
+
+    public EmailService(ILogger<EmailService> logger, ISessionContext context,
+        IOptions<EmailConfig> options) : base(logger, context)
     {
         _config = options.Value;
     }

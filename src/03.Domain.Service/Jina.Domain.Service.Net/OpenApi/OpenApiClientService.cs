@@ -3,6 +3,7 @@ using Jina.Base.Service;
 using Jina.Domain.Abstract.Net.OpenApi.Services;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Net.OpenApi;
 
@@ -10,7 +11,7 @@ public class OpenApiClientService
     : ServiceImplBase<OpenApiClientService, string, string>
         , IOpenApiClientService
 {
-    public OpenApiClientService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
+    public OpenApiClientService(ILogger<OpenApiClientService> logger, ISessionContext context) : base(logger, context)
     {
     }
 

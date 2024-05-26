@@ -79,7 +79,7 @@ public class Tests
             .FirstOrDefaultAsync(m => m.Name == "front 번역" && m.PrimaryCultureType == "en-US");
         Assert.Multiple(() =>
         {
-            Assert.That(selected3.Id, Is.Not.Zero);
+            Assert.That(selected3!.Id, Is.Not.Zero);
             Assert.That(selected3.MultilingualTopicConfigs.Count, Is.Not.Zero);
         });
         
@@ -97,7 +97,7 @@ public class Tests
         var result3 = await linqQuery.ToListAsync();
         Assert.That(result3.Count, Is.GreaterThan(1));
 
-        _db.MultilingualTopics.Remove(selected1);
+        _db.MultilingualTopics.Remove(selected1!);
         await _db.SaveChangesAsync();
 
         _db.ChangeTracker.Clear();

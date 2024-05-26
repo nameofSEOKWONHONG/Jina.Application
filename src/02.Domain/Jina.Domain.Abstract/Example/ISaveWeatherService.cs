@@ -8,3 +8,8 @@ public interface ISaveWeatherService : IServiceImplBase<WeatherForecastResult, I
 {
         
 }
+
+public interface ISaveFreeWeatherService : IServiceImplBase<WeatherForecastResult, IResults<int>>, IScopeService
+{
+        
+}

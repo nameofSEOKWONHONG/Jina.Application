@@ -9,6 +9,7 @@ using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account.User;
 
@@ -18,9 +19,10 @@ public sealed class CreateRoleClaimService : ServiceImplBase<CreateRoleClaimServ
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="ctx"></param>
+    /// <param name="logger"></param>
+    /// <param name="context"></param>
     /// <param name="pipe"></param>
-    public CreateRoleClaimService(ISessionContext ctx, ServicePipeline pipe) : base(ctx, pipe)
+    public CreateRoleClaimService(ILogger<CreateRoleClaimService> logger, ISessionContext context, ServicePipeline pipe) : base(logger, context, pipe)
     {
     }
 

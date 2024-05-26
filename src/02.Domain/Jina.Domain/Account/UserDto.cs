@@ -15,8 +15,6 @@ namespace Jina.Domain.Account
         public string GroupName { get; set; }
         public string RoleId { get; set; }
         public string RoleName { get; set; }
-        public string CreatedName { get; set; }
-        public string LastModifiedName { get; set; }
 
         public class Validator : Validator<UserDto>
         {

@@ -229,30 +229,8 @@ namespace Jina.Passion.Api
             builder.Services.AddJinaDatabase<MsSqlProvider>(() =>
                 new MsSqlProvider(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddSingleton<IFreeSql>(r =>
-            {
-                /*
-                 * freesql을 사용하려면 Entity 구성 Attribute를 사용하여 작성해야 함.
-                 * 장점 : Entity 구성 요소를 직접 사용하여 Fluent 방식으로 쿼리 작성 가능.
-                 *       동적 Table 생성 지원.
-                 *       SqlKata가 Entity와 string 조합이라면, 이쪽은 Entity 중심으로 개발 가능.
-                 * 단점 : EF와 혼합하여 사용할 경우 매우 곤란해 질 수 있음.
-                 *       Table 매핑부터 각종 설정까지 2가지를 모두 고려하여 작성할 수는 없음.
-                 *       따라서, 양자 택일이 강요됨.
-                 *       (예: ModelBuilder 특성과 Table Attribute의 특성)
-                 * 결론 : DB First로 작업한다면 EF 보다 좋을 수 있다.
-                 *       FK에 비관적이라면 이쪽이 더 좋을 수 있다.
-                 *       복잡한 집계 쿼리는 어짜피 프로시저의 몫이다.
-                 */
-                IFreeSql fsql = new FreeSql.FreeSqlBuilder()
-                    .UseConnectionString(FreeSql.DataType.SqlServer, builder.Configuration.GetConnectionString("DefaultConnection"))
-                    .UseMonitorCommand(cmd => Console.WriteLine($"Sql：{cmd.CommandText}"))
-                    //Automatically synchronize the entity structure to the database.
-                    //FreeSql will not scan the assembly, and will generate a table if and only when the CRUD instruction is executed.
-                    .UseAutoSyncStructure(false)
-                    .Build();
-                return fsql;
-            });
+            builder.Services.AddFSql(builder.Configuration.GetConnectionString("DefaultConnection"));
+            
             #endregion [dbcontext]
 
             #region [limiter]

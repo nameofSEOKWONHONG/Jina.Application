@@ -42,11 +42,11 @@ public class AccountController : ActionController
         IResults<TokenResult> result = null;
 
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .SetValidator(() => validator)
-            .OnValidated(vResult => result = Results<TokenResult>.Fail(vResult.Errors.xJoin()))
-            .OnExecuted(r => result = r);
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .WithValidator(() => validator)
+            .ThenValidate(vResult => result = Results<TokenResult>.Fail(vResult.Errors.xJoin()))
+            .Then(r => result = r);
         
         await this.Pipe.ExecuteAsync();
 
@@ -64,9 +64,9 @@ public class AccountController : ActionController
     {
         IResults<bool> result = null;
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .OnExecuted(m => result = m);
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .Then(m => result = m);
 
         await this.Pipe.ExecuteAsync();
  
@@ -91,14 +91,14 @@ public class AccountController : ActionController
         IResults<TokenResult> result = null;
 
         this.Pipe.Register(service)
-            .AddFilter(model.xIsNotEmpty)
-            .SetParameter(() => model)
-            .SetValidator(() => validator)
-            .OnValidated(m =>
+            .Where(model.xIsNotEmpty)
+            .WithParameter(() => model)
+            .WithValidator(() => validator)
+            .ThenValidate(m =>
             {
                 result = Results<TokenResult>.Fail(m.vToKeyValueErrors());
             })
-            .OnExecuted(m =>
+            .Then(m =>
             {
                 result = m;
             });
@@ -125,14 +125,14 @@ public class AccountController : ActionController
     {
         IResults result = null;
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .SetValidator(() => validator)
-            .OnValidated(m =>
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .WithValidator(() => validator)
+            .ThenValidate(m =>
             {
                 result = Results.Fail(m.vToKeyValueErrors());
             })
-            .OnExecuted(m => result = m);
+            .Then(m => result = m);
 
         await this.Pipe.ExecuteAsync();
  

@@ -232,11 +232,11 @@ public class AppDbContext : AuditableContext, IDbContext
 
     public DbSet<Tenant> Tenants { get; set; }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserRole> UserRoles { get; set; }
+    public override DbSet<User> Users { get; set; }
+    public override DbSet<UserRole> UserRoles { get; set; }
 
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<RoleClaim> RoleClaims { get; set; }
+    public override DbSet<Role> Roles { get; set; }
+    public override DbSet<RoleClaim> RoleClaims { get; set; }
 
     public DbSet<MenuRole> MenuRoles { get; set; }
     public DbSet<MenuGroup> MenuGroups { get; set; }

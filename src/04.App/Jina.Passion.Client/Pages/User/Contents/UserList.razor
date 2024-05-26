@@ -162,19 +162,13 @@
         //             return Task.CompletedTask;
         //         },
         //     };
-        var confirmd = await this.ModalService.CreateModalAsync<User, DlgOptions<UserDto>, UserDto>(options, new DlgOptions<UserDto>()
+        var confirmd = this.ModalService.CreateModal<User, DlgOptions<UserDto>, UserDto>(options, new DlgOptions<UserDto>()
             {
                 Param = new UserDto()
             });
-        confirmd.OnOpen = () =>
-        {
-            return Task.CompletedTask;
-        };
+        confirmd.OnOpen = () => Task.CompletedTask;
 
-        confirmd.OnClose = () =>
-        {
-            return Task.CompletedTask;
-        };
+        confirmd.OnClose = () => Task.CompletedTask;
 
         confirmd.OnOk = result =>
         {

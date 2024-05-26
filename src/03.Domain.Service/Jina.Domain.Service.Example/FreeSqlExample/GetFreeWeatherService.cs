@@ -3,20 +3,26 @@ using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Example;
+using Jina.Domain.Entity.Example;
 using Jina.Domain.Example;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
-using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Example.Weather
 {
-    [TransactionOptions(IsolationLevel.ReadUncommitted)]
-	public sealed class GetWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, Results<WeatherForecastResult>>
-        , IGetWeatherService
+    [TransactionOptions(IsolationLevel.ReadUncommitted, ENUM_DB_PROVIDER_TYPE.FreeSql)]
+	public sealed class GetFreeWeatherService : ServiceImplBase<GetWeatherService, AppDbContext, int, Results<WeatherForecastResult>>
+        , IGetFreeWeatherService
     {
-        public GetWeatherService(ILogger<GetWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="context"></param>
+        /// <param name="pipe"></param>
+        public GetFreeWeatherService(ILogger<GetWeatherService> logger, ISessionContext context, ServicePipeline pipe) : base(logger, context, pipe)
         {
         }
 
@@ -33,9 +39,13 @@ namespace Jina.Domain.Service.Example.Weather
 
         public override async Task OnExecuteAsync()
         {
-            var exist = await this.Db.WeatherForecasts.vFirstAsync(this.Context
-                , m => m.Id == this.Request
-                , m => new WeatherForecastResult()
+            var exist = await this.Context.xAs<SessionContext>()
+                .FSql
+                .Select<WeatherForecast>()
+                .WithLock(SqlServerLock.NoLock|SqlServerLock.ReadUnCommitted)
+                .Where(m => m.TenantId == this.Context.TenantId)
+                .Where(m => m.Id == this.Request)
+                .FirstAsync(m => new WeatherForecastResult()
                 {
                     Id = m.Id,
                     City = m.City,
@@ -47,5 +57,5 @@ namespace Jina.Domain.Service.Example.Weather
 
             this.Result = await Results<WeatherForecastResult>.SuccessAsync(exist);
         }
-    }  
+    } 
 }

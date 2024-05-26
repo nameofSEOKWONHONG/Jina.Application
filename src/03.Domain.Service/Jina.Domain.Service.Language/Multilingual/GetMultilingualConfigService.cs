@@ -7,21 +7,20 @@ using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Language;
 
-public class GetMultilingualTopicService : ServiceImplBase<GetMultilingualTopicService
-    , AppDbContext
-    , GetMultilingualTopicRequest
-    , IResults<GetMultilingualTopicResult>>
-    , IGetMultilingualTopicService
+public class GetMultilingualTopicService 
+    : ServiceImplBase<GetMultilingualTopicService, AppDbContext, GetMultilingualTopicRequest, Results<GetMultilingualTopicResult>>
+        , IGetMultilingualTopicService
 {
     /// <summary>
-    /// ctor
+    /// 
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="pipe"></param>
-    public GetMultilingualTopicService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
+    /// <param name="logger"></param>
+    /// <param name="ctx"></param>
+    public GetMultilingualTopicService(ILogger<GetMultilingualTopicService> logger, ISessionContext ctx) : base(logger, ctx)
     {
     }
 
@@ -38,10 +37,12 @@ public class GetMultilingualTopicService : ServiceImplBase<GetMultilingualTopicS
 
         if(result.xIsEmpty()) return;
         
-        var data = new GetMultilingualTopicResult();
-        data.Id = result.Id;
-        data.PrimaryCultureType = result.PrimaryCultureType;
-        data.MultilingualTopicConfigResults = new();
+        var data = new GetMultilingualTopicResult
+        {
+            Id = result!.Id,
+            PrimaryCultureType = result.PrimaryCultureType,
+            MultilingualTopicConfigResults = []
+        };
         foreach (var item in result.MultilingualTopicConfigs)
         {
             data.MultilingualTopicConfigResults.Add(new MultilingualTopicConfigResult()

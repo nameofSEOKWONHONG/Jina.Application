@@ -13,6 +13,7 @@ using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -25,15 +26,18 @@ public sealed class RefreshTokenService : ServiceImplBase<RefreshTokenService, A
     private readonly ApplicationConfig _config;
     private Entity.Account.User _user;
     private readonly IGenerateEncryptedTokenService _generateEncryptedTokenService;
-    
+
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="db"></param>
+    /// <param name="logger"></param>
     /// <param name="context"></param>
-    public RefreshTokenService(ISessionContext context, ServicePipeline pipe,
+    /// <param name="pipe"></param>
+    /// <param name="generateEncryptedTokenService"></param>
+    /// <param name="options"></param>
+    public RefreshTokenService(ILogger<RefreshTokenService> logger, ISessionContext context, ServicePipeline pipe,
         IGenerateEncryptedTokenService generateEncryptedTokenService,
-        IOptions<ApplicationConfig> options) : base(context, pipe)
+        IOptions<ApplicationConfig> options) : base(logger, context, pipe)
     {
         _generateEncryptedTokenService = generateEncryptedTokenService;
         _config = options.Value;
@@ -70,8 +74,8 @@ public sealed class RefreshTokenService : ServiceImplBase<RefreshTokenService, A
     {
         string token = string.Empty;
         this.Pipe.Register(_generateEncryptedTokenService)
-            .SetParameter(() => _user)
-            .OnExecuted(r => token = r);
+            .WithParameter(() => _user)
+            .Then(r => token = r);
         await this.Pipe.ExecuteAsync();
         
         _user.RefreshToken = GenerateRefreshToken();

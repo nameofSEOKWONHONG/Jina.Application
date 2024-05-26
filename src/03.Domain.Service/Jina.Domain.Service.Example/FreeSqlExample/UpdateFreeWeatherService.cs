@@ -11,14 +11,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Example.Weather;
 
-public sealed class UpdateWeatherService : ServiceImplBase<UpdateWeatherService, AppDbContext, UpdateWeatherRequest, IResults<int>>, IUpdateWeatherService
+public sealed class UpdateFreeWeatherService : ServiceImplBase<UpdateWeatherService, AppDbContext, UpdateWeatherRequest, IResults<int>>
+    , IUpdateFreeWeatherService
 {
     /// <summary>
     /// 
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="ctx"></param>
-    public UpdateWeatherService(ILogger<UpdateWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
+    public UpdateFreeWeatherService(ILogger<UpdateWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
     {
     }
 

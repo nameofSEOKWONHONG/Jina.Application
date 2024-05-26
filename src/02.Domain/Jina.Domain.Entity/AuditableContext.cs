@@ -20,8 +20,8 @@ public abstract class AuditableContext : IdentityDbContext<User, Role, string, I
         User = user;
         Date = date;
     }
-    
-    public virtual async Task<int> SaveChangesAsync(string tenantId, string userId = null, CancellationToken cancellationToken = new())
+
+    protected virtual async Task<int> SaveChangesAsync(string tenantId, string userId = null, CancellationToken cancellationToken = new())
     {
         var auditEntries = OnBeforeSaveChanges(tenantId, userId);
         var result = await base.SaveChangesAsync(cancellationToken);

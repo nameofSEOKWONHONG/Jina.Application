@@ -5,6 +5,7 @@ using Jina.Domain.Example;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 using QuestPDF.Fluent;
 
 namespace Jina.Domain.Service.Example.Weather;
@@ -15,13 +16,10 @@ public class GetPdfWeathersService : ServiceImplBase<GetPdfWeathersService, Pagi
 {
     private readonly IGetWeathersService _getWeathersService;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="context"></param>
-    /// <param name="pipe"></param>
-    public GetPdfWeathersService(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
+    public GetPdfWeathersService(ILogger<GetPdfWeathersService> logger, ISessionContext context, ServicePipeline pipe,
+        IGetWeathersService getWeathersService) : base(logger, context, pipe)
     {
+        _getWeathersService = getWeathersService;
     }
 
     public override Task<bool> OnExecutingAsync()
@@ -34,8 +32,8 @@ public class GetPdfWeathersService : ServiceImplBase<GetPdfWeathersService, Pagi
         PaginatedResult<WeatherForecastResult> result = null;
         
         this.Pipe.Register(_getWeathersService)
-            .SetParameter(() => this.Request)
-            .OnExecuted(r => result = r);
+            .WithParameter(() => this.Request)
+            .Then(r => result = r);
 
         await this.Pipe.ExecuteAsync();
 

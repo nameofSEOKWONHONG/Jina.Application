@@ -1,7 +1,6 @@
 ﻿using eXtensionSharp;
 using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Request;
-using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
 using Microsoft.AspNetCore.Identity;
@@ -15,6 +14,7 @@ using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Domain.Shared.Consts;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account.User
 {
@@ -22,14 +22,19 @@ namespace Jina.Domain.Service.Account.User
         IRegisterUserService        
     {
         private readonly IPasswordHasher<Entity.Account.User> _passwordHasher;
-        private readonly IEmailService _emailService;
         
-        public RegisterUserService(ISessionContext ctx, ServicePipeline pipe,
-            IPasswordHasher<Entity.Account.User> passwordHasher,
-            IEmailService emailService) : base(ctx, pipe)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="context"></param>
+        /// <param name="pipe"></param>
+        /// <param name="passwordHasher"></param>
+        /// <param name="emailService"></param>
+        public RegisterUserService(ILogger<RegisterUserService> logger, ISessionContext context, ServicePipeline pipe,
+            IPasswordHasher<Entity.Account.User> passwordHasher) : base(logger, context, pipe)
         {
             _passwordHasher = passwordHasher;
-            _emailService = emailService;
         }
 
         public override async Task<bool> OnExecutingAsync()

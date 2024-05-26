@@ -7,3 +7,8 @@ public interface IRemoveWeatherService : IServiceImplBase<int, IResults>, IScope
 {
         
 }
+
+public interface IRemoveFreeWeatherService : IServiceImplBase<int, IResults>, IScopeService
+{
+        
+}

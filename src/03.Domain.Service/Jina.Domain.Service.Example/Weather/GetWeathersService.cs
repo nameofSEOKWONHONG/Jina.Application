@@ -7,6 +7,7 @@ using Jina.Domain.Example;
 using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Example.Weather
 {
@@ -15,11 +16,8 @@ namespace Jina.Domain.Service.Example.Weather
         : ServiceImplBase<GetWeathersService, AppDbContext, PaginatedRequest<WeatherForecastRequest>, PaginatedResult<WeatherForecastResult>>
             , IGetWeathersService
     {
-        private readonly WeatherForecastResultValidator _validator;
-        public GetWeathersService(ISessionContext ctx, ServicePipeline pipe
-        , WeatherForecastResultValidator validator) : base(ctx, pipe)
+        public GetWeathersService(ILogger<GetWeathersService> logger, ISessionContext ctx) : base(logger, ctx)
         {
-            _validator = validator;
         }
 
         public override async Task<bool> OnExecutingAsync()

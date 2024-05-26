@@ -44,11 +44,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eXtensionSharp.AspNet", "..
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Lang", "..\JINA\src\Jina.Lang\Jina.Lang.csproj", "{A7D9818A-5554-4989-B502-96DA96EA0763}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Domain.Service.Language", "src\03.Domain.Service\Jina.Domain.Service.Language\Jina.Domain.Service.Language.csproj", "{D4216C32-8E87-4C28-AA47-B0396CFA1D5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Domain.Service.Language", "src\03.Domain.Service\Jina.Domain.Service.Language\Jina.Domain.Service.Language.csproj", "{D4216C32-8E87-4C28-AA47-B0396CFA1D5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{8CA72C1E-51AD-4DCA-96BB-5B32E872B969}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Client", "src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj", "{8CA72C1E-51AD-4DCA-96BB-5B32E872B969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Db.Test", "src\99.Test\Jina.Db.Test\Jina.Db.Test.csproj", "{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Db.Test", "src\99.Test\Jina.Db.Test\Jina.Db.Test.csproj", "{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

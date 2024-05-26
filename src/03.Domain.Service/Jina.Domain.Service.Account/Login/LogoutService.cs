@@ -7,27 +7,27 @@ using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account;
 
 public sealed class LogoutService : ServiceImplBase<LogoutService, AppDbContext, LogoutRequest, IResults<bool>>, ILogoutService
 {
-    private Entity.Account.User _user;
     /// <summary>
-    /// ctor
+    /// 
     /// </summary>
+    /// <param name="logger"></param>
     /// <param name="ctx"></param>
-    public LogoutService(ISessionContext ctx) : base(ctx)
+    public LogoutService(ILogger<LogoutService> logger, ISessionContext ctx) : base(logger, ctx)
     {
-        
     }
 
     public override async Task<bool> OnExecutingAsync()
     {
-        _user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Context.TenantId &&
+        var user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Context.TenantId &&
                                                              m.Email == this.Context.CurrentUser.Email);
 
-        if (_user.xIsEmpty())
+        if (user.xIsEmpty())
         {
             this.Result = await Results<bool>.FailAsync("User not exist");
             return false;
@@ -38,7 +38,10 @@ public sealed class LogoutService : ServiceImplBase<LogoutService, AppDbContext,
 
     public override async Task OnExecuteAsync()
     {
-        await this.Db.Users.Where(m => m.TenantId == _user.TenantId)
+        var user = await this.Db.Users.FirstOrDefaultAsync(m => m.TenantId == this.Context.TenantId &&
+                                                                m.Email == this.Context.CurrentUser.Email);
+        
+        await this.Db.Users.Where(m => m.TenantId == user.TenantId)
             .ExecuteUpdateAsync(m =>
                 m.SetProperty(mm => mm.RefreshToken, string.Empty)
                     .SetProperty(mm => mm.RefreshTokenExpiryTime, DateTime.MinValue)

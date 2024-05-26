@@ -24,10 +24,10 @@ public class WeatherController : SessionRestController
         IResults<WeatherForecastResult> result = null;
         
         this.Pipe.Register(service)
-            .AddFilter(() => id > 0)
-            .SetParameter(() => id)
-            .UseCache()
-            .OnExecuted(r => result = r);
+            .Where(() => id > 0)
+            .WithParameter(() => id)
+            .WithCache()
+            .Then(r => result = r);
         
         await this.Pipe.ExecuteAsync();
 
@@ -40,9 +40,9 @@ public class WeatherController : SessionRestController
     {
         PaginatedResult<WeatherForecastResult> result = null;
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .OnExecuted(r => result = r);
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .Then(r => result = r);
         await this.Pipe.ExecuteAsync();
         return Ok(result);
     }
@@ -84,9 +84,9 @@ public class WeatherController : SessionRestController
         IResults<int> result = null;
         
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .OnExecuted(r => result = r);
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .Then(r => result = r);
 
         await this.Pipe.ExecuteAsync();
 
@@ -100,9 +100,9 @@ public class WeatherController : SessionRestController
         IResults<int> result = null;
         
         this.Pipe.Register(service)
-            .AddFilter(request.xIsNotEmpty)
-            .SetParameter(() => request)
-            .OnExecuted(r => result = r);
+            .Where(request.xIsNotEmpty)
+            .WithParameter(() => request)
+            .Then(r => result = r);
 
         await this.Pipe.ExecuteAsync();
 
@@ -116,9 +116,9 @@ public class WeatherController : SessionRestController
         IResults result = null;
         
         this.Pipe.Register(service)
-            .AddFilter(() => request.xIsNotEmpty())
-            .SetParameter(() => request)
-            .OnExecuted(r => result = r);
+            .Where(() => request.xIsNotEmpty())
+            .WithParameter(() => request)
+            .Then(r => result = r);
 
         await this.Pipe.ExecuteAsync();
 

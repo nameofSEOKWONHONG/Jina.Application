@@ -82,7 +82,6 @@ namespace Jina.Passion.Client
             #endregion
 
             #region [http 설정]
-
             builder.Services.AddScoped<IHttpInterceptorManager, HttpInterceptorManager>();
             builder.Services.AddScoped<AuthenticationHeaderHandler>();
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IHttpClientFactory>()

@@ -3,7 +3,6 @@ using eXtensionSharp;
 using Jina.Base.Attributes;
 using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Request;
-using Jina.Domain.Entity;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
@@ -14,6 +13,7 @@ using Jina.Base.Service;
 using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Domain.Shared.Consts;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account
 {
@@ -29,11 +29,12 @@ namespace Jina.Domain.Service.Account
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="ctx"></param>
+        /// <param name="logger"></param>
+        /// <param name="context"></param>
         /// <param name="pipe"></param>
         /// <param name="passwordHasher"></param>
-        public CreateTenantService(ISessionContext ctx, ServicePipeline pipe,
-            IPasswordHasher<Entity.Account.User> passwordHasher) : base(ctx, pipe)
+        public CreateTenantService(ILogger<CreateTenantService> logger, ISessionContext context, ServicePipeline pipe,
+            IPasswordHasher<Entity.Account.User> passwordHasher) : base(logger, context, pipe)
         {
             _passwordHasher = passwordHasher;
         }

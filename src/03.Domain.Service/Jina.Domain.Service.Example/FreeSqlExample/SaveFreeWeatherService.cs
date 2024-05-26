@@ -16,14 +16,9 @@ using Microsoft.Extensions.Logging;
 namespace Jina.Domain.Service.Example.Weather
 {   
     [TransactionOptions(IsolationLevel.ReadCommitted)]
-	public sealed class SaveWeatherService : ServiceImplBase<SaveWeatherService, AppDbContext, WeatherForecastResult, IResults<int>>, ISaveWeatherService
+	public sealed class SaveFreeWeatherService : ServiceImplBase<SaveWeatherService, AppDbContext, WeatherForecastResult, IResults<int>>, ISaveWeatherService
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logger"></param>
-        /// <param name="ctx"></param>
-        public SaveWeatherService(ILogger<SaveWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
+        public SaveFreeWeatherService(ILogger<SaveWeatherService> logger, ISessionContext ctx) : base(logger, ctx)
         {
         }
 

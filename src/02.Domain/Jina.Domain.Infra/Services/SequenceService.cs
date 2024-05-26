@@ -16,7 +16,7 @@ public class SequenceService : ISequenceService
     private readonly ISessionContext _ctx;
     public SequenceService(ISessionContext ctx)
     {
-        _ctx = _ctx;
+        _ctx = ctx;
     }
 
     public async Task<int> GetNextNumber(string tableName)

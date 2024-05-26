@@ -18,6 +18,7 @@ public class MockSessionCurrentUser : ISessionCurrentUser
         Email = "admin@test.com";
         TimeZone = "Korea Standard Time";
         UserId = Guid.NewGuid().ToString("N");
+        UserName = "admin";
         RoleName = "admin";
         Claims = default;
     }

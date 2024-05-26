@@ -8,6 +8,7 @@ using Mapster;
 using System.Net.Http.Json;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Net.ExchangeRate;
 
@@ -33,16 +34,10 @@ public class SaveUsdKrwService : ServiceImplBase<SaveUsdKrwService, AppDbContext
     //이건 개인 제작, 1분당 캐시, 금액은 다소 정확함.
     //https://api.manana.kr/exchange/rate.json
     private readonly string _url = "https://quotation-api-cdn.dunamu.com/v1/forex/recent?codes=FRX.KRWUSD";
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="ctx"></param>
-    public SaveUsdKrwService(ISessionContext ctx) : base(ctx)
-    {
-        
-    }
 
+    public SaveUsdKrwService(ILogger<SaveUsdKrwService> logger, ISessionContext ctx) : base(logger, ctx)
+    {
+    }
 
     public override Task<bool> OnExecutingAsync()
     {

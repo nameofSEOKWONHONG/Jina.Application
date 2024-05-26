@@ -8,9 +8,8 @@ namespace Jina.Domain.Abstract.Example
     public interface IGetWeatherService : IServiceImplBase<int, Results<WeatherForecastResult>>, IScopeService
     {
     }
-
-    public interface IGetWeatherV2Service : IServiceImplBase<int, IResults<WeatherForecastResult>>, IScopeService
+    
+    public interface IGetFreeWeatherService : IServiceImplBase<int, Results<WeatherForecastResult>>, IScopeService
     {
-        
     }
 }

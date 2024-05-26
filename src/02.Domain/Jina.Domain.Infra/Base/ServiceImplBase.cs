@@ -3,6 +3,7 @@ using Jina.Base.Service;
 using Jina.Base.Service.Abstract;
 using Jina.Database.Abstract;
 using Jina.Session.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Infra
 {
@@ -14,10 +15,14 @@ namespace Jina.Domain.Service.Infra
         public ISessionContext Context { get; }
         protected readonly ServicePipeline Pipe;
 
-        protected ServiceImplBase(ISessionContext context, ServicePipeline pipe)
+        protected ServiceImplBase(ILogger<TSelf> logger, ISessionContext context) : base(logger: logger)
         {
             this.Self = this;
             this.Context = context;
+        }
+        
+        protected ServiceImplBase(ILogger<TSelf> logger, ISessionContext context, ServicePipeline pipe) : this(logger, context)
+        {
             this.Pipe = pipe;
         }
     }
@@ -33,7 +38,7 @@ namespace Jina.Domain.Service.Infra
         /// 
         /// </summary>
         /// <param name="ctx"></param>
-        protected ServiceImplBase(ISessionContext ctx) : base(ctx, null)
+        protected ServiceImplBase(ILogger<TSelf> logger, ISessionContext ctx) : base(logger:logger, ctx, null)
         {
             
         }
@@ -43,7 +48,7 @@ namespace Jina.Domain.Service.Infra
         /// </summary>
         /// <param name="context"></param>
         /// <param name="pipe"></param>
-        protected ServiceImplBase(ISessionContext context, ServicePipeline pipe) : base(context, pipe)
+        protected ServiceImplBase(ILogger<TSelf> logger, ISessionContext context, ServicePipeline pipe) : base(logger:logger, context, pipe)
         {
         }
     }

@@ -49,8 +49,8 @@ public class OpenApiTest
 
         var result = string.Empty;
         pip.Register(service)
-            .SetParameter(() => $"아래의 문장을 영어로 번역해줘.{Environment.NewLine} \"에러가 발생했습니다. 다시 시도 하시겠습니까?\"")
-            .OnExecuted(r => result = r);
+            .WithParameter(() => $"아래의 문장을 영어로 번역해줘.{Environment.NewLine} \"에러가 발생했습니다. 다시 시도 하시겠습니까?\"")
+            .Then(r => result = r);
         await pip.ExecuteAsync();
 
         Assert.That(result, Is.Not.Null);

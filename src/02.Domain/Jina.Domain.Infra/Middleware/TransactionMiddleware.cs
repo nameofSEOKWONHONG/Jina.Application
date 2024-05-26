@@ -39,6 +39,11 @@ public class TransactionMiddleware
                 await sessionContext.DbContext.Database.CurrentTransaction!.CommitAsync();    
             }
 
+            if (sessionContext.FSql.CurrentTransaction.xIsNotEmpty())
+            {
+                await sessionContext.FSql.CurrentTransaction.CommitAsync();
+            }
+
             // if (sessionContext.DbProvider.Transaction().xIsNotEmpty())
             // {
             //     await sessionContext.DbProvider.Transaction().CommitAsync();
@@ -52,6 +57,11 @@ public class TransactionMiddleware
             if(sessionContext.DbContext.Database.CurrentTransaction.xIsNotEmpty()) {
                 await sessionContext.DbContext.Database.CurrentTransaction!.RollbackAsync();        
             }
+            
+            if (sessionContext.FSql.CurrentTransaction.xIsNotEmpty())
+            {
+                await sessionContext.FSql.CurrentTransaction.RollbackAsync();
+            }            
             
             // if (sessionContext.DbProvider.Transaction().xIsNotEmpty())
             // {

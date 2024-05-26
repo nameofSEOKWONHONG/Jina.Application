@@ -1,5 +1,6 @@
 using eXtensionSharp;
 using Jina.Base.Service;
+using Jina.Domain.Service.Infra.Middleware;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

@@ -2,7 +2,6 @@
 using Jina.Base.Attributes;
 using Jina.Domain.Abstract.Account;
 using Jina.Domain.Account.Token;
-using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +15,7 @@ using System.Text;
 using Jina.Base.Service;
 using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
+using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account
 {
@@ -27,16 +27,17 @@ namespace Jina.Domain.Service.Account
 		private readonly ApplicationConfig _config;
 
 		/// <summary>
-		/// ctor
+		/// 
 		/// </summary>
-		/// <param name="ctx"></param>
+		/// <param name="logger"></param>
+		/// <param name="context"></param>
 		/// <param name="pipe"></param>
 		/// <param name="passwordHasher"></param>
+		/// <param name="generateEncryptedTokenService"></param>
 		/// <param name="options"></param>
-		public LoginService(ISessionContext ctx, ServicePipeline pipe,
+		public LoginService(ILogger<LoginService> logger, ISessionContext context, ServicePipeline pipe,
 			IPasswordHasher<Jina.Domain.Entity.Account.User> passwordHasher,
-			IGenerateEncryptedTokenService generateEncryptedTokenService,
-			IOptions<ApplicationConfig> options) : base(ctx, pipe)
+			IOptions<ApplicationConfig> options) : base(logger, context, pipe)
 		{
 			_passwordHasher = passwordHasher;
 			_config = options.Value;

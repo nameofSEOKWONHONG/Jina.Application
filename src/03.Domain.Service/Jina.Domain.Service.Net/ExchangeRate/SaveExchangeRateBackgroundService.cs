@@ -29,9 +29,10 @@ namespace Jina.Domain.Service.Net.ExchangeRate
             var service = scope.ServiceProvider.GetService<ISaveExchangeRateService>();
             var context = scope.ServiceProvider.GetService<ISessionContext>();
             
-            using var sp = new ServicePipeline(context);
-            sp.Register(service)
-                .OnExecuted(r => result = r);
+            using var pipeline = new ServicePipeline(context);
+            pipeline.Register(service)
+                .Then(r => result = r);
+            await pipeline.ExecuteAsync();
 
             this.Logger.LogInformation("end {name} service", nameof(SaveExchangeRateBackgroundService));
 

@@ -1,5 +1,6 @@
 ﻿using eXtensionSharp;
 using Hangfire;
+using Jina.Database;
 using Jina.Database.Abstract;
 using Jina.Domain.Entity;
 using Jina.Domain.Service.Infra.Services;
@@ -28,6 +29,8 @@ namespace Jina.Domain.Service.Infra
         
         public IBackgroundJobClient JobClient { get; init;}
         public IDistributedCache DistributedCache { get; init; }
+        
+        public IFSql FSql { get; init; }
 
         public bool IsDecrypt { get; set; }
 
@@ -40,7 +43,8 @@ namespace Jina.Domain.Service.Infra
             , IHttpClientFactory factory
             , IHttpContextAccessor accessor
             , IBackgroundJobClient jobClient
-            , IDistributedCache cache)
+            , IDistributedCache cache
+            , IFSql fSql)
         {
             this.DbContext = dbContext;
             this.Localizer = localizer;
@@ -52,6 +56,7 @@ namespace Jina.Domain.Service.Infra
             this.HttpClientFactory = factory;
             this.JobClient = jobClient;
             this.DistributedCache = cache;
+            this.FSql = fSql;
 
             if (this.CurrentUser.xIsNotEmpty())
             {
