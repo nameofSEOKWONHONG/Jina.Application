@@ -21,22 +21,24 @@ public class TicketController : ActionController
     public IActionResult Tickets(TicketRequest[] requests)
     {
         Task[] tasks = new Task[requests.Length];
-        var list = new List<string>(requests.Length);
+        var list = new ConcurrentBag<TicketResult>();
 
         requests.xForEach((i, request) =>
         {
             tasks[i] = Task.Run(() =>
             {
-                list.Add(TicketImpl.Instance.Open(request.Id));
+                var ticketNo = TicketImpl.Instance.Open(request.Id);
+                list.Add(new TicketResult()
+                {
+                    TicketNo = ticketNo,
+                    Completes = TicketImpl.Instance.Complete.ToList()
+                });
             });            
         });
 
         // 모든 Task가 완료될 때까지 대기
         Task.WaitAll(tasks);
-        
-        var result = new TicketResult() { TicketNo = list.First(), Completes = list};
-        
-        return Ok(result);
+        return Ok(list);
     }
 }
 
@@ -68,7 +70,7 @@ public class TicketImpl
     
     private TicketImpl()
     {
-        foreach (var i in Enumerable.Range(1, 2))
+        foreach (var i in Enumerable.Range(1, 5))
         {
             Tickets.TryAdd(i, Guid.NewGuid().ToString("N"));
         }
