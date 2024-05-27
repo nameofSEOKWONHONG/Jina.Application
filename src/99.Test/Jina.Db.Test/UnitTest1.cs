@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using Jina.Domain.Entity.Language;
 using Jina.Domain.Service.Infra;
 using Microsoft.EntityFrameworkCore;
@@ -104,7 +103,7 @@ public class Tests
         
         var topic = await _db.MultilingualTopics.FirstOrDefaultAsync(m => m.Name == "front 번역" &&
                                                                      m.PrimaryCultureType == "en-US");
-        var contents = await _db.MultilingualTopicConfigs.Where(m => m.MultilingualTopicTenantId == selected1.TenantId &&
+        var contents = await _db.MultilingualTopicConfigs.Where(m => m.MultilingualTopicTenantId == selected1!.TenantId &&
                                                                  m.MultilingualTopicId == selected1.Id &&
                                                                  m.MultilingualTopicPrimaryCultureType ==
                                                                  selected1.PrimaryCultureType)

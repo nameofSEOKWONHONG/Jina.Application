@@ -34,7 +34,7 @@ public class NotificationController : ActionController
         var valid = await validator.ValidateAsync(request);
         if (valid.IsValid.xIsFalse())
         {
-            return Ok(await Results.FailAsync(valid.vToKeyValueErrors()));
+            return Ok(await Results.FailAsync(valid.vErrors()));
         }
         await _messageHub.Clients.All.SendAsync("SendUserMessage", request.UserId, request.Message);
         return Ok(await Results.SuccessAsync());

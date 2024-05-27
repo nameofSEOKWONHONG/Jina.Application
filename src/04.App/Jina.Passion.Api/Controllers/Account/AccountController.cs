@@ -45,7 +45,7 @@ public class AccountController : ActionController
             .Where(request.xIsNotEmpty)
             .WithParameter(() => request)
             .WithValidator(() => validator)
-            .ThenValidate(vResult => result = Results<TokenResult>.Fail(vResult.Errors.xJoin()))
+            .ThenValidate(r => result = Results<TokenResult>.Fail(r.vErrors()))
             .Then(r => result = r);
         
         await this.Pipe.ExecuteAsync();
@@ -94,9 +94,9 @@ public class AccountController : ActionController
             .Where(model.xIsNotEmpty)
             .WithParameter(() => model)
             .WithValidator(() => validator)
-            .ThenValidate(m =>
+            .ThenValidate(r =>
             {
-                result = Results<TokenResult>.Fail(m.vToKeyValueErrors());
+                result = Results<TokenResult>.Fail(r.vErrors());
             })
             .Then(m =>
             {
@@ -130,7 +130,7 @@ public class AccountController : ActionController
             .WithValidator(() => validator)
             .ThenValidate(m =>
             {
-                result = Results.Fail(m.vToKeyValueErrors());
+                result = Results.Fail(m.vErrors());
             })
             .Then(m => result = m);
 
