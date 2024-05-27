@@ -10,8 +10,32 @@ public class TicketController : ActionController
     [HttpPost]
     public IActionResult Ticket(TicketRequest request)
     {
-        var ticketNo = Singleton<Ticket>.Instance.Open(request.Id);
-        var result = new TicketResult() { TicketNo = ticketNo, Completes = Singleton<Ticket>.Instance.Complete.ToList()};
+        var ticketNo = TicketImpl.Instance.Open(request.Id);
+        
+        var result = new TicketResult() { TicketNo = ticketNo, Completes = TicketImpl.Instance.Complete.ToList()};
+        
+        return Ok(result);
+    }
+
+    [HttpPost]
+    public IActionResult Tickets(TicketRequest[] requests)
+    {
+        Task[] tasks = new Task[requests.Length];
+        var list = new List<string>(requests.Length);
+
+        requests.xForEach((i, request) =>
+        {
+            tasks[i] = Task.Run(() =>
+            {
+                list.Add(TicketImpl.Instance.Open(request.Id));
+            });            
+        });
+
+        // 모든 Task가 완료될 때까지 대기
+        Task.WaitAll(tasks);
+        
+        var result = new TicketResult() { TicketNo = list.First(), Completes = list};
+        
         return Ok(result);
     }
 }
@@ -28,33 +52,47 @@ public class TicketResult
     public List<string> Completes { get; set; }
 }
 
-public class Singleton<T> where T : class, new()
+//직접 구현했지만, DI를 이용해 Singleton으로 구현하는게 맞다.
+//최종적으로 구현하다면 Zone 설정은 Sub/Pub을 이용해서 하던가, Config에서 읽어서 처리해야 함.
+//넥슨 인터뷰 관련 구현임.
+public class TicketImpl
 {
-    private static Lazy<T> _instance = new Lazy<T>(() => new T());
-    public static T Instance => _instance.Value;
+    private static Lazy<TicketImpl> _instance = new Lazy<TicketImpl>(() => new TicketImpl());
+    public static TicketImpl Instance => _instance.Value;
     
-    private Singleton()
-    {
-        
-    }
-}
-
-public class Ticket
-{
     public ConcurrentDictionary<int, string> Tickets = new();
     public ConcurrentBag<string> Complete = new();
-    public Ticket()
+    public bool IsSoldOut = false;
+    public Func<Task> OnSoldOut { get; set; }
+    private static object _sync = new();
+    
+    private TicketImpl()
     {
-        foreach (var i in Enumerable.Range(1, 100))
+        foreach (var i in Enumerable.Range(1, 2))
         {
             Tickets.TryAdd(i, Guid.NewGuid().ToString("N"));
         }
     }
 
+    public Task SetZone(string zone)
+    {
+        //read data from database about ticket zone.
+        return Task.CompletedTask;
+    }
+
     public string Open(int id)
     {
         if (Tickets.TryRemove(id, out var value))
-        {  
+        {
+            IsSoldOut = Tickets.Count <= 0;
+            if (IsSoldOut)
+            {
+                lock (_sync)
+                {
+                    OnSoldOut();    
+                }
+            }
+            
             Complete.Add(value);
             return value;
         }
