@@ -30,8 +30,8 @@ public class MultilingualContentDetailModelBuilder : IModelBuilder
         builder.Entity<MultilingualContentDetail>(e =>
         {
             e.ToTable($"{nameof(MultilingualContentDetail)}s", "language");
-            e.HasKey(m => new { m.TenantId, Guid = m.Id});
-            e.Property(m => m.Id)
+            e.HasKey(m => new { m.TenantId, Guid = m.Guid});
+            e.Property(m => m.Guid)
                 .ValueGeneratedOnAdd();
             e.Property(m => m.CultureType)
                 .HasMaxLength(5)

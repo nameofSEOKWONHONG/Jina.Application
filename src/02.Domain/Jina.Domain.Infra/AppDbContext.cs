@@ -35,6 +35,10 @@ public class AppDbContext : AuditableContext, IDbContext
         return new DbContextOptionsBuilder().UseSqlServer(connection).Options;
     }
 
+    /// <summary>
+    /// ef core modeling settings.
+    /// </summary>
+    /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -80,7 +84,7 @@ public class AppDbContext : AuditableContext, IDbContext
         //
         // #endregion [get all composite keys (entity decorated by more than 1 [Key] attribute]
 
-        #region [tenant setting]
+        #region [multi tenant filter setting]
 
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
@@ -100,7 +104,7 @@ public class AppDbContext : AuditableContext, IDbContext
 
         #endregion
 
-        #region [entity setting]
+        #region [tenant-entity default setting]
 
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
@@ -230,7 +234,11 @@ public class AppDbContext : AuditableContext, IDbContext
         return await base.SaveChangesAsync(User.TenantId, User.UserId, cancellationToken);
     }
 
+    #region [dbset's]
+    
     public DbSet<Tenant> Tenants { get; set; }
+
+    #region [user]
 
     public override DbSet<User> Users { get; set; }
     public override DbSet<UserRole> UserRoles { get; set; }
@@ -238,14 +246,25 @@ public class AppDbContext : AuditableContext, IDbContext
     public override DbSet<Role> Roles { get; set; }
     public override DbSet<RoleClaim> RoleClaims { get; set; }
 
+
+    #endregion
+
+    #region [menu]
+
     public DbSet<MenuRole> MenuRoles { get; set; }
     public DbSet<MenuGroup> MenuGroups { get; set; }
     public DbSet<Menu> Menus { get; set; }
 
-    public DbSet<CodeGroup> CodeGroups { get; set; }
+    #endregion
+
+    #region [example]
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; }
-    
+
+    #endregion
+
+    #region [multi language]
+
     /// <summary>
     /// 메인 토픽
     /// </summary>
@@ -258,6 +277,16 @@ public class AppDbContext : AuditableContext, IDbContext
     /// 번역 언어
     /// </summary>
     public DbSet<MultilingualContent> MultilingualContents { get; set; }
+
+    #endregion
     
-    public DbSet<Sequence> Sequences { get; set; }
+    #region [common scheme]
+
+    public DbSet<Sequence> Sequences { get; set; }    
+    public DbSet<CodeGroup> CodeGroups { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    
+    #endregion
+
+    #endregion
 }

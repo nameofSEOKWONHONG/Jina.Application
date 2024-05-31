@@ -25,7 +25,7 @@ namespace Jina.Domain.Account.Token
     
     public class TokenRequestValidator : Validator<TokenRequest>
     {
-        public TokenRequestValidator(ILocalizer localizer)
+        public TokenRequestValidator(ILocalizer localizer): base(localizer)
         {
             RuleFor(m => m.TenantId)
                 .NotEmpty()

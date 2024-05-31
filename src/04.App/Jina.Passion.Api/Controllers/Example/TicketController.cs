@@ -7,6 +7,13 @@ namespace Jina.Passion.Api.Controllers.Example;
 
 public class TicketController : ActionController
 {
+    [HttpGet]
+    public IActionResult GetTicket(int id)
+    {
+        var ticketNo = TicketImpl.Instance.Open(id);
+        return Ok(ticketNo);
+    }
+
     [HttpPost]
     public IActionResult Ticket(TicketRequest request)
     {

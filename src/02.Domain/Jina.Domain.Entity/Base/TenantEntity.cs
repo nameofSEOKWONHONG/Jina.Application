@@ -1,4 +1,8 @@
-﻿namespace Jina.Domain.Entity.Base;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
+using ServiceStack;
+
+namespace Jina.Domain.Entity.Base;
 
 public abstract class Entity : IAuditableEntity
 {
@@ -38,12 +42,26 @@ public abstract class NumberEntity : TenantEntity
 /// <summary>
 /// Master - Detail 구조에서 Detail에 사용.
 /// GUID는 Clustered Index로 사용하면 안됨. 데이터가 많아지면 read에서(-정렬-) 성능에 문제 발생함. None Clustered Index로 사용해야 함.
-/// 또한, DB 자동 채번을 사용하면 안되며, 직접 프로그래밍으로 처리해야 함. (-Sql Server의 경우 GUID 채번도 오름차순에 따른 정렬 속성에 따라 GUID가 채번됨) 
+/// 또한, GUID 순번이 깨진 상황 - 자동채번에서 수동채번이 된 상황, 또는 반대 -, DB 자동 채번을 사용하면 안되며, 직접 프로그래밍으로 처리해야 함. (-Sql Server의 경우 GUID 채번도 오름차순에 따른 정렬 속성에 따라 GUID가 채번됨) 
 /// </summary>
 public abstract class GuidEntity : TenantEntity
 {
-    public Guid Id { get; set; } = Guid.Empty;
+    public Guid Guid { get; set; } = Guid.Empty;
     public int SortNo { get; set; }
+}
+
+public abstract class TagEntityById : TenantEntity
+{
+    public int Id { get; set; }
+    [MaxLength(36)]
+    public string MTag { get; set; }
+}
+
+public abstract class TagEntityByGuid : TenantEntity
+{
+    public Guid Guid { get; set; } = Guid.Empty;
+    [MaxLength(36)]
+    public string MTag { get; set; }
 }
 
 
