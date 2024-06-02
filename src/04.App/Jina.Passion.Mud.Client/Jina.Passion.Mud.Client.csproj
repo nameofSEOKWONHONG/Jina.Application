@@ -36,4 +36,11 @@
       <Folder Include="Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\JINA\src\Jina.Lang\Jina.Lang.csproj" />
+      <ProjectReference Include="..\..\..\..\JINA\src\Jina.Validate\Jina.Validate.csproj" />
+      <ProjectReference Include="..\..\02.Domain\Jina.Domain\Jina.Domain.csproj" />
+      <ProjectReference Include="..\Jina.Passion.Client.Share\Jina.Passion.Client.Share.csproj" />
+    </ItemGroup>
+
 </Project>
