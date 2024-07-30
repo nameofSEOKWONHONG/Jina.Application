@@ -50,10 +50,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Passion.Client", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jina.Db.Test", "src\99.Test\Jina.Db.Test\Jina.Db.Test.csproj", "{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Passion.Mud.Client", "src\04.App\Jina.Passion.Mud.Client\Jina.Passion.Mud.Client.csproj", "{0BF0295B-99D3-42F6-BF29-9FE2A6288A81}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jina.Passion.Client.Share", "src\04.App\Jina.Passion.Client.Share\Jina.Passion.Client.Share.csproj", "{B24CDF44-830D-467E-908A-0B8780837AF4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -124,14 +120,6 @@ Global
 		{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BF0295B-99D3-42F6-BF29-9FE2A6288A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BF0295B-99D3-42F6-BF29-9FE2A6288A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BF0295B-99D3-42F6-BF29-9FE2A6288A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BF0295B-99D3-42F6-BF29-9FE2A6288A81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B24CDF44-830D-467E-908A-0B8780837AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B24CDF44-830D-467E-908A-0B8780837AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B24CDF44-830D-467E-908A-0B8780837AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B24CDF44-830D-467E-908A-0B8780837AF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,8 +141,6 @@ Global
 		{D4216C32-8E87-4C28-AA47-B0396CFA1D5B} = {10E5DA75-9ACE-4679-989B-72EB734E4D99}
 		{8CA72C1E-51AD-4DCA-96BB-5B32E872B969} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
 		{9AF51F38-04FA-4DE8-8AAE-F0AB6D447B3D} = {D54D4183-2360-42E0-8C86-A3F553F61E49}
-		{0BF0295B-99D3-42F6-BF29-9FE2A6288A81} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
-		{B24CDF44-830D-467E-908A-0B8780837AF4} = {3F109823-B924-4BA9-A4A3-7164AAEF9AE9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D3F399BD-DFC6-41B1-9452-44E74499EF10}
