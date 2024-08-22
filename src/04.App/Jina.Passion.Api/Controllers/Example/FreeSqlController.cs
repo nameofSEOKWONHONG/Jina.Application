@@ -25,7 +25,7 @@ public class FreeSqlController : SessionActionController
         IResults<WeatherForecastResult> result = null;
         
         this.Pipe.Register(service)
-            .Where(() => id > 0)
+            .When(() => id > 0)
             .WithParameter(() => id)
             .WithCache()
             .Then(r => result = r);
@@ -41,7 +41,7 @@ public class FreeSqlController : SessionActionController
     {
         PaginatedResult<WeatherForecastResult> result = null;
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .Then(r => result = r);
         await this.Pipe.ExecuteAsync();
@@ -85,7 +85,7 @@ public class FreeSqlController : SessionActionController
         IResults<int> result = null;
         
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .Then(r => result = r);
 
@@ -101,7 +101,7 @@ public class FreeSqlController : SessionActionController
         IResults<int> result = null;
         
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .Then(r => result = r);
 
@@ -117,7 +117,7 @@ public class FreeSqlController : SessionActionController
         IResults result = null;
         
         this.Pipe.Register(service)
-            .Where(() => request.xIsNotEmpty())
+            .When(() => request.xIsNotEmpty())
             .WithParameter(() => request)
             .Then(r => result = r);
 

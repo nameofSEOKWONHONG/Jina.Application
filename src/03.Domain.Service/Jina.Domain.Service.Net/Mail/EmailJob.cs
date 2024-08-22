@@ -26,7 +26,7 @@ public class EmailJob : JobBase<EmailRequest>
     public override async Task ExecuteAsync(EmailRequest request)
     {
         this.Spl.Register(_emailService)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .Then(r => _ = r);
 

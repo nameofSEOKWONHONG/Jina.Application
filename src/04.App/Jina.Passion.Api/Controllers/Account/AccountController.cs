@@ -42,7 +42,7 @@ public class AccountController : ActionController
         IResults<TokenResult> result = null;
 
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .WithValidator(() => validator)
             .ThenValidate(r => result = Results<TokenResult>.Fail(r.vErrors()))
@@ -64,7 +64,7 @@ public class AccountController : ActionController
     {
         IResults<bool> result = null;
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .Then(m => result = m);
 
@@ -91,7 +91,7 @@ public class AccountController : ActionController
         IResults<TokenResult> result = null;
 
         this.Pipe.Register(service)
-            .Where(model.xIsNotEmpty)
+            .When(model.xIsNotEmpty)
             .WithParameter(() => model)
             .WithValidator(() => validator)
             .ThenValidate(r =>
@@ -125,7 +125,7 @@ public class AccountController : ActionController
     {
         IResults result = null;
         this.Pipe.Register(service)
-            .Where(request.xIsNotEmpty)
+            .When(request.xIsNotEmpty)
             .WithParameter(() => request)
             .WithValidator(() => validator)
             .ThenValidate(m =>
