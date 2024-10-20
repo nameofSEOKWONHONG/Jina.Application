@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Passion.Api.Controllers.Example;
 
-public class WeatherController : SessionRestController
+public class WeatherController : RestSessionController
 {
     public WeatherController()
     {

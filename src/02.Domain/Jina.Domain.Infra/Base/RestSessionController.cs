@@ -30,7 +30,7 @@ public abstract class RestController : JControllerBase
 [Authorize]
 [TypeFilter<SessionExecuteFilter>]
 [Route("api/[controller]")]
-public abstract class SessionRestController : RestController
+public abstract class RestSessionController : RestController
 {
     
 }
@@ -41,7 +41,7 @@ public abstract class SessionRestController : RestController
 [Authorize]
 [TypeFilter<SessionExecuteFilter>]
 [Route("api/[controller]/[action]")]
-public abstract class SessionActionController : ActionController
+public abstract class ActionSessionController : ActionController
 {
     
 }

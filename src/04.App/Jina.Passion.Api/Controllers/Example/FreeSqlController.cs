@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jina.Passion.Api.Controllers.Example;
 
-public class FreeSqlController : SessionActionController
+public class FreeSqlController : ActionSessionController
 {
     public FreeSqlController()
     {

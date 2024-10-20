@@ -43,7 +43,6 @@ public class SessionExecuteFilter : IAsyncActionFilter
         if (_ctx.TenantId.xIsEmpty()) throw new ArgumentNullException(nameof(_ctx.TenantId), "TenantId is empty");
         if (_ctx.CurrentUser.UserId.xIsEmpty()) throw new ArgumentNullException(nameof(_ctx.CurrentUser.UserId), "UserId is empty");
         
-        //before
         var user = await _ctx.DbContext.xAs<AppDbContext>().Users
             .FirstOrDefaultAsync(m => m.Email == _ctx.CurrentUser.Email);
         
@@ -53,15 +52,22 @@ public class SessionExecuteFilter : IAsyncActionFilter
             return;
         }
         
-        if (user.RefreshToken.xIsEmpty() && 
-            user.RefreshTokenExpiryTime == DateTime.MinValue)
+        if (user.RefreshToken.xIsEmpty() ||
+            user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             context.Result = new UnauthorizedResult();
             return;
         }
 
-        await next();
-        
-        //after
+        if (_ctx.xIsNotEmpty())
+        {
+            await _ctx.xAs<ISessionContextInitializer>().InitializeAsync(user);
+        }
+
+        var account = $"{_ctx.TenantId}§{_ctx.CurrentUser.UserId}";
+        using (Serilog.Context.LogContext.PushProperty("Account", account))
+        {
+            await next();    
+        }
     }
 }

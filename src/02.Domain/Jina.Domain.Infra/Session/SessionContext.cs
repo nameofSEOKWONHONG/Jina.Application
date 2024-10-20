@@ -7,13 +7,14 @@ using Jina.Domain.Service.Infra.Services;
 using Jina.Lang.Abstract;
 using Jina.Session.Abstract;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Jina.Domain.Service.Infra
 {
-	public class SessionContext : ISessionContext
+	public class SessionContext : ISessionContext, ISessionContextInitializer
     {
-        public string TenantId { get; init; }
+        public string TenantId { get; private set; }
 
         public ISessionCurrentUser CurrentUser { get; init; }
 
@@ -57,7 +58,10 @@ namespace Jina.Domain.Service.Infra
             this.JobClient = jobClient;
             this.DistributedCache = cache;
             this.FSql = fSql;
+        }
 
+        public Task InitializeAsync(IdentityUser<string> user)
+        {
             if (this.CurrentUser.xIsNotEmpty())
             {
                 if (this.CurrentUser.TenantId.xIsNotEmpty())
@@ -65,6 +69,8 @@ namespace Jina.Domain.Service.Infra
                     this.TenantId = this.CurrentUser.TenantId;    
                 }                
             }
+            
+            return Task.CompletedTask;
         }
     }
 }
