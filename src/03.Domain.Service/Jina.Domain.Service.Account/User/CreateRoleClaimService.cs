@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using eXtensionSharp;
+﻿using eXtensionSharp;
 using Jina.Base.Service;
 using Jina.Base.Service.Abstract;
 using Jina.Domain.Account.Request;
@@ -9,6 +8,7 @@ using Jina.Domain.Service.Infra;
 using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Session.Abstract;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account.User;

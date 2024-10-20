@@ -7,15 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EntityFramework.DynamicLinq" Version="1.4.0" />
-        <PackageReference Include="FreeSql" Version="3.2.825" />
-        <PackageReference Include="FreeSql.DbContext" Version="3.2.825" />
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="8.4.0" />
-        <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.0" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\..\JINA\src\jina\Jina.csproj" />
       <ProjectReference Include="..\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
       <ProjectReference Include="..\Jina.Domain\Jina.Domain.csproj" />

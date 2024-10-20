@@ -5,7 +5,6 @@ using Jina.Session.Abstract;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
-using Esprima.Ast;
 using Jina.Base.Service;
 using Jina.Domain.Service.Infra.Services;
 

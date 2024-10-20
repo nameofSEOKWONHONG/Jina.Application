@@ -4,7 +4,6 @@ using Jina.Domain.Account.Request;
 using Jina.Domain.Entity.Account;
 using Jina.Domain.Service.Infra;
 using Microsoft.AspNetCore.Identity;
-using System.Data.Entity;
 using Hangfire;
 using Jina.Base.Service;
 using Jina.Domain.Abstract.Net;
@@ -14,6 +13,7 @@ using Jina.Domain.Shared;
 using Jina.Domain.Shared.Abstract;
 using Jina.Domain.Shared.Consts;
 using Jina.Session.Abstract;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Jina.Domain.Service.Account.User

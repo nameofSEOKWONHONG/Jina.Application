@@ -15,13 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FreeSql" Version="3.2.825" />
-    <PackageReference Include="FreeSql.DbContext" Version="3.2.825" />
-    <PackageReference Include="FreeSql.Provider.SqlServer" Version="3.2.825" />
-    <PackageReference Include="FreeSql.Repository" Version="3.2.825" />
-    <PackageReference Include="LiveChartsCore" Version="2.0.0-rc2" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-rc2" />    
-    <PackageReference Include="QuestPDF" Version="2024.3.10" />
+    
+    <PackageReference Include="LiveChartsCore" Version="2.0.0-rc3.3" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView" Version="2.0.0-rc3.3" />    
+    
   </ItemGroup>
 
 </Project>

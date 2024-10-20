@@ -1,0 +1,31 @@
+﻿<Solution>
+  <Folder Name="/01.Infra/">
+    <Project Path="..\eXtensionSharp.AspNet\src\eXtensionSharp.AspNet.csproj" />
+    <Project Path="..\JINA\src\Jina.Lang\Jina.Lang.csproj" />
+    <Project Path="..\JINA\src\Jina.Validate\Jina.Validate.csproj" />
+    <Project Path="..\JINA\src\jina\Jina.csproj" />
+  </Folder>
+  <Folder Name="/02.Domain/">
+    <Project Path="src\02.Domain\Jina.Domain.Abstract\Jina.Domain.Abstract.csproj" />
+    <Project Path="src\02.Domain\Jina.Domain.Entity\Jina.Domain.Entity.csproj" />
+    <Project Path="src\02.Domain\Jina.Domain\Jina.Domain.csproj" />
+  </Folder>
+  <Folder Name="/03.Domain.Service/">
+    <Project Path="src\02.Domain\Jina.Domain.Infra\Jina.Domain.Service.Infra.csproj" />
+    <Project Path="src\03.Domain.Service\Jina.Domain.Service.Account\Jina.Domain.Service.Account.csproj" />
+    <Project Path="src\03.Domain.Service\Jina.Domain.Service.Example\Jina.Domain.Service.Example.csproj" />
+    <Project Path="src\03.Domain.Service\Jina.Domain.Service.Language\Jina.Domain.Service.Language.csproj" />
+    <Project Path="src\03.Domain.Service\Jina.Domain.Service.Net\Jina.Domain.Service.Net.csproj" />
+  </Folder>
+  <Folder Name="/04.App/">
+    <Project Path="src\04.App\Jina.Passion.Api\Jina.Passion.Api.csproj" />
+    <Project Path="src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj" />
+  </Folder>
+  <Folder Name="/99.Test/">
+    <Project Path="src\99.Test\Jina.Db.Test\Jina.Db.Test.csproj" />
+    <Project Path="src\99.Test\Jina.Test\Jina.Test.csproj" />
+  </Folder>
+  <Folder Name="/솔루션 항목/">
+    <File Path="README.md" />
+  </Folder>
+</Solution>

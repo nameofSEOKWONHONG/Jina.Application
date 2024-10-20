@@ -7,9 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Ardalis.SmartEnum" Version="8.0.0" />      
-    </ItemGroup>
-    <ItemGroup>
       <ProjectReference Include="..\..\..\..\JINA\src\Jina.Validate\Jina.Validate.csproj" />
     </ItemGroup>
 
