@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\02.Domain\Jina.Domain\Jina.Domain.csproj" />
+    <ProjectReference Include="..\..\02.Domain\Jina.Domain\Jina.Domain.csproj" />    
   </ItemGroup>
 
   <ItemGroup>

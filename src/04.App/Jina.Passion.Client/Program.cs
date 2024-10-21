@@ -38,7 +38,7 @@ namespace Jina.Passion.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
-
+            
             #region [logging]
 
             var levelSwitch = new LoggingLevelSwitch();
@@ -81,6 +81,8 @@ namespace Jina.Passion.Client
             builder.Services.Configure<ProSettings>(builder.Configuration.GetSection("ProSettings"));
             #endregion
 
+            var isHttps = builder.Configuration["DOTNET_LAUNCH_PROFILE"] == "https";
+
             #region [http 설정]
             builder.Services.AddScoped<IHttpInterceptorManager, HttpInterceptorManager>();
             builder.Services.AddScoped<AuthenticationHeaderHandler>();
@@ -92,7 +94,7 @@ namespace Jina.Passion.Client
                     var culture = CultureInfo.DefaultThreadCurrentCulture;                    
                     client.DefaultRequestHeaders.AcceptLanguage.Clear();
                     client.DefaultRequestHeaders.AcceptLanguage.ParseAdd($"{culture.ToString()},{culture.Name}");
-                    client.BaseAddress = new Uri("https://localhost:7103");
+                    client.BaseAddress = new Uri($"{(isHttps ? "https" : "http")}://api-service");
                 })
                 .AddHttpMessageHandler<AuthenticationHeaderHandler>();
             builder.Services.AddHttpClientInterceptor();

@@ -18,6 +18,7 @@
     <Project Path="src\03.Domain.Service\Jina.Domain.Service.Net\Jina.Domain.Service.Net.csproj" />
   </Folder>
   <Folder Name="/04.App/">
+    <Project Path="Jina.Host\Jina.Host.csproj" Type="Classic C#" />
     <Project Path="src\04.App\Jina.Passion.Api\Jina.Passion.Api.csproj" />
     <Project Path="src\04.App\Jina.Passion.Client\Jina.Passion.Client.csproj" />
   </Folder>

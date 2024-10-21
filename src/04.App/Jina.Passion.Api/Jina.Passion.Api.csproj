@@ -8,11 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-<!--        <PackageReference Include="Marvin.Cache.Headers" Version="7.1.0" />-->
-        
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-      <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />      
     </ItemGroup>
 
     <ItemGroup>
@@ -34,6 +31,7 @@
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Example\Jina.Domain.Service.Example.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Language\Jina.Domain.Service.Language.csproj" />
       <ProjectReference Include="..\..\03.Domain.Service\Jina.Domain.Service.Net\Jina.Domain.Service.Net.csproj" />
+      <ProjectReference Include="..\Jina.Passion.ServiceDefaults\Jina.Passion.ServiceDefaults.csproj" />
     </ItemGroup>
 
     <ItemGroup>

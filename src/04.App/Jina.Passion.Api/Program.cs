@@ -7,6 +7,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Host.UseSerilog((context, loggerConfig) =>
 	loggerConfig.ReadFrom.Configuration(context.Configuration));
 
@@ -14,16 +16,16 @@ var app = WebApplicationBuilderInitializer
     .Initialize(builder)
     .Build();
 
+app.MapDefaultEndpoints();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseWebAssemblyDebugging();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseStaticFiles()
-	.UseBlazorFrameworkFiles()
 	.UseHttpsRedirection();
 
 app.UseExceptionHandler();
@@ -37,7 +39,6 @@ app.UseRouting();
 //app.UseHttpCacheHeaders();
 
 #endregion
-
 
 app.UseMiddleware<RequestLogContextMiddleware>();
 app.UseSerilogRequestLogging();
